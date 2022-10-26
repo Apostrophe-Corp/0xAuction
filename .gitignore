@@ -5,6 +5,8 @@ build/*
 *build
 *.vscode
 package-lock.json
+*.reach
+.reach/*
 
 test_index.rsh
 test_auction.rsh
