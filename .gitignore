@@ -5,3 +5,6 @@ build/*
 *build
 *.vscode
 package-lock.json
+
+test_index.rsh
+test_auction.rsh
