@@ -35,13 +35,12 @@ const App = () => {
 					className={cf(s.wMax, s.p10, s.flex, s.flexCenter, app.catchPhrase)}
 				>
 					<h1 className={cf(s.wMax, s.p0, s.m0, app.catchPhraseText)}>
-						Create, Sell, and Buy all NFTs on Algorand.
+						A Fully Decentralized P2P NFT Marketplace.
 					</h1>
 				</div>
 				<div className={cf(s.wMax, s.p10, s.flex, s.flexCenter, app.intro)}>
 					<h2 className={cf(s.wMax, s.p0, s.m0, app.introText)}>
-						Some dummy text...Some dummy text...Some dummy text...Some dummy
-						text...Some dummy text...
+						Be your own Sotheby's and own your auctions, no middlemen, commissions, or hidden charges.
 					</h2>
 				</div>
 			</div>
@@ -72,8 +71,7 @@ const App = () => {
 						<div className={cf(s.flex, s.flex_dColumn, app.cardPurpose)}>
 							<div className={cf(app.cardPurposeText)}>Mint NFts</div>
 							<div className={cf(app.cardDescription)}>
-								Some dummy text...Some dummy text...Some dummy text...Some dummy
-								text...
+								Create your very own collectibles on the Algorand blockchain.
 							</div>
 						</div>
 						<div className={cf(app.cardIcon, app.createIcon)}>
@@ -128,8 +126,7 @@ const App = () => {
 						<div className={cf(s.flex, s.flex_dColumn, app.cardPurpose)}>
 							<div className={cf(app.cardPurposeText)}>Auction Assets</div>
 							<div className={cf(app.cardDescription)}>
-								Some dummy text...Some dummy text...Some dummy text...Some dummy
-								text...
+								Start your very own auction to sell your collectibles to the highest bidder.
 							</div>
 						</div>
 						<div className={cf(app.cardIcon, app.sellIcon)}>
@@ -153,8 +150,7 @@ const App = () => {
 						<div className={cf(s.flex, s.flex_dColumn, app.cardPurpose)}>
 							<div className={cf(app.cardPurposeText)}>Purchase Assets</div>
 							<div className={cf(app.cardDescription)}>
-								Some dummy text...Some dummy text...Some dummy text...Some dummy
-								text...
+								Browse through our vast pool of Auctioneers and bid on any collectibles you like.
 							</div>
 						</div>
 						<div className={cf(app.cardIcon, app.buyIcon)}>
