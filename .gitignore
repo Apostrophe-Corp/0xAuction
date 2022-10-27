@@ -2,11 +2,15 @@ node_modules/*
 build/*
 .vscode/*
 *node_modules
+build/
+build
 *build
 *.vscode
 package-lock.json
 *.reach
 .reach/*
-
+.reach
 test_index.rsh
 test_auction.rsh
+.vscode/
+.vscode
