@@ -121,7 +121,6 @@ export const main = Reach.App(() => {
 	Auction.log(state.pad('sold'), auctionInfo.id, lastPrice)
 	if (!isFirstBid) {
 		transfer(lastPrice).to(auctionInfo.owner)
-		Auction.log(state.pad('notSold'), auctionInfo.id, 0)
 	}
 	commit()
 	exit()
