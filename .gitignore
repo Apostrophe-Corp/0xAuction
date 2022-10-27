@@ -12,3 +12,5 @@ package-lock.json
 .reach
 test_index.rsh
 test_auction.rsh
+.vscode/
+.vscode
