@@ -94,8 +94,10 @@ const ReachContextProvider = ({ children }) => {
 					app.header
 				)}
 			>
-				<div className={cf(app.branding)}>Auctoken</div>
-				<div className={cf(s.p0, s.m0, app.navParent)}>
+				<div className={cf(app.branding, s.w480_100, s.w360_100)}>
+					0xAuction
+				</div>
+				<div className={cf(s.p0, s.m0, s.w480_100, s.w360_100, app.navParent)}>
 					<ul className={cf(s.p0, s.m0, s.flex, s.flexCenter)}>
 						<li className={cf(s.flex, s.flexCenter, s.p10, s.m0, app.navItem)}>
 							Create
@@ -108,7 +110,15 @@ const ReachContextProvider = ({ children }) => {
 						</li>
 					</ul>
 				</div>
-				<button className={cf(s.flex, s.flexCenter, app.connectAccount)}>
+				<button
+					className={cf(
+						s.flex,
+						s.w480_100,
+						s.w360_100,
+						s.flexCenter,
+						app.connectAccount
+					)}
+				>
 					{user.address
 						? String(user.address).slice(0, 10) + '...'
 						: `Connect Account`}
@@ -116,20 +126,13 @@ const ReachContextProvider = ({ children }) => {
 			</div>
 			{children}
 			{/* TODO Add a footer */}
-			<div className={app.footer}>
-				<div className={app.footerBar}>
-					<div className={app.closeQuaters}>
-						<div className={app.footerBranding}></div>
-						<div className={app.privacy}></div>
+			<div className={cf(s.container, s.flex, s.wMax, app.footer)}>
+				<div className={cf(s.wMax, s.flex, s.flexCenter, app.footerBar)}>
+					<div className={cf(app.footerBranding)}>0xAuction</div>
+					<div className={cf(s.wMax, app.registered)}>
+						0xAuction is the product of Apostrophe-Corp for the Onchain
+						Notifications Green House Hack Category
 					</div>
-					<div className={app.footerSocials}>
-						<div className={app.footerSocial}></div>
-						<div className={app.footerSocial}></div>
-						<div className={app.footerSocial}></div>
-						<div className={app.footerSocial}></div>
-					</div>
-					<div className={app.footerDisclaimer}></div>
-					<div className={app.registered}></div>
 				</div>
 			</div>
 		</ReachContext.Provider>
