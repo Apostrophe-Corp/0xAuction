@@ -14,3 +14,5 @@ test_index.rsh
 test_auction.rsh
 .vscode/
 .vscode
+error_auction.rsh
+test_token.rsh

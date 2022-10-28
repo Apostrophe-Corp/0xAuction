@@ -94,18 +94,38 @@ const ReachContextProvider = ({ children }) => {
 					app.header
 				)}
 			>
-				<div className={cf(app.branding, s.w480_100, s.w360_100)}>
+				<div
+					className={cf(app.branding, s.w480_100, s.w360_100)}
+					onClick={() => {
+						setView('App')
+					}}
+				>
 					0xAuction
 				</div>
 				<div className={cf(s.p0, s.m0, s.w480_100, s.w360_100, app.navParent)}>
 					<ul className={cf(s.p0, s.m0, s.flex, s.flexCenter)}>
-						<li className={cf(s.flex, s.flexCenter, s.p10, s.m0, app.navItem)}>
+						<li
+							className={cf(s.flex, s.flexCenter, s.p10, s.m0, app.navItem)}
+							onClick={() => {
+								setView('Create')
+							}}
+						>
 							Create
 						</li>
-						<li className={cf(s.flex, s.flexCenter, s.p10, s.m0, app.navItem)}>
+						<li
+							className={cf(s.flex, s.flexCenter, s.p10, s.m0, app.navItem)}
+							onClick={() => {
+								setView('Sell')
+							}}
+						>
 							Sell
 						</li>
-						<li className={cf(s.flex, s.flexCenter, s.p10, s.m0, app.navItem)}>
+						<li
+							className={cf(s.flex, s.flexCenter, s.p10, s.m0, app.navItem)}
+							onClick={() => {
+								setView('Buy')
+							}}
+						>
 							Buy
 						</li>
 					</ul>
@@ -128,10 +148,17 @@ const ReachContextProvider = ({ children }) => {
 			{/* TODO Add a footer */}
 			<div className={cf(s.container, s.flex, s.wMax, app.footer)}>
 				<div className={cf(s.wMax, s.flex, s.flexCenter, app.footerBar)}>
-					<div className={cf(app.footerBranding)}>0xAuction</div>
+					<div
+						className={cf(app.footerBranding)}
+						onClick={() => {
+							setView('App')
+						}}
+					>
+						0xAuction
+					</div>
 					<div className={cf(s.wMax, app.registered)}>
-						0xAuction is the product of Apostrophe-Corp for the Onchain
-						Notifications Green House Hack Category
+						0xAuction is the product of Apostrophe Corp. for the Live Onchain
+						Notifications Algorand Green House Hack Category.
 					</div>
 				</div>
 			</div>
