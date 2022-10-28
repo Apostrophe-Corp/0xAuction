@@ -16,8 +16,8 @@ export const main = Reach.App(() => {
 			deadline: UInt,
 			price: UInt,
 			owner: Address,
-			link: Bytes(50),
-			title: Bytes(15),
+			link: Bytes(96),
+			title: Bytes(32),
 			description: Bytes(80),
 		}),
 	})
@@ -27,8 +27,8 @@ export const main = Reach.App(() => {
 		['contractInfo', Contract],
 		['blockCreated', UInt],
 		['owner', Address],
-		['link', Bytes(50)],
-		['title', Bytes(15)],
+		['link', Bytes(96)],
+		['title', Bytes(32)],
 		['description', Bytes(80)],
 	])
 

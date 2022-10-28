@@ -10,9 +10,22 @@
 }
 
 .branding {
-	text-transform: uppercase;
-	font-weight: 600;
-	font-size: 18px;
+	text-transform: none;
+	background: 
+	/* linear-gradient(
+			to bottom right,
+			rgb(247, 231, 255),
+			rgb(213, 3, 255)
+		), */ rgb(
+		255,
+		255,
+		255
+	);
+	background-clip: text;
+	font-size: 30px;
+	font-weight: 800;
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
 	cursor: pointer;
 }
 
@@ -58,7 +71,7 @@
 	background-position: center;
 	background-repeat: no-repeat;
 	background-size: cover;
-	height: 140vh;
+	min-height: 140vh;
 }
 
 .heroWelcome {
@@ -105,6 +118,7 @@
 
 .forestParent {
 	opacity: 1;
+	box-shadow: 0 0 10px 5px rgb(0, 0, 0);
 	background: linear-gradient(to bottom, transparent, rgb(93, 0, 154)), #000;
 	padding-top: 100px;
 	padding-bottom: 100px;
@@ -132,6 +146,7 @@
 	background-color: rgb(11, 0, 21);
 	border-radius: 20px;
 	margin-bottom: 20px;
+	cursor: pointer;
 }
 
 .cardAction {
@@ -160,6 +175,7 @@
 }
 
 .community {
+	box-shadow: 0 0 10px 5px rgb(93, 0, 154);
 	background-color: rgb(93, 0, 154);
 	color: #fff !important;
 	padding-bottom: 100px;
@@ -236,7 +252,6 @@
 
 .footerBranding {
 	composes: branding;
-	text-transform: none;
 	background: linear-gradient(
 			to bottom right,
 			rgb(152, 0, 223),
@@ -269,4 +284,44 @@
 	-webkit-background-clip: text;
 	-webkit-text-fill-color: transparent;
 	font-weight: 600;
+}
+
+@media only screen and (max-width: 900px) and (min-width: 761px) {
+	.hero {
+		min-height: 95vh;
+	}
+}
+
+@media only screen and (max-width: 760px) and (min-width: 481px) {
+	.hero {
+		min-height: 90vh;
+	}
+}
+
+@media only screen and (max-width: 480px) and (min-width: 361px) {
+	.hero {
+		min-height: 90vh;
+	}
+
+	.catchPhraseText {
+		font-size: 50px;
+	}
+
+	.branding {
+		text-align: center;
+	}
+}
+
+@media only screen and (max-width: 360px) {
+	.hero {
+		height: 80vh;
+	}
+
+	.catchPhraseText {
+		font-size: 40px;
+	}
+
+	.branding {
+		text-align: center;
+	}
 }

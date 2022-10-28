@@ -4,8 +4,9 @@ import app from '../../styles/App.module.css'
 import { useReach, fmtClasses as cf } from '../../hooks'
 
 const App = () => {
+	const { setView } = useReach()
 	return (
-		<div className={cf(s.wMax)}>
+		<div className={cf(s.wMax, s.window)}>
 			{/* The Hero */}
 			<div
 				className={cf(
@@ -40,7 +41,8 @@ const App = () => {
 				</div>
 				<div className={cf(s.wMax, s.p10, s.flex, s.flexCenter, app.intro)}>
 					<h2 className={cf(s.wMax, s.p0, s.m0, app.introText)}>
-						Be your own Sotheby's and own your auctions, no middlemen, commissions, or hidden charges.
+						Be your own Sotheby's and own your auctions, no middlemen,
+						commissions, or hidden charges.
 					</h2>
 				</div>
 			</div>
@@ -66,7 +68,9 @@ const App = () => {
 						app.cardForest
 					)}
 				>
-					<div className={cf(app.card)}>
+					<div className={ cf(app.card) } onClick={ () => {
+						setView('Create')
+					}}>
 						<div className={cf(app.cardAction)}>Create</div>
 						<div className={cf(s.flex, s.flex_dColumn, app.cardPurpose)}>
 							<div className={cf(app.cardPurposeText)}>Mint NFts</div>
@@ -121,12 +125,15 @@ const App = () => {
 							</svg>
 						</div>
 					</div>
-					<div className={cf(app.card)}>
+					<div className={cf(app.card)} onClick={ () => {
+						setView('Sell')
+					}}>
 						<div className={cf(app.cardAction)}>Sell</div>
 						<div className={cf(s.flex, s.flex_dColumn, app.cardPurpose)}>
 							<div className={cf(app.cardPurposeText)}>Auction Assets</div>
 							<div className={cf(app.cardDescription)}>
-								Start your very own auction to sell your collectibles to the highest bidder.
+								Start your very own auction to sell your collectibles to the
+								highest bidder.
 							</div>
 						</div>
 						<div className={cf(app.cardIcon, app.sellIcon)}>
@@ -145,12 +152,15 @@ const App = () => {
 							</svg>
 						</div>
 					</div>
-					<div className={cf(app.card)}>
+					<div className={cf(app.card)} onClick={ () => {
+						setView('Buy')
+					}}>
 						<div className={cf(app.cardAction)}>Buy</div>
 						<div className={cf(s.flex, s.flex_dColumn, app.cardPurpose)}>
 							<div className={cf(app.cardPurposeText)}>Purchase Assets</div>
 							<div className={cf(app.cardDescription)}>
-								Browse through our vast pool of Auctioneers and bid on any collectibles you like.
+								Browse through our vast pool of Auctioneers and bid on any
+								collectibles you like.
 							</div>
 						</div>
 						<div className={cf(app.cardIcon, app.buyIcon)}>
