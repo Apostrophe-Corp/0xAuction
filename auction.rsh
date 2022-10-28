@@ -1,3 +1,4 @@
+/* eslint-disable no-self-compare */
 /* eslint-disable no-array-constructor */
 /* eslint-disable no-use-before-define */
 /* eslint-disable eqeqeq */
@@ -6,8 +7,8 @@
 'reach 0.1'
 
 const state = Bytes(20)
+const DEADLINE = 20
 const amt = 1
-
 export const main = Reach.App(() => {
 	const Seller = Participant('Seller', {
 		getAuction: Object({
@@ -22,25 +23,20 @@ export const main = Reach.App(() => {
 		}),
 	})
 
-	const objectRep = Struct([
-		['id', UInt],
-		['contractInfo', Contract],
-		['blockCreated', UInt],
-		['owner', Address],
-		['link', Bytes(96)],
-		['title', Bytes(32)],
-		['description', Bytes(80)],
-	])
-
 	const endResponse = Struct([
-        ['id', UInt],
+		['id', UInt],
 		['blockEnded', UInt],
 		['lastBid', UInt],
 	])
 
 	const Bidder = API('Bidder', {
 		bid: Fun([UInt], Tuple(Address, UInt)),
+	})
+
+	const Auctioneer = API('Auctioneer', {
 		stopAuction: Fun([], endResponse),
+		acceptSale: Fun([], Bool),
+		rejectSale: Fun([], Bool),
 	})
 
 	const Auction = Events({
@@ -65,50 +61,44 @@ export const main = Reach.App(() => {
 		auctionInfo.description
 	)
 
-	const [timeRemaining, KeepGoing] = makeDeadline(auctionInfo.deadline)
+	const [timeRemaining, keepGoing] = makeDeadline(auctionInfo.deadline)
 
 	const [keepBidding, highestBidder, lastPrice, isFirstBid] = parallelReduce([
 		true,
-		auctionInfo.owner,
+		Seller,
 		0,
 		true,
 	])
 		.invariant(balance(tokenId) == amt)
 		.invariant(balance() == (isFirstBid ? 0 : lastPrice))
-		.while(KeepGoing() && keepBidding)
+		.while(keepGoing() && keepBidding)
 		.api_(Bidder.bid, (bid) => {
 			check(bid > lastPrice, 'Your bid is too low, please try again')
 			return [
 				bid,
 				(notify) => {
 					notify([highestBidder, lastPrice])
-					if (!isFirstBid) {
-						transfer(lastPrice).to(highestBidder)
-					}
+					if (!isFirstBid) transfer(lastPrice).to(highestBidder)
 					const who = this
-					if (bid > lastPrice) {
-						Auction.log(state.pad('bidSuccess'), auctionInfo.id, bid)
-					} else {
-						Auction.log(state.pad('bidFailed'), auctionInfo.id, lastPrice)
-					}
+					Auction.log(state.pad('bidSuccess'), auctionInfo.id, bid)
 					return [keepBidding, who, bid, false]
 				},
 			]
 		})
 		.api(
-			Bidder.stopAuction,
+			Auctioneer.stopAuction,
 			() => {
-				check(this == auctionInfo.owner, 'You are not the Seller')
+				check(this == Seller, 'You are not the Seller')
 			},
 			() => 0,
 			(notify) => {
 				Auction.log(state.pad('endSuccess'), auctionInfo.id, lastPrice)
 				const response = endResponse.fromObject({
-                    id: auctionInfo.id,
+					id: auctionInfo.id,
 					blockEnded: thisConsensusTime(),
 					lastBid: lastPrice,
 				})
-				Auction.log(state.pad('down'), auctionInfo.id, 1)
+				// Auction.log(state.pad('down'), auctionInfo.id, 1)
 				notify(response)
 				return [false, highestBidder, lastPrice, isFirstBid]
 			}
@@ -117,11 +107,52 @@ export const main = Reach.App(() => {
 			Seller.publish()
 			return [keepBidding, highestBidder, lastPrice, isFirstBid]
 		})
-	transfer(amt, tokenId).to(highestBidder)
-	Auction.log(state.pad('sold'), auctionInfo.id, lastPrice)
-	if (!isFirstBid) {
-		transfer(lastPrice).to(auctionInfo.owner)
-	}
+
+	Auction.log(state.pad('down'), auctionInfo.id, 1)
+
+	const awaitingDecision = parallelReduce(true)
+		.invariant(balance(tokenId) == balance(tokenId))
+		.while(awaitingDecision == true)
+		.api(
+			Auctioneer.acceptSale,
+			() => {
+				check(this == Seller, 'You are not the Seller')
+			},
+			() => 0,
+			(notify) => {
+				Auction.log(state.pad('accepted'), auctionInfo.id, lastPrice)
+				// Auction.log(state.pad('down'), auctionInfo.id, 1)
+				transfer(balance(tokenId), tokenId).to(highestBidder)
+				transfer(balance()).to(Seller)
+				notify(true)
+				return false
+			}
+		)
+		.api(
+			Auctioneer.rejectSale,
+			() => {
+				check(this == Seller, 'You are not the Seller')
+			},
+			() => 0,
+			(notify) => {
+				Auction.log(state.pad('rejected'), auctionInfo.id, lastPrice)
+				// Auction.log(state.pad('down'), auctionInfo.id, 1)
+				transfer(balance(tokenId), tokenId).to(Seller)
+				transfer(balance()).to(highestBidder)
+				notify(false)
+				return false
+			}
+		)
+		.timeout(relativeTime(DEADLINE), () => {
+			Seller.publish()
+			Auction.log(state.pad('accepted'), auctionInfo.id, lastPrice)
+			// Auction.log(state.pad('down'), auctionInfo.id, 1)
+			transfer(balance(tokenId), tokenId).to(highestBidder)
+			transfer(balance()).to(Seller)
+			return true
+		})
+	transfer(balance(tokenId), tokenId).to(highestBidder)
+	transfer(balance()).to(Seller)
 	commit()
 	exit()
 })
