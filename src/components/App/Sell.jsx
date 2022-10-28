@@ -196,7 +196,7 @@ const Sell = () => {
 								name='title'
 								id='title'
 								onInput={handleInput}
-								placeholder='Image by Graphue on Freepik'
+								placeholder='NFT Sale'
 								className={cf(sell.formInput)}
 							/>
 						</label>
@@ -210,7 +210,7 @@ const Sell = () => {
 								id='description'
 								rows='3'
 								onInput={handleInput}
-								placeholder='NFT Sale'
+								placeholder='Image by Graphue on Freepik'
 								className={cf(sell.formInput)}
 							/>
 						</label>
