@@ -1,17 +1,199 @@
+.buyParent {
+	background-color: #000;
+	color: #fff;
+}
 
+.topDiv {
+	opacity: 1;
+	padding: 30px 50px;
+}
+
+.topText {
+	color: rgb(132, 0, 255);
+	font-weight: 700;
+	font-size: 30px;
+}
+
+.latest {
+	opacity: 1;
+	overflow: hidden;
+	color: #fff !important;
+	width: max(80%, 300px);
+	border: 0.5px solid rgb(132, 0, 255);
+	border-radius: 10px;
+}
+
+.latestAuctions {
+	height: 400px;
+	transition: transform 0.5s;
+}
+
+.latestAuction {
+	height: 100%;
+	color: #fff !important;
+	border-radius: 10px;
+	cursor: pointer;
+}
+
+.auctionNFT {
+	opacity: 1;
+	background: url(../assets/images/preview.jpg); /* bit.ly/3gD1nFM#i */
+	/* background: url(https://bit.ly/3gD1nFM#i), url(../assets/images/404.jpg); bit.ly/3gD1nFM#i */
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: contain;
+	height: 400px;
+}
+
+.auctionDetails {
+	padding: 10px 20px;
+	text-align: center;
+}
+
+.auctionTitle {
+	padding: 10px 5px;
+}
+
+.auctionTitleText {
+	font-size: 35px;
+	background: linear-gradient(
+			to bottom right,
+			rgb(247, 231, 255),
+			rgb(213, 3, 255)
+		),
+		rgb(255, 255, 255);
+	background-clip: text;
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+}
+
+.auctionDes {
+	padding: 5px 5px;
+}
+
+.auctionDesText {
+	font-size: 25px;
+	color: rgb(201, 201, 201);
+}
+
+.desiredPrice {
+	padding: 10px 5px;
+}
+
+.desiredPriceText {
+	font-weight: 600;
+	font-size: 16px;
+	color: rgba(255, 255, 255);
+}
+
+.aucAuctions {
+	opacity: 1;
+	padding: 10px;
+}
+
+.aucAuction {
+	width: 23%;
+	height: calc(23vw - 40px);
+	background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.7)),
+		url(../assets/images/preview.jpg); /* bit.ly/3gD1nFM#i */
+	/* background: url(https://bit.ly/3gD1nFM#i), url(../assets/images/404.jpg); bit.ly/3gD1nFM#i */
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
+	margin-top: 15px;
+	cursor: pointer;
+}
+
+.aucAucDetails {
+	height: 100%;
+	color: #fff;
+	justify-content: flex-end;
+	align-items: flex-start;
+}
 
 @media only screen and (max-width: 900px) and (min-width: 761px) {
+	.auctionTitleText {
+		font-size: 30px;
+	}
 
+	.auctionDesText {
+		font-size: 20px;
+	}
+
+	.aucAuction {
+		width: 31%;
+		height: calc(31vw - 40px);
+	}
 }
 
 @media only screen and (max-width: 760px) and (min-width: 481px) {
+	.latest {
+		width: 90%;
+	}
 
+	.auctionTitleText {
+		font-size: 30px;
+	}
+
+	.auctionDesText {
+		font-size: 20px;
+	}
+
+	.aucAuction {
+		width: 48%;
+		height: calc(31vw - 48px);
+	}
 }
 
 @media only screen and (max-width: 480px) and (min-width: 361px) {
+	.latestAuctions {
+		height: calc(300px + 300px);
+	}
 
+	.auctionNFT {
+		height: 300px;
+	}
+
+	.auctionDetails {
+		height: 300px;
+	}
+
+	.auctionTitleText {
+		font-size: 27.5px;
+	}
+
+	.auctionDesText {
+		font-size: 18px;
+	}
+	.aucAuction {
+		width: 90%;
+		height: calc(90vw - 40px);
+	}
 }
 
 @media only screen and (max-width: 360px) {
+	.latestAuctions {
+		height: calc(250px + 300px);
+	}
 
+	.auctionNFT {
+		height: 250px;
+	}
+
+	.auctionDetails {
+		height: 300px;
+	}
+
+	.auctionTitleText {
+		font-size: 25px;
+	}
+
+	.auctionDesText {
+		font-size: 18px;
+	}
+
+	.aucAuction {
+		width: 300px;
+		height: 300px;
+	}
 }

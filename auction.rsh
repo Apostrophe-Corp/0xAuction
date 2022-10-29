@@ -18,7 +18,7 @@ export const main = Reach.App(() => {
 			price: UInt,
 			owner: Address,
 			link: Bytes(96),
-			title: Bytes(32),
+			title: Bytes(20),
 			description: Bytes(80),
 		}),
 	})
@@ -41,7 +41,7 @@ export const main = Reach.App(() => {
 
 	const Auction = Events({
 		log: [state, UInt, UInt],
-		created: [UInt, Contract, UInt, Bytes(96), Bytes(32), Bytes(80)],
+		created: [UInt, Contract, UInt, Bytes(96), Bytes(20), Bytes(80)],
 	})
 	init()
 
