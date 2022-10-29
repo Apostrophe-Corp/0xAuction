@@ -11,13 +11,18 @@ import {
 import { fmtClasses as cf } from '../hooks/fmtClasses'
 import s from '../styles/Shared.module.css'
 import '../styles/Global.module.css'
+import icon from '../assets/images/preview.jpg'
 import app from '../styles/App.module.css'
 import { Preloader } from '../components/Preloader'
 import { Alert } from '../components/Alert'
 
+
+
 const reach = loadStdlib(process.env)
 
 export const ReachContext = React.createContext()
+
+const { standardUnit } = reach
 
 const ReachContextProvider = ({ children }) => {
 	const [view, setView] = useState('App')
@@ -75,6 +80,7 @@ const ReachContextProvider = ({ children }) => {
 	}
 
 	const ReachContextValue = {
+		standardUnit,
 		user,
 		connectToWallet,
 		view,
@@ -83,6 +89,21 @@ const ReachContextProvider = ({ children }) => {
 
 	return (
 		<ReachContext.Provider value={ReachContextValue}>
+			<Helmet>
+				<title>0xAuction | NFT MarketPlace</title>
+				<link
+					rel='icon'
+					href={icon}
+				/>
+				<link
+					rel='apple-touch-icon'
+					href={icon}
+				/>
+				<meta
+					name='viewport'
+					content='width=device-width, initial-scale=1.0'
+				/>
+			</Helmet>
 			{/* The Header */}
 			<div
 				className={cf(

@@ -190,7 +190,7 @@ const Sell = () => {
 							className={cf(sell.formLabel)}
 							htmlFor='title'
 						>
-							<span className={cf(sell.formText)}>Auction Title (Max 32)</span>
+							<span className={cf(sell.formText)}>Auction Title (Max 20)</span>
 							<input
 								type='text'
 								name='title'

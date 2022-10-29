@@ -14,10 +14,10 @@ export class Arc69 {
 					Origin: 'https://ipfs.io',
 				},
 			}).then((res) => res.json())
-			console.log(transitTransactions)
+			// console.log(transitTransactions)
 			transactions = transitTransactions.transactions
 		} catch (err) {
-			console.error(err)
+			// console.error(err)
 			return { success: false }
 		}
 
