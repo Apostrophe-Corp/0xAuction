@@ -7,6 +7,7 @@ import notFound from '../../assets/images/404.jpg'
 // import LoadingPreview from './LoadingPreview'
 
 const Create = () => {
+	const { mintNFT } = useReach()
 	const [nftParams, setNftParams] = useState({})
 
 	const previewRef = useRef()
@@ -69,10 +70,10 @@ const Create = () => {
 				...nftParams,
 				manager: value,
 			})
-		} else if (name === 'frozen') {
+		} else if (name === 'defaultFrozen') {
 			setNftParams({
 				...nftParams,
-				frozen: e.target.checked,
+				defaultFrozen: e.target.checked,
 			})
 		}
 
@@ -82,6 +83,7 @@ const Create = () => {
 	const handleSubmit = (e) => {
 		e.preventDefault()
 		console.log(nftParams)
+		mintNFT(nftParams)
 	}
 
 	return (
@@ -249,12 +251,12 @@ const Create = () => {
 						</label>
 						<label
 							className={cf(cr8.formLabel, s.flexLeft, cr8.checkboxLabel)}
-							htmlFor='frozen'
+							htmlFor='defaultFrozen'
 						>
 							<input
 								type='checkbox'
-								name='frozen'
-								id='frozen'
+								name='defaultFrozen'
+								id='defaultFrozen'
 								onInput={handleInput}
 								className={cf(
 									s.dInlineBlock,

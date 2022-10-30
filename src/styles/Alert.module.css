@@ -11,6 +11,7 @@
 	height: 100%;
 	top: 0;
 	left: 0;
+	z-index: 10000;
 }
 
 .alertMask {
@@ -18,7 +19,7 @@
 	height: 100%;
 	top: 0;
 	left: 0;
-	z-index: 1000;
+	z-index: -1;
 	background-color: rgba(0, 0, 0, 0.7);
 }
 
@@ -34,7 +35,6 @@
 	border: 1px solid transparent;
 	border-radius: 10px;
 	padding: 30px 10px;
-	z-index: 10000;
 }
 
 .alertMessage {
