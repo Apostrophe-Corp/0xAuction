@@ -260,6 +260,32 @@ const ReachContextProvider = ({ children }) => {
 		}
 	}
 
+	const mintNFT = async (opts) => {
+		startWaiting()
+		const optKeys = Object.keys(opts)
+		const len = optKeys.length
+		const note = new Uint8Array(32)
+		const launchOpts = { supply: 1, note, decimals: 0 }
+		let i = 0
+		for (i; i < len; i++) {
+			const key = optKeys[i]
+			if (key === 'name' || key === 'symbol') continue
+			if (opts[key]) launchOpts[key] = opts[key]
+		}
+		console.log(launchOpts)
+		const launchedToken = await reach.launchToken(
+			user.account,
+			opts['name'],
+			opts['symbol'],
+			launchOpts
+		)
+		stopWaiting(true)
+		alertThis({
+			message: `NFT successfully minted, here's its ID: ${launchedToken.id}`,
+			forConfirmation: false,
+		})
+	}
+
 	const ReachContextValue = {
 		standardUnit,
 		user,
@@ -283,6 +309,8 @@ const ReachContextProvider = ({ children }) => {
 		setShowSeller,
 		setShowConnectAccount,
 		checkForContract,
+		mintNFT,
+		alertThis,
 	}
 
 	return (
@@ -356,20 +384,12 @@ const ReachContextProvider = ({ children }) => {
 					</ul>
 				</div>
 				<button
-					className={cf(
-						s.flex,
-						s.w480_100,
-						s.w360_100,
-						s.flexCenter,
-						app.connectAccount
-					)}
+					className={cf(s.w480_100, s.w360_100, app.connectAccount)}
 					onClick={() => {
 						setShowConnectAccount(true)
 					}}
 				>
-					{user.address
-						? String(user.address).slice(0, 10) + '...'
-						: `Connect Account`}
+					{user.address ? user.address : `Connect Account`}
 				</button>
 			</div>
 			{children}

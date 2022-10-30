@@ -16,6 +16,16 @@
 	background-color: rgba(133, 0, 255, 0.7);
 }
 
+.connectTitle {
+	composes: connectAccount from './App.module.css';
+	text-overflow: ellipsis !important;
+	overflow: hidden !important;
+	white-space: nowrap !important;
+	text-align: center;
+	cursor: pointer;
+	transition: all .3s;
+}
+
 .conContainer {
 	min-height: 50vh;
 	width: max(70%, 300px);

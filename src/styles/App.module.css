@@ -58,6 +58,11 @@
 	box-shadow: 0 5px 15px 5px rgb(54, 0, 131);
 	font-weight: 500;
 	font-size: 14px;
+	width: 200px;
+	text-overflow: ellipsis !important;
+	overflow: hidden !important;
+	white-space: nowrap !important;
+	text-align: center;
 	transition: all 0.2s;
 }
 
