@@ -20,6 +20,7 @@
 
 .callOut {
 	opacity: 1;
+	max-height: 100vh;
 }
 
 .callOutMain {
@@ -66,10 +67,10 @@
 	-webkit-text-fill-color: transparent;
 }
 
-.sideNote{
+.sideNote {
 	width: 100%;
 	display: inline-block;
-	color: rgba(0,0,0,.6);
+	color: rgba(0, 0, 0, 0.6);
 	text-align: center;
 }
 
@@ -179,6 +180,19 @@
 	font-weight: 700;
 	border-radius: 5px;
 	cursor: not-allowed !important;
+}
+
+.checkboxLabel {
+	flex-direction: row !important;
+}
+
+.forCheckbox {
+	width: 100%;
+	flex: 1;
+}
+
+.checkbox {
+	opacity: 1;
 }
 
 /* -----------------Media-Queries---------------------- */

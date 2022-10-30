@@ -150,8 +150,8 @@ const ReachContextProvider = ({ children }) => {
 		}
 		try {
 			const account = mnemonic
-				? (await instantReach.newAccountFromMnemonic(secret))
-				: (await instantReach.getDefaultAccount())
+				? await instantReach.newAccountFromMnemonic(secret)
+				: await instantReach.getDefaultAccount()
 			setUser({
 				account,
 				balance: async () => {
@@ -178,10 +178,15 @@ const ReachContextProvider = ({ children }) => {
 
 	const checkForContract = async (func) => {
 		if (!user.account) {
-			alertThis({
+			const connect = await alertThis({
 				message: 'Connect your wallet account first',
-				forConfirmation: false,
+				accept: 'Connect now',
+				decline: 'Not now',
 			})
+
+			if (connect) {
+				setShowConnectAccount(true)
+			}
 			return
 		}
 		if (!contract.ctcInfoStr) {
