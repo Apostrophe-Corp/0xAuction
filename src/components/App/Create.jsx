@@ -34,7 +34,7 @@ const Create = () => {
 				...nftParams,
 				symbol: value,
 			})
-		} else {
+		} else if (name === 'url') {
 			value = String(value).slice(0, 96)
 			setNftParams({
 				...nftParams,
@@ -49,6 +49,31 @@ const Create = () => {
 			} else {
 				setPreviewBgs(previewImg)
 			}
+		} else if (name === 'clawback') {
+			setNftParams({
+				...nftParams,
+				clawback: value,
+			})
+		} else if (name === 'freeze') {
+			setNftParams({
+				...nftParams,
+				freeze: value,
+			})
+		} else if (name === 'reserve') {
+			setNftParams({
+				...nftParams,
+				reserve: value,
+			})
+		} else if (name === 'manager') {
+			setNftParams({
+				...nftParams,
+				manager: value,
+			})
+		} else if (name === 'frozen') {
+			setNftParams({
+				...nftParams,
+				frozen: e.target.checked,
+			})
 		}
 
 		e.currentTarget.value = value
@@ -109,7 +134,7 @@ const Create = () => {
 							className={cf(cr8.formLabel)}
 							htmlFor='name'
 						>
-							<span className={cf(cr8.formText)}>Name (Max 32)</span>
+							<span className={cf(cr8.formText)}>Name (Max 32)*</span>
 							<input
 								type='text'
 								name='name'
@@ -123,7 +148,7 @@ const Create = () => {
 							className={cf(cr8.formLabel)}
 							htmlFor='symbol'
 						>
-							<span className={cf(cr8.formText)}>Symbol (Max 8)</span>
+							<span className={cf(cr8.formText)}>Symbol (Max 8)*</span>
 							<input
 								type='text'
 								name='symbol'
@@ -137,7 +162,7 @@ const Create = () => {
 							className={cf(cr8.formLabel)}
 							htmlFor='url'
 						>
-							<span className={cf(cr8.formText)}>Media URL (Max 96)</span>
+							<span className={cf(cr8.formText)}>Media URL (Max 96)*</span>
 							<input
 								type='url'
 								name='url'
@@ -166,7 +191,80 @@ const Create = () => {
 								.
 							</span>
 						</label>
-
+						<label
+							className={cf(cr8.formLabel)}
+							htmlFor='clawback'
+						>
+							<span className={cf(cr8.formText)}>Clawback Address</span>
+							<input
+								type='text'
+								name='clawback'
+								id='clawback'
+								onInput={handleInput}
+								placeholder='Optional'
+								className={cf(cr8.formInput)}
+							/>
+						</label>
+						<label
+							className={cf(cr8.formLabel)}
+							htmlFor='freeze'
+						>
+							<span className={cf(cr8.formText)}>Freeze Address</span>
+							<input
+								type='text'
+								name='freeze'
+								id='freeze'
+								onInput={handleInput}
+								placeholder='Optional'
+								className={cf(cr8.formInput)}
+							/>
+						</label>
+						<label
+							className={cf(cr8.formLabel)}
+							htmlFor='reserve'
+						>
+							<span className={cf(cr8.formText)}>Reserve Address</span>
+							<input
+								type='text'
+								name='reserve'
+								id='reserve'
+								onInput={handleInput}
+								placeholder='Optional'
+								className={cf(cr8.formInput)}
+							/>
+						</label>
+						<label
+							className={cf(cr8.formLabel)}
+							htmlFor='manager'
+						>
+							<span className={cf(cr8.formText)}>Manager Address</span>
+							<input
+								type='text'
+								name='manager'
+								id='manager'
+								onInput={handleInput}
+								placeholder='Optional'
+								className={cf(cr8.formInput)}
+							/>
+						</label>
+						<label
+							className={cf(cr8.formLabel, s.flexLeft, cr8.checkboxLabel)}
+							htmlFor='frozen'
+						>
+							<input
+								type='checkbox'
+								name='frozen'
+								id='frozen'
+								onInput={handleInput}
+								className={cf(
+									s.dInlineBlock,
+									s.flex,
+									s.flexCenter,
+									cr8.checkbox
+								)}
+							/>
+							<span className={cf(cr8.formText, cr8.forCheckbox)}>Frozen?</span>
+						</label>
 						<div className={cf(s.wMax, s.flex, s.flexCenter, cr8.submitDiv)}>
 							<button
 								type='submit'
