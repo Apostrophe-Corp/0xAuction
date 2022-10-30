@@ -4,7 +4,7 @@ import app from '../../styles/App.module.css'
 import { useReach, fmtClasses as cf } from '../../hooks'
 
 const App = () => {
-	const { setView } = useReach()
+	const { setView, checkForContract } = useReach()
 	return (
 		<div className={cf(s.wMax, s.window)}>
 			{/* The Hero */}
@@ -69,7 +69,8 @@ const App = () => {
 					)}
 				>
 					<div className={ cf(app.card) } onClick={ () => {
-						setView('Create')
+						checkForContract(() => {
+						setView('Create')})
 					}}>
 						<div className={cf(app.cardAction)}>Create</div>
 						<div className={cf(s.flex, s.flex_dColumn, app.cardPurpose)}>
@@ -126,7 +127,8 @@ const App = () => {
 						</div>
 					</div>
 					<div className={cf(app.card)} onClick={ () => {
-						setView('Sell')
+checkForContract(() => {
+						setView('Sell')})
 					}}>
 						<div className={cf(app.cardAction)}>Sell</div>
 						<div className={cf(s.flex, s.flex_dColumn, app.cardPurpose)}>
@@ -153,7 +155,8 @@ const App = () => {
 						</div>
 					</div>
 					<div className={cf(app.card)} onClick={ () => {
-						setView('Buy')
+						checkForContract(() => {
+						setView('Buy')})
 					}}>
 						<div className={cf(app.cardAction)}>Buy</div>
 						<div className={cf(s.flex, s.flex_dColumn, app.cardPurpose)}>

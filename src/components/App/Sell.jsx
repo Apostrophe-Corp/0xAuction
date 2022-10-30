@@ -9,13 +9,15 @@ import { Arc69 } from '../../ARC69/arc.js'
 const arc69 = new Arc69()
 
 const Sell = () => {
-
 	const [auctionParams, setAuctionParams] = useState({})
 	const [assetTimeout, setAssetTimeout] = useState(null)
 	const [[manualMedia, setManualMedia], [defaultMedia, setDefaultMedia]] = [
 		useState(''),
 		useState(''),
 	]
+
+	const { standardUnit } = useReach()
+
 	const previewRef = useRef()
 
 	const setPreviewBgs = ({ x = '', y = '' } = {}) => {
@@ -97,8 +99,13 @@ const Sell = () => {
 				setManualMedia(previewImg)
 				setPreviewBgs({ y: defaultMedia })
 			}
+		} else if (name === 'price') {
+			value = value > 0 ? Number(value) : 0
+			setAuctionParams({
+				...auctionParams,
+				price: value,
+			})
 		}
-
 		e.currentTarget.value = value
 	}
 
@@ -154,7 +161,9 @@ const Sell = () => {
 						<div
 							className={cf(sell.preview)}
 							ref={previewRef}
-						>						</div>
+						>
+							{' '}
+						</div>
 						<span className={cf(sell.sideNote)}>
 							Preview only available for image NFTs
 						</span>
@@ -214,6 +223,22 @@ const Sell = () => {
 								className={cf(sell.formInput)}
 							/>
 						</label>
+						<label
+							className={cf(sell.formLabel)}
+							htmlFor='price'
+						>
+							<span className={cf(sell.formText)}>
+								Desired Price ({standardUnit})
+							</span>
+							<input
+								type='number'
+								name='price'
+								id='price'
+								onInput={handleInput}
+								placeholder={standardUnit}
+								className={cf(sell.formInput)}
+							/>
+						</label>
 
 						<div className={cf(s.wMax, s.flex, s.flexCenter, sell.submitDiv)}>
 							<button
@@ -223,6 +248,7 @@ const Sell = () => {
 										auctionParams.asset &&
 										auctionParams.title &&
 										auctionParams.description &&
+										auctionParams.price &&
 										(auctionParams.url
 											? auctionParams.url.indexOf('https://ipfs.io/ipfs/') !==
 													0 &&

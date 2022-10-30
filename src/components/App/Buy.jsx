@@ -169,6 +169,8 @@ const Auction = ({ assetID, title, description, desiredPrice, url }) => {
 }
 
 const Buy = () => {
+	const {auctions, latestAuctions} = useReach()
+
 	const latestAuctionRef = useRef()
 
 	useEffect(() => {
