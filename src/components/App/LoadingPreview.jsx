@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { useReach, fmtClasses } from '../../hooks'
 import styles from '../../styles/LoadingPreview.module.css'
 
-const LoadingPreview = ({showPreloader, setShowPreloader, setProcessing }) => {
-	const { sleep } = useReach()
+const LoadingPreview = () => {
+	const { sleep, showPreloader, setShowPreloader, setProcessing } = useReach()
 	const [preloaderClass, setPreloaderClass] = useState(
 		fmtClasses(styles.container, styles.invisible)
 	)
@@ -18,9 +18,7 @@ const LoadingPreview = ({showPreloader, setShowPreloader, setProcessing }) => {
 			const fadeOff = async () => {
 				setPreloaderClass(fmtClasses(styles.container, styles.invisible))
 				await sleep(400)
-				setPreloaderClass(
-					fmtClasses(styles.container, styles.invisible, styles.terminated)
-				)
+				setPreloaderClass(fmtClasses(styles.terminated))
 			}
 			if (showPreloader === false) {
 				await fadeOff()
@@ -28,7 +26,7 @@ const LoadingPreview = ({showPreloader, setShowPreloader, setProcessing }) => {
 			}
 		}
 		close()
-	}, [setProcessing, showPreloader, sleep])
+	}, [showPreloader])
 
 	return (
 		<div className={preloaderClass}>

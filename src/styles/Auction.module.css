@@ -1,0 +1,121 @@
+.auctionParent {
+	position: fixed;
+	height: 100%;
+	top: 0;
+	left: 0;
+	/* z-index: 1000; */
+}
+
+.auctionMask {
+	position: absolute;
+	height: 100%;
+	top: 0;
+	left: 0;
+	z-index: -1;
+	background-color: rgba(133, 0, 255, 0.7);
+}
+
+.aucView {
+	width: max(50%, 300px);
+	background-color: #000;
+	color: #fff;
+	border: 1px solid transparent;
+	border-radius: 10px;
+	padding: 30px 10px;
+}
+
+.aucTitleText {
+	font-size: 30px;
+	font-weight: 600;
+	background: linear-gradient(
+			to bottom right,
+			rgb(247, 231, 255),
+			rgb(213, 3, 255)
+		),
+		rgb(255, 255, 255);
+	background-clip: text;
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+}
+
+.aucAsset {
+	height: 300px;
+	background: url(../assets/images/preview.jpg); /* bit.ly/3gD1nFM#i */
+	/* background: url(https://bit.ly/3gD1nFM#i), url(../assets/images/404.jpg); bit.ly/3gD1nFM#i */
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: contain;
+	margin: 10px;
+}
+
+.bidText {
+	font-weight: 400;
+    background: linear-gradient(
+			to bottom right,
+			rgb(255, 255, 255),
+			rgb(213, 3, 255)
+		),
+		rgb(255, 255, 255);
+	background-clip: text;
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+}
+
+.terminateCon {
+	padding: 10px 5px 5px;
+}
+
+.terminateBtn {
+	padding: 10px 20px;
+	border: 1px solid rgb(133, 0, 255);
+	border-radius: 5px;
+	font-size: 16px;
+	font-weight: 400;
+	color: rgb(255, 255, 255);
+	background-color: #000;
+}
+
+.terminateBtn:hover {
+	border: 1px solid rgb(255, 0, 0);
+	color: rgb(255, 0, 0);
+}
+
+.liveBidBtn {
+	padding: 10px 20px;
+	border: 1px solid rgb(255, 255, 255);
+	border-radius: 5px;
+	font-size: 16px;
+	font-weight: 400;
+	color: rgb(255, 255, 255);
+	background-color: #000;
+}
+
+.liveBidBtn:hover {
+	border: 1px solid rgb(204, 0, 255);
+	color: rgb(255, 255, 255);
+}
+
+/* -----------------Media-Queries---------------------- */
+@media only screen and (max-width: 900px) and (min-width: 761px) {
+	.aucView {
+		width: 60%;
+	}
+}
+
+@media only screen and (max-width: 760px) and (min-width: 481px) {
+	.aucView {
+		width: 70%;
+	}
+}
+
+@media only screen and (max-width: 480px) and (min-width: 361px) {
+	.aucView {
+		width: 80%;
+	}
+}
+
+@media only screen and (max-width: 360px) {
+	.aucView {
+		width: 300px;
+	}
+}
