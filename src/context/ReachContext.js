@@ -395,7 +395,8 @@ const ReachContextProvider = ({ children }) => {
 					if (Number(el.id) === parseInt(what[1])) {
 						const newBid = reach.formatCurrency(what[2], 4)
 						el['liveBid'] = newBid
-						if (newBid > el['yourBid']) {
+						console.log(newBid, el['yourBid'], el.owner !== user.address)
+						if (newBid > el['yourBid'] && el.owner !== user.address) {
 							const bidAgain = await alertThis({
 								message: 'You just got outbid, bid again?',
 								accept: 'Yes',
@@ -532,7 +533,7 @@ const ReachContextProvider = ({ children }) => {
 			ctc.events.log.monitor(handleAuctionLog)
 			setCurrentAuction(id)
 			stopWaiting()
-			alertThis({
+			await alertThis({
 				message:
 					'Auction created, sign the transaction to transfer the NFT for this auction to be made public',
 				forConfirmation: false,
