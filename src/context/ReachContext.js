@@ -143,6 +143,7 @@ const ReachContextProvider = ({ children }) => {
 		mnemonic = false,
 		secret = ''
 	) => {
+		startWaiting()
 		delete window.algorand
 		const instantReach = loadStdlib(process.env)
 		switch (walletPreference) {
@@ -181,12 +182,14 @@ const ReachContextProvider = ({ children }) => {
 				address: instantReach.formatAddress(account.getAddress()),
 			})
 			setShowConnectAccount(false)
+			stopWaiting()
 			alertThis({
 				message: 'Connection to wallet was successful',
 				forConfirmation: false,
 			})
 		} catch (error) {
 			console.error({ error })
+			stopWaiting(false)
 			alertThis({
 				message:
 					'An error occurred, unable to connect to wallet. Please try again',
