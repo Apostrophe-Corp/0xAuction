@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useRef, useEffect } from 'react'
 import s from '../../styles/Shared.module.css'
 import buy from '../../styles/Buy.module.css'
 import notFound from '../../assets/images/no_image.jpg'
@@ -7,6 +7,7 @@ import { Arc69 } from '../../ARC69/arc.js'
 
 const arc69 = new Arc69()
 
+// Asset IDs in dummyText are referencing MainNet NFTs
 const dummyText = [
 	{
 		assetID: 912646033,
@@ -49,7 +50,7 @@ const dummyText = [
 	},
 ]
 
-const LatestAuction = ({ assetID, url, title, description, desiredPrice }) => {
+const LatestAuction = ({ assetID, url = '', title, description, desiredPrice }) => {
 	const { standardUnit } = useReach()
 	const previewRef = useRef()
 
@@ -113,7 +114,7 @@ const LatestAuction = ({ assetID, url, title, description, desiredPrice }) => {
 	)
 }
 
-const Auction = ({ assetID, title, description, desiredPrice, url }) => {
+const Auction = ({ assetID, title, description, desiredPrice, url='' }) => {
 	const { standardUnit } = useReach()
 	const auctionNFTRef = useRef()
 
@@ -160,7 +161,6 @@ const Auction = ({ assetID, title, description, desiredPrice, url }) => {
 			>
 				<h3 className={cf(s.m0, s.p0, s.wMax, buy.aucAucTitleText)}>{title}</h3>
 				<span className={cf(s.wMax, s.dInlineBlock, buy.aucAucDesiredPrice)}>
-					{' '}
 					{desiredPrice} {standardUnit}
 				</span>
 			</div>
@@ -169,7 +169,7 @@ const Auction = ({ assetID, title, description, desiredPrice, url }) => {
 }
 
 const Buy = () => {
-	const {auctions, latestAuctions} = useReach()
+	const {auctions, latestAuctions, joinAuction} = useReach()
 
 	const latestAuctionRef = useRef()
 
@@ -178,8 +178,7 @@ const Buy = () => {
 		const slide = setInterval(() => {
 			progress += 100
 			latestAuctionRef.current.style.transform = `translate(-${progress}%,0)`
-			// TODO Replace dummyText with latest Auction Array
-			const length = (dummyText.length - 1) * 100
+			const length = (latestAuctions.length - 1) * 100
 			if (progress === length) {
 				const revert = setTimeout(() => {
 					latestAuctionRef.current.style.transition = `none`
@@ -218,14 +217,14 @@ const Buy = () => {
 						)}
 						ref={latestAuctionRef}
 					>
-						{/* { dummyText.map((el) => <LatestAuction onClick={ () => { console.log({el}) } } props={el} />)} */}
-						{dummyText.map((el) => (
+						{latestAuctions.map((el) => (
 							<LatestAuction
-								onClick={() => {}}
-								assetID={el.assetID}
-								url={el.url}
+								onClick={ () => {
+									joinAuction(el);
+								} }
+								assetID={el.tokenId}
 								title={el.title}
-								desiredPrice={el.desiredPrice}
+								desiredPrice={el.price}
 								description={el.description}
 							/>
 						))}
@@ -246,13 +245,14 @@ const Buy = () => {
 					buy.aucAuctions
 				)}
 			>
-				{dummyText.map((el) => (
+				{auctions.map((el) => (
 					<Auction
-						onClick={() => {}}
-						assetID={el.assetID}
-						url={el.url}
+						onClick={ () => {
+							joinAuction(el)
+						}}
+						assetID={el.tokenId}
 						title={el.title}
-						desiredPrice={el.desiredPrice}
+						desiredPrice={el.price}
 						description={el.description}
 					/>
 				))}

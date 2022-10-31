@@ -58,7 +58,6 @@ const ReachContextProvider = ({ children }) => {
 		}),
 		useState(false),
 	]
-	const [waitingPromise, setWaitingPromise] = useState({})
 
 	const [currentAuction, setCurrentAuction] = useState({})
 	const [auctions, setAuctions] = useState([])
@@ -111,7 +110,6 @@ const ReachContextProvider = ({ children }) => {
 			await new Promise((resolve, reject) => {
 				waitingPro['resolve'] = resolve
 				waitingPro['reject'] = reject
-				// setWaitingPromise({ resolve, reject })
 				shouldDisplay(true)
 			})
 			shouldDisplay(false)
@@ -201,12 +199,13 @@ const ReachContextProvider = ({ children }) => {
 		const presentAuctions = auctions
 		presentAuctions.push({
 			id: parseInt(what[0]),
-			contractInfo: what[1],
+			contractInfo: JSON.stringify(what[1],null),
 			blockCreated: parseInt(what[2]),
 			owner: what[3],
 			title: what[4],
 			description: what[5],
 			price: parseInt(what[6]),
+			tokenId: parseInt(what[7]),
 		})
 		setAuctions((previous) => presentAuctions)
 		updateLatestAuctions(presentAuctions)
@@ -388,7 +387,6 @@ const ReachContextProvider = ({ children }) => {
 				setShowSeller(false)
 				break
 			case ifState('down'):
-				// Call the main contract to take down this auction
 				try {
 					await contractInstance.apis.Auctions.ended({
 						id: parseInt(what[1]),
@@ -488,12 +486,49 @@ const ReachContextProvider = ({ children }) => {
 		}
 	}
 
-	// TODO implement the join auction
-	const joinAuction = async (contractInfo) => {
-		// alert - are you interested in bidding for this nft?
-		// if yes - prompt for the bidding amount
-		// connect the user to the auction contract and bring the buyer view up
-		// update the currentAuction state along with the yourBid, liveBid and optIn property
+	const joinAuction = async (auctionInfo) => {
+		const join = await alertThis({
+			message: 'Are you interested in bidding for this auction?',
+			accept: 'Yes',
+			decline: 'No',
+		})
+
+		if (join) {
+			const ctc = user.account.contract(auctionCtc, JSON.parse(auctionInfo.contractInfo))
+			setCurrentAuction({...auctionInfo, ctc, liveBid: 0, yourBid: 0, optIn: false})
+			setShowBuyer(true)
+			const bid = await alertThis({
+				message: 'Enter your bidding amount',
+				prompt: true,
+			})
+			startWaiting()
+			try {
+				const bidRes = await ctc.a.Bidder.bid(reach.parseCurrency(bid))
+				setCurrentAuction({ ...currentAuction, yourBid: bidRes[1] })
+				stopWaiting()
+				alertThis({
+					message: 'Bid placed',
+					forConfirmation: false,
+				})
+			} catch (error) {
+				console.log({ error })
+				stopWaiting()
+				alertThis({
+					message: `Unable to place bid. Most likely someone's outbid you`,
+					forConfirmation: false,
+				})
+				
+				const opt = await alertThis({
+					message: 'To prevent this from happening during this auction, how would you like to opt into Live Bid?',
+					accept: 'Opt In',
+					decline: 'Decline',
+				})
+
+				if (opt) {
+					optIn()
+				}
+			}
+		}
 	}
 
 	const optIn = async () => {
@@ -505,7 +540,7 @@ const ReachContextProvider = ({ children }) => {
 		if (agree) {
 			startWaiting()
 			try {
-				await currentAuction.ctc.a.Bidders.optIn().then((data) => {
+				await currentAuction.ctc.a.Bidder.optIn().then((data) => {
 					setCurrentAuction({
 						...currentAuction,
 						optIn: data,
@@ -526,8 +561,6 @@ const ReachContextProvider = ({ children }) => {
 			}
 		}
 	}
-
-	// TODO assign Event Handlers, one must handle the returned auction contract info
 
 	const ReachContextValue = {
 		standardUnit,
@@ -557,6 +590,7 @@ const ReachContextProvider = ({ children }) => {
 		createAuction,
 		endAuction,
 		optIn,
+		joinAuction,
 	}
 
 	return (
@@ -641,7 +675,6 @@ const ReachContextProvider = ({ children }) => {
 				</button>
 			</div>
 			{children}
-			{/* TODO Add a footer */}
 			<div className={cf(s.container, s.flex, s.wMax, app.footer)}>
 				<div className={cf(s.wMax, s.flex, s.flexCenter, app.footerBar)}>
 					<div
