@@ -392,8 +392,8 @@ const ReachContextProvider = ({ children }) => {
 				try {
 					await contractInstance.apis.Auctions.ended({
 						id: parseInt(what[1]),
-						blockEnded: 0,
-						lastBid: 0,
+						blockEnded: await reach.getNetworkTime(),
+						lastBid: currentAuction.liveBid,
 					})
 				} catch (error) {
 					console.log({ error })
@@ -490,7 +490,12 @@ const ReachContextProvider = ({ children }) => {
 	}
 
 	// TODO implement the join auction
-	const joinAuction = async () => {}
+	const joinAuction = async (contractInfo) => {
+		// alert - are you interested in bidding for this nft?
+		// if yes - prompt for the bidding amount
+		// connect the user to the auction contract and bring the buyer view up
+		// update the currentAuction state along with the yourBid, liveBid and optIn property
+	}
 
 	const optIn = async () => {
 		const agree = await alertThis({
