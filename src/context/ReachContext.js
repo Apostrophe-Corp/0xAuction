@@ -18,6 +18,13 @@ import { Alert } from '../components/Alert'
 import { Buyer, Seller } from '../components/Auction'
 import { ConnectAccount, LoadingPreview } from '../components/App'
 
+const algoExplorerURI = {
+	TestNet: 'https://testnet.algoexplorer.io',
+	MainNet: 'https://algoexplorer.io',
+}['TestNet']
+
+const deadline = 30
+
 const reach = loadStdlib(process.env)
 
 export const ReachContext = React.createContext()
@@ -53,7 +60,7 @@ const ReachContextProvider = ({ children }) => {
 	]
 	const [waitingPromise, setWaitingPromise] = useState({})
 
-	const [currentAuction, setCurrentAcution] = useState({})
+	const [currentAuction, setCurrentAuction] = useState({})
 	const [auctions, setAuctions] = useState([])
 	const [latestAuctions, setLatestAuctions] = useState([])
 
@@ -62,6 +69,18 @@ const ReachContextProvider = ({ children }) => {
 	const [showConnectAccount, setShowConnectAccount] = useState(false)
 	const [contractInstance, setContractInstance] = useState(null)
 	const [contract, setContract] = useState('')
+
+	const updateLatestAuctions = (auc) => {
+		const length = auc.length
+		let x = length
+		const newAuctions = []
+		for (x; x > length - 6; x--) {
+			newAuctions.push(auc[x])
+			if (x === 0) break
+		}
+		newAuctions.push(auc[length - 1])
+		setLatestAuctions((previous) => newAuctions)
+	}
 
 	const alertThis = ({
 		message = 'Confirm Action',
@@ -116,6 +135,8 @@ const ReachContextProvider = ({ children }) => {
 		}
 		return string
 	}
+
+	const ifState = (x) => x.padEnd(20, '\u0000')
 
 	const sleep = (m) => new Promise((resolve) => setTimeout(resolve, m))
 
@@ -176,6 +197,29 @@ const ReachContextProvider = ({ children }) => {
 		}
 	}
 
+	const postAuction = ({ what }) => {
+		const presentAuctions = auctions
+		presentAuctions.push({
+			id: parseInt(what[0]),
+			contractInfo: what[1],
+			blockCreated: parseInt(what[2]),
+			owner: what[3],
+			title: what[4],
+			description: what[5],
+			price: parseInt(what[6]),
+		})
+		setAuctions((previous) => presentAuctions)
+		updateLatestAuctions(presentAuctions)
+	}
+
+	const dropAuction = ({ what }) => {
+		const remainingAuctions = auctions.filter(
+			(el) => el.id !== parseInt(what[0])
+		)
+		setAuctions((previous) => remainingAuctions)
+		updateLatestAuctions(remainingAuctions)
+	}
+
 	const checkForContract = async (func) => {
 		if (!user.account) {
 			const connect = await alertThis({
@@ -212,10 +256,11 @@ const ReachContextProvider = ({ children }) => {
 						ctc.p.Admin({})
 						await ctc.getInfo().then((infoStr) => {
 							const ctcInfoStr = JSON.stringify(infoStr, null)
-							// TODO assign events
+							ctc.events.create.monitor(postAuction)
+							ctc.events.end.monitor(dropAuction)
 							setContract({ ctcInfoStr })
 							console.log(ctcInfoStr)
-							stopWaiting(true)
+							stopWaiting()
 							alertThis({
 								message: `Deployed successfully, here's the contract info: ${ctcInfoStr}.`,
 								forConfirmation: false,
@@ -239,7 +284,8 @@ const ReachContextProvider = ({ children }) => {
 						const ctc = user.account.contract(mainCtc, JSON.parse(ctcInfo))
 						setContractInstance(ctc)
 						setContract({ ctcInfoStr: ctcInfo })
-						// TODO assign events
+						ctc.events.create.monitor(postAuction)
+						ctc.events.end.monitor(dropAuction)
 						alertThis({
 							message: 'Successfully attached',
 							forConfirmation: false,
@@ -279,12 +325,205 @@ const ReachContextProvider = ({ children }) => {
 			opts['symbol'],
 			launchOpts
 		)
-		stopWaiting(true)
-		alertThis({
-			message: `NFT successfully minted, here's its ID: ${launchedToken.id}`,
-			forConfirmation: false,
+		stopWaiting()
+		const viewToken = await alertThis({
+			message: `NFT successfully minted with ID: ${launchedToken.id}. Would you like to view this asset on AlgoExplorer.io now?`,
+			accept: 'Yes',
+			decline: 'No',
 		})
+
+		if (viewToken) {
+			window.open(`${algoExplorerURI}/asset/${launchedToken.id}`, '_blank')
+		}
 	}
+
+	const auctionCreated = async ({ what }) => {
+		try {
+			await contractInstance.apis.Auctions.created({
+				id: parseInt(what[0]),
+				contractInfo: what[1],
+				blockCreated: parseInt(what[2]),
+				owner: what[3],
+				title: what[4],
+				description: what[5],
+				price: parseInt(what[6]),
+			})
+			alertThis({
+				message: 'Auction has been sent to OxAuction',
+				forConfirmation: false,
+			})
+		} catch (error) {
+			console.log({ error })
+			alertThis({
+				message:
+					'Sorry, unable to send your auction to OxAuction. Just wait a while, and after a few transaction signings, your NFT will be returned to you',
+				forConfirmation: false,
+			})
+		}
+	}
+
+	const handleAuctionLog = async ({ what }) => {
+		switch (what[0]) {
+			case ifState('bidSuccess'):
+				if (currentAuction.id === parseInt(what[1])) {
+					setCurrentAuction({
+						...currentAuction,
+						liveBid: parseInt(what[2]),
+					})
+				}
+				break
+			case ifState('endSuccess'):
+				alertThis({
+					message: `This auction's bidding window has been closed by the Auctioneer. The final bid was ${parseInt(
+						what[2]
+					)}`,
+					forConfirmation: false,
+				})
+				const remainingAuctions = auctions.filter(
+					(el) => el.id !== parseInt(what[1])
+				)
+				setAuctions((previous) => remainingAuctions)
+				updateLatestAuctions(remainingAuctions)
+				setShowBuyer(false)
+				setShowSeller(false)
+				break
+			case ifState('down'):
+				// Call the main contract to take down this auction
+				try {
+					await contractInstance.apis.Auctions.ended({
+						id: parseInt(what[1]),
+						blockEnded: 0,
+						lastBid: 0,
+					})
+				} catch (error) {
+					console.log({ error })
+				}
+				break
+			case ifState('accepted'):
+				// If the user is opt into this auction's live bid notification (check possibly through an object) then alert that the final bid got accepted
+				break
+			case ifState('rejected'):
+				// If the user is opt into this auction's live bid notification (check possibly through an object) then alert that the final bid got accepted
+				break
+			default:
+				break
+		}
+	}
+
+	const createAuction = async (auctionParams) => {
+		startWaiting()
+		const auctionInfo = {
+			...auctionParams,
+			id:
+				auctions.length > 0
+					? auctions.length === 1
+						? auctions[0].id + 1
+						: Number(auctions.reduce((a, b) => (a.id > b.id ? a.id : b.id))) + 1
+					: 1,
+			deadline,
+			owner: user.address,
+		}
+
+		try {
+			const ctc = user.account.contract(auctionCtc)
+			ctc.p.Seller({ getAuction: auctionInfo })
+			await ctc.getInfo()
+			ctc.events.created.monitor(auctionCreated)
+			ctc.events.log.monitor(handleAuctionLog)
+			// TODO assign Events for log
+			setCurrentAuction({ ...auctionInfo, ctc, liveBid: 0 })
+			stopWaiting()
+			alertThis({
+				message: 'Auction created successfully',
+				forConfirmation: false,
+			})
+			setShowSeller(true)
+		} catch (error) {
+			console.log({ error })
+			alertThis({
+				message: 'Sorry, unable to create auction',
+				forConfirmation: false,
+			})
+			stopWaiting(false)
+		}
+	}
+
+	const endAuction = async () => {
+		const end = await alertThis({
+			message: 'Confirm action',
+			accept: 'Cancel',
+			decline: 'End Auction',
+		})
+		if (!end) {
+			startWaiting()
+			try {
+				await currentAuction.ctc.a.Auctioneer.stopAuction().then(
+					async (res) => {
+						try {
+							await contractInstance.apis.Auctions.ended({
+								id: parseInt(res.id),
+								blockCreated: parseInt(res.blockCreated),
+								lastBid: parseInt(res.lastBid),
+							})
+						} catch (error) {
+							console.log({ error })
+							stopWaiting(false)
+							alertThis({
+								message:
+									'Unable to inform OxAuction of the close of this auction',
+								forConfirmation: false,
+							})
+						}
+					}
+				)
+				stopWaiting()
+				setShowSeller(false)
+			} catch (error) {
+				console.log({ error })
+				stopWaiting(false)
+				alertThis({
+					message: 'An error occurred while closing this auction',
+					forConfirmation: false,
+				})
+			}
+		}
+	}
+
+	// TODO implement the join auction
+	const joinAuction = async () => {}
+
+	const optIn = async () => {
+		const agree = await alertThis({
+			message: `To view Live Bid, you must pay a small token of 1 ${standardUnit}`,
+			accept: 'Pay',
+			decline: 'Forfeit',
+		})
+		if (agree) {
+			startWaiting()
+			try {
+				await currentAuction.ctc.a.Bidders.optIn().then((data) => {
+					setCurrentAuction({
+						...currentAuction,
+						optIn: data,
+					})
+				})
+				stopWaiting()
+				alertThis({
+					message: 'OptIn successful',
+					forConfirmation: false,
+				})
+			} catch (error) {
+				console.log({ error })
+				stopWaiting(false)
+				alertThis({
+					message: 'OptIn failed',
+					forConfirmation: false,
+				})
+			}
+		}
+	}
+
+	// TODO assign Event Handlers, one must handle the returned auction contract info
 
 	const ReachContextValue = {
 		standardUnit,
@@ -311,6 +550,9 @@ const ReachContextProvider = ({ children }) => {
 		checkForContract,
 		mintNFT,
 		alertThis,
+		createAuction,
+		endAuction,
+		optIn,
 	}
 
 	return (
@@ -376,7 +618,9 @@ const ReachContextProvider = ({ children }) => {
 						<li
 							className={cf(s.flex, s.flexCenter, s.p10, s.m0, app.navItem)}
 							onClick={() => {
-								setView('Buy')
+								checkForContract(() => {
+									setView('Buy')
+								})
 							}}
 						>
 							Buy

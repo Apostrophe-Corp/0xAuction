@@ -8,8 +8,16 @@ import { Arc69 } from '../../ARC69/arc.js'
 const arc69 = new Arc69()
 
 const Buyer = () => {
-	const { standardUnit, currentAuction } = useReach()
-	const { assetID, title, url, description, desiredPrice } = currentAuction
+	const { standardUnit, currentAuction, optIn } = useReach()
+	const {
+		tokenId: assetID,
+		title,
+		link: url,
+		description,
+		liveBid,
+		price: desiredPrice,
+		yourBid,		
+	} = currentAuction
 	const aucAsset = useRef()
 
 	const setPreviewBgs = ({ x = '', y = '' } = {}) => {
@@ -92,7 +100,7 @@ const Buyer = () => {
 					<span
 						className={cf(s.wMax, s.flex, s.flexCenter, auc.currentBidValue)}
 					>
-						#### {standardUnit}
+						{yourBid} {standardUnit}
 					</span>
 				</div>
 				<div
@@ -121,7 +129,7 @@ const Buyer = () => {
 					<span
 						className={cf(s.wMax, s.flex, s.flexCenter, auc.desiredBidValue)}
 					>
-						#### {desiredPrice} {standardUnit}
+						{desiredPrice} {standardUnit}
 					</span>
 				</div>
 				<div
@@ -148,14 +156,14 @@ const Buyer = () => {
 					</h2>
 					{/* TODO Make this dynamic */}
 					<span className={cf(s.wMax, s.flex, s.flexCenter, auc.liveBidValue)}>
-						#### {desiredPrice} {standardUnit}
+						{currentAuction.optIn ? liveBid : '####'} {standardUnit}
 					</span>
 				</div>
 				<div className={cf(s.wMax, s.flex, s.flexCenter, auc.terminateCon)}>
 					<button
 						className={cf(s.flex, s.flexCenter, auc.liveBidBtn)}
 						type='button'
-						onClick={() => {}}
+						onClick={optIn}
 					>
 						View Live Bid
 					</button>

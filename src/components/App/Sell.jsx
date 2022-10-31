@@ -16,7 +16,7 @@ const Sell = () => {
 		useState(''),
 	]
 
-	const { standardUnit } = useReach()
+	const { standardUnit, createAuction } = useReach()
 
 	const previewRef = useRef()
 
@@ -58,11 +58,11 @@ const Sell = () => {
 				...auctionParams,
 				title: value,
 			})
-		} else if (name === 'asset') {
+		} else if (name === 'tokenId') {
 			value = value > 0 ? Number(value) : 0
 			setAuctionParams({
 				...auctionParams,
-				asset: value,
+				tokenId: value,
 			})
 			if (assetTimeout) {
 				clearTimeout(assetTimeout)
@@ -81,24 +81,6 @@ const Sell = () => {
 				...auctionParams,
 				description: value,
 			})
-		} else if (name === 'url') {
-			value = String(value).slice(0, 96)
-			setAuctionParams({
-				...auctionParams,
-				url: value,
-			})
-			setManualMedia(value)
-			if (
-				value.indexOf('https://ipfs.io/ipfs/') !== 0 &&
-				(value.indexOf('https://') === 0 || value.indexOf('ipfs://') === 0)
-			) {
-				setPreviewBgs({ z: defaultMedia, y: value })
-			} else if (!auctionParams) {
-				setPreviewBgs({ y: previewImg })
-			} else {
-				setManualMedia(previewImg)
-				setPreviewBgs({ y: defaultMedia })
-			}
 		} else if (name === 'price') {
 			value = value > 0 ? Number(value) : 0
 			setAuctionParams({
@@ -112,6 +94,7 @@ const Sell = () => {
 	const handleSubmit = (e) => {
 		e.preventDefault()
 		console.log(auctionParams)
+		createAuction(auctionParams)
 	}
 
 	return (
@@ -169,29 +152,15 @@ const Sell = () => {
 						</span>
 						<label
 							className={cf(sell.formLabel)}
-							htmlFor='asset'
+							htmlFor='tokenId'
 						>
 							<span className={cf(sell.formText)}>Asset ID</span>
 							<input
 								type='number'
-								name='asset'
-								id='asset'
+								name='tokenId'
+								id='tokenId'
 								onInput={handleInput}
 								placeholder='########'
-								className={cf(sell.formInput)}
-							/>
-						</label>
-						<label
-							className={cf(sell.formLabel)}
-							htmlFor='url'
-						>
-							<span className={cf(sell.formText)}>Media URL (Max 96)</span>
-							<input
-								type='url'
-								name='url'
-								id='url'
-								onInput={handleInput}
-								placeholder='bit.ly/3gD1nFM#i'
 								className={cf(sell.formInput)}
 							/>
 						</label>
@@ -245,16 +214,12 @@ const Sell = () => {
 								type='submit'
 								disabled={
 									!(
-										auctionParams.asset &&
-										auctionParams.title &&
-										auctionParams.description &&
-										auctionParams.price &&
-										(auctionParams.url
-											? auctionParams.url.indexOf('https://ipfs.io/ipfs/') !==
-													0 &&
-											  (auctionParams.url.indexOf('https://') === 0 ||
-													auctionParams.url.indexOf('ipfs://') === 0)
-											: true)
+										(
+											auctionParams.tokenId &&
+											auctionParams.title &&
+											auctionParams.description &&
+											auctionParams.price
+										)
 									)
 								}
 							>

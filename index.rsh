@@ -15,9 +15,9 @@ export const main = Reach.App(() => {
 		['contractInfo', Contract],
 		['blockCreated', UInt],
 		['owner', Address],
-		['link', Bytes(50)],
-		['title', Bytes(15)],
+		['title', Bytes(20)],
 		['description', Bytes(80)],
+		['price', UInt],
 	])
 
 	const endResponse = Struct([
@@ -34,8 +34,8 @@ export const main = Reach.App(() => {
 	const Auction = Events({
 		// ID, LastBid, BlockEnded
 		end: [UInt, UInt, UInt],
-		// ID, ContractInfo, BlockCreated, Owner, Link, Title, Description
-		create: [UInt, Contract, UInt, Address, Bytes(50), Bytes(15), Bytes(80)],
+		// ID, ContractInfo, BlockCreated, Owner, Title, Description
+		create: [UInt, Contract, UInt, Address, Bytes(20), Bytes(80), UInt],
 	})
 
 	init()
@@ -55,9 +55,9 @@ export const main = Reach.App(() => {
 				auctionObject.contractInfo,
 				auctionObject.blockCreated,
 				auctionObject.owner,
-				auctionObject.link,
 				auctionObject.title,
-				auctionObject.description
+				auctionObject.description,
+				auctionObject.price
 			)
 			return keepGoing
 		})

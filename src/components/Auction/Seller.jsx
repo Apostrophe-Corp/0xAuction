@@ -8,8 +8,15 @@ import { Arc69 } from '../../ARC69/arc.js'
 const arc69 = new Arc69()
 
 const Seller = () => {
-	const { standardUnit, currentAuction } = useReach()
-	const { assetID, title, url, description, desiredPrice } = currentAuction
+	const { standardUnit, currentAuction,endAuction } = useReach()
+	const {
+		tokenId: assetID,
+		title,
+		link: url,
+		description,
+		liveBid,
+		price: desiredPrice,
+	} = currentAuction
 	const aucAsset = useRef()
 
 	const setPreviewBgs = ({ x = '', y = '' } = {}) => {
@@ -59,7 +66,7 @@ const Seller = () => {
 							auc.aucTitleText
 						)}
 					>
-						NFT Sale {title}
+						{title}
 					</h2>
 				</div>
 				<div
@@ -87,12 +94,12 @@ const Seller = () => {
 						)}
 					>
 						Current Bid
-                    </h2>
-                    {/* TODO Make this dynamic */}
+					</h2>
+					{/* TODO Make this dynamic */}
 					<span
 						className={cf(s.wMax, s.flex, s.flexCenter, auc.currentBidValue)}
 					>
-						#### {standardUnit}
+						{liveBid} {standardUnit}
 					</span>
 				</div>
 				<div
@@ -117,18 +124,18 @@ const Seller = () => {
 					>
 						Desired Bid
 					</h2>
-                    {/* TODO Make this dynamic */}
+					{/* TODO Make this dynamic */}
 					<span
 						className={cf(s.wMax, s.flex, s.flexCenter, auc.desiredBidValue)}
 					>
-						#### {desiredPrice} {standardUnit}
+						{desiredPrice} {standardUnit}
 					</span>
 				</div>
 				<div className={cf(s.wMax, s.flex, s.flexCenter, auc.terminateCon)}>
 					<button
 						className={cf(s.flex, s.flexCenter, auc.terminateBtn)}
 						type='button'
-						onClick={() => {}}
+						onClick={endAuction}
 					>
 						End Auction
 					</button>

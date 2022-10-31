@@ -21,6 +21,7 @@
 	text-overflow: ellipsis !important;
 	overflow: hidden !important;
 	white-space: nowrap !important;
+	box-shadow: 0 5px 10px 5px rgb(54, 0, 131);
 	text-align: center;
 	cursor: pointer;
 	transition: all .3s;
