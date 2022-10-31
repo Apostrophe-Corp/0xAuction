@@ -230,18 +230,18 @@ const Buy = () => {
 			</div>
 			<div className={cf(s.wMax, s.flex, s.flexCenter)}>
 				<div className={cf(s.flex, s.flexCenter, buy.latest)}>
-					<div
-						className={cf(
-							s.flex,
-							s.wMax,
-							s.flexCenter,
-							s.flex_dColumn,
-							buy.latestAuctions
-						)}
-						ref={latestAuctionRef}
-					>
-						{latestAuctions &&
-							latestAuctions.map((el, i) => (
+					{latestAuctions && (
+						<div
+							className={cf(
+								s.flex,
+								s.wMax,
+								s.flexCenter,
+								s.flex_dColumn,
+								buy.latestAuctions
+							)}
+							ref={latestAuctionRef}
+						>
+							{latestAuctions.map((el, i) => (
 								<LatestAuction
 									key={i}
 									fullAuction={el}
@@ -251,7 +251,8 @@ const Buy = () => {
 									description={el.description}
 								/>
 							))}
-					</div>
+						</div>
+					)}
 				</div>
 			</div>
 			<div className={cf(s.wMax, s.flex, s.flexRight, buy.topDiv)}>
@@ -259,17 +260,17 @@ const Buy = () => {
 					Available Auctions
 				</h1>
 			</div>
-			<div
-				className={cf(
-					s.wMax,
-					s.flex,
-					s.spaceXAround,
-					s.spaceYCenter,
-					buy.aucAuctions
-				)}
-			>
-				{auctions &&
-					auctions.map((el, i) => (
+			{auctions && (
+				<div
+					className={cf(
+						s.wMax,
+						s.flex,
+						s.spaceXAround,
+						s.spaceYCenter,
+						buy.aucAuctions
+					)}
+				>
+					{auctions.map((el, i) => (
 						<Auction
 							key={i}
 							fullAuction={el}
@@ -279,7 +280,8 @@ const Buy = () => {
 							description={el.description}
 						/>
 					))}
-			</div>
+				</div>
+			)}
 		</div>
 	)
 }
