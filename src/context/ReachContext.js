@@ -216,6 +216,9 @@ const ReachContextProvider = ({ children }) => {
 				description: noneNull(what[5]),
 				price: parseInt(what[6]),
 				tokenId: parseInt(what[7]),
+				yourBid: 0,
+				optIn: false,
+				liveBid: 0,
 			})
 			setAuctions((previous) => presentAuctions)
 			updateLatestAuctions(presentAuctions)
@@ -526,20 +529,20 @@ const ReachContextProvider = ({ children }) => {
 			ctc.events.created.monitor(auctionCreated)
 			ctc.events.log.monitor(handleAuctionLog)
 			setCurrentAuction(id)
-			// stopWaiting()
+			stopWaiting()
 			alertThis({
 				message:
 					'Auction created, sign the transaction to transfer the NFT for this auction to be made public',
 				forConfirmation: false,
 			})
-			setShowSeller(true)
+			// setShowSeller(true)
 		} catch (error) {
 			console.log({ error })
+			stopWaiting(false)
 			alertThis({
 				message: 'Sorry, unable to create auction',
 				forConfirmation: false,
 			})
-			stopWaiting(false)
 		}
 	}
 
