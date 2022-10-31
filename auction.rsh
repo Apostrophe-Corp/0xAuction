@@ -60,8 +60,8 @@ export const main = Reach.App(() => {
 		auctionInfo.owner,
 		auctionInfo.title,
 		auctionInfo.description,
-		auctionInfo.price,
-		tokenId
+		auctionInfo.price
+		auctionInfo.tokenId
 	)
 
 	const [timeRemaining, keepGoing] = makeDeadline(auctionInfo.deadline)
@@ -92,7 +92,7 @@ export const main = Reach.App(() => {
 			return [
 				100000,
 				(notify) => {
-					if(balance()>=100000)
+					if(balance)
 					transfer(100000).to(auctionInfo.Admin)
 					notify(true)					
 					return [keepBidding, highestBidder, lastPrice, isFirstBid]

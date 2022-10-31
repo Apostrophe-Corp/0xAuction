@@ -23,7 +23,7 @@ const algoExplorerURI = {
 	MainNet: 'https://algoexplorer.io',
 }['TestNet']
 
-const deadline = 30
+const deadline = 70
 
 const reach = loadStdlib(process.env)
 
@@ -72,7 +72,7 @@ const ReachContextProvider = ({ children }) => {
 
 	const updateLatestAuctions = (auc) => {
 		const length = auc.length
-		let x = length
+		let x = length - 1
 		const newAuctions = []
 		for (x; x > length - 6; x--) {
 			newAuctions.push(auc[x])
@@ -175,8 +175,8 @@ const ReachContextProvider = ({ children }) => {
 				: await instantReach.getDefaultAccount()
 			setUser({
 				account,
-				balance: async () => {
-					const balAtomic = await instantReach.balanceOf(account)
+				balance: async (tokenID = null) => {
+					const balAtomic = await instantReach.balanceOf(account, tokenID)
 					const balance = instantReach.formatCurrency(balAtomic, 4)
 					return balance
 				},
@@ -200,23 +200,26 @@ const ReachContextProvider = ({ children }) => {
 	}
 
 	const setAdmin = ({ what }) => {
-		setAdminAddress(what[0])
+		setAdminAddress(reach.formatAddress(what[0]))
 	}
 
-	const postAuction = ({ what }) => {
-		const presentAuctions = auctions
-		presentAuctions.push({
-			id: parseInt(what[0]),
-			contractInfo: JSON.stringify(what[1], null),
-			blockCreated: parseInt(what[2]),
-			owner: what[3],
-			title: what[4],
-			description: what[5],
-			price: parseInt(what[6]),
-			tokenId: parseInt(what[7]),
-		})
-		setAuctions((previous) => presentAuctions)
-		updateLatestAuctions(presentAuctions)
+	const postAuction = async ({ what }) => {
+		const time = await reach.getNetworkTime()
+		if (time < parseInt(what[2]) + deadline) {
+			const presentAuctions = auctions
+			presentAuctions.push({
+				id: parseInt(what[0]),
+				contractInfo: JSON.stringify(what[1], null),
+				blockCreated: parseInt(what[2]),
+				owner: what[3],
+				title: noneNull(what[4]),
+				description: noneNull(what[5]),
+				price: parseInt(what[6]),
+				tokenId: parseInt(what[7]),
+			})
+			setAuctions((previous) => presentAuctions)
+			updateLatestAuctions(presentAuctions)
+		}
 	}
 
 	const dropAuction = ({ what }) => {
@@ -261,11 +264,11 @@ const ReachContextProvider = ({ children }) => {
 						const ctc = user.account.contract(mainCtc)
 						setContractInstance(ctc)
 						ctc.p.Admin({})
+						ctc.events.create.monitor(postAuction)
+						ctc.events.end.monitor(dropAuction)
+						ctc.events.passAddress.monitor(setAdmin)
 						await ctc.getInfo().then((infoStr) => {
 							const ctcInfoStr = JSON.stringify(infoStr, null)
-							ctc.events.create.monitor(postAuction)
-							ctc.events.end.monitor(dropAuction)
-							ctc.events.passAddress.monitor(setAdmin)
 							setContract({ ctcInfoStr })
 							console.log(ctcInfoStr)
 							stopWaiting()
@@ -348,7 +351,7 @@ const ReachContextProvider = ({ children }) => {
 
 	const auctionCreated = async ({ what }) => {
 		try {
-			await contractInstance.apis.Auctions.created({
+			await contractInstance.apis.Auction.created({
 				id: parseInt(what[0]),
 				contractInfo: what[1],
 				blockCreated: parseInt(what[2]),
@@ -356,6 +359,7 @@ const ReachContextProvider = ({ children }) => {
 				title: what[4],
 				description: what[5],
 				price: parseInt(what[6]),
+				tokenId: parseInt(what[7]),
 			})
 			alertThis({
 				message: 'Auction has been sent to OxAuction',
@@ -374,18 +378,16 @@ const ReachContextProvider = ({ children }) => {
 	const handleAuctionLog = async ({ what }) => {
 		switch (what[0]) {
 			case ifState('bidSuccess'):
-				if (currentAuction.id === parseInt(what[1])) {
-					setCurrentAuction({
-						...currentAuction,
-						liveBid: parseInt(what[2]),
-					})
-				}
+				// if (currentAuction.id === parseInt(what[1])) {
+				setCurrentAuction({
+					...currentAuction,
+					liveBid: reach.formatCurrency(what[2], 4),
+				})
+				// }
 				break
 			case ifState('endSuccess'):
 				alertThis({
-					message: `This auction's bidding window has been closed by the Auctioneer. The final bid was ${parseInt(
-						what[2]
-					)}`,
+					message: `This auction's bidding window has been closed by the Auctioneer`,
 					forConfirmation: false,
 				})
 				const remainingAuctions = auctions.filter(
@@ -398,11 +400,14 @@ const ReachContextProvider = ({ children }) => {
 				break
 			case ifState('down'):
 				try {
-					await contractInstance.apis.Auctions.ended({
+					const blockEnded = parseInt(await reach.getNetworkTime())
+					const object = {
 						id: parseInt(what[1]),
-						blockEnded: await reach.getNetworkTime(),
-						lastBid: currentAuction.liveBid,
-					})
+						blockEnded: blockEnded,
+						lastBid: 0,
+					}
+					console.log(object)
+					await contractInstance.apis.Auction.ended(object)
 				} catch (error) {
 					console.log({ error })
 				}
@@ -420,6 +425,19 @@ const ReachContextProvider = ({ children }) => {
 
 	const createAuction = async (auctionParams) => {
 		startWaiting()
+		const [bal, nftBal] = await reach.balancesOf(user.account, [
+			null,
+			auctionParams.tokenId,
+		])
+		console.log(parseInt(nftBal))
+		if (!parseInt(nftBal)) {
+			stopWaiting()
+			alertThis({
+				message: 'You do not own this asset, dishonesty is not condoned here',
+				forConfirmation: false,
+			})
+			return
+		}
 		const auctionInfo = {
 			...auctionParams,
 			id:
@@ -442,7 +460,8 @@ const ReachContextProvider = ({ children }) => {
 			setCurrentAuction({ ...auctionInfo, ctc, liveBid: 0 })
 			stopWaiting()
 			alertThis({
-				message: 'Auction created successfully',
+				message:
+					'Auction created, sign the transaction to transfer the NFT for this auction to be made public',
 				forConfirmation: false,
 			})
 			setShowSeller(true)
@@ -468,7 +487,7 @@ const ReachContextProvider = ({ children }) => {
 				await currentAuction.ctc.a.Auctioneer.stopAuction().then(
 					async (res) => {
 						try {
-							await contractInstance.apis.Auctions.ended({
+							await contractInstance.apis.Auction.ended({
 								id: parseInt(res.id),
 								blockCreated: parseInt(res.blockCreated),
 								lastBid: parseInt(res.lastBid),
@@ -505,26 +524,59 @@ const ReachContextProvider = ({ children }) => {
 		})
 
 		if (join) {
+			alertThis({
+				message: 'Please confirm asset opt-in on your wallet',
+				forConfirmation: false,
+			})
+			try {
+				await user.account.tokenAccept(auctionInfo.tokenId)
+				alertThis({
+					message: 'Opt-In confirmed',
+					forConfirmation: false,
+				})
+			} catch (error) {
+				console.log({ error })
+				alertThis({
+					message:
+						'Opt-In failed and as such you cannot bid for this NFT at this point. But you can try again',
+					forConfirmation: false,
+				})
+				return
+			}
 			const ctc = user.account.contract(
 				auctionCtc,
 				JSON.parse(auctionInfo.contractInfo)
 			)
-			setCurrentAuction({
-				...auctionInfo,
-				ctc,
-				liveBid: 0,
-				yourBid: 0,
-				optIn: false,
-			})
+			await ctc.getInfo()
 			setShowBuyer(true)
 			const bid = await alertThis({
 				message: 'Enter your bidding amount',
 				prompt: true,
 			})
 			startWaiting()
+			const userBal = reach.formatCurrency(
+				await reach.balanceOf(user.account),
+				4
+			)
+			console.log(userBal)
+			if (userBal < bid) {
+				stopWaiting()
+				alertThis({
+					message: `Your balance: ${userBal} {standardUnit}, is insufficient for this bid`,
+					forConfirmation: false,
+				})
+				setShowBuyer(false)
+				return
+			}
 			try {
 				const bidRes = await ctc.a.Bidder.bid(reach.parseCurrency(bid))
-				setCurrentAuction({ ...currentAuction, yourBid: bidRes[1] })
+				setCurrentAuction({
+					...auctionInfo,
+					ctc,
+					liveBid: 0,
+					optIn: false,
+					yourBid: bid,
+				})
 				stopWaiting()
 				alertThis({
 					message: 'Bid placed',
@@ -533,14 +585,10 @@ const ReachContextProvider = ({ children }) => {
 			} catch (error) {
 				console.log({ error })
 				stopWaiting()
-				alertThis({
-					message: `Unable to place bid. Most likely someone's outbid you`,
-					forConfirmation: false,
-				})
 
 				const opt = await alertThis({
 					message:
-						'To prevent this from happening during this auction, how would you like to opt into Live Bid?',
+						"Unable to place bid. Most likely someone's outbid you. To prevent this from happening during this auction, how would you like to opt into Live Bid?",
 					accept: 'Opt In',
 					decline: 'Decline',
 				})
@@ -558,10 +606,12 @@ const ReachContextProvider = ({ children }) => {
 			accept: 'Pay',
 			decline: 'Forfeit',
 		})
-		if (agree) {
+		const userBal = reach.formatCurrency(await reach.balanceOf(user.account), 4)
+		if (agree && userBal) {
 			startWaiting()
 			try {
-				await currentAuction.ctc.a.Bidder.optIn().then((data) => {
+				console.log(currentAuction.ctc)
+				await currentAuction.ctc.apis.Bidder.optIn().then((data) => {
 					setCurrentAuction({
 						...currentAuction,
 						optIn: data,
@@ -678,7 +728,13 @@ const ReachContextProvider = ({ children }) => {
 							className={cf(s.flex, s.flexCenter, s.p10, s.m0, app.navItem)}
 							onClick={() => {
 								checkForContract(() => {
-									setView('Buy')
+									if (auctions.length) setView('Buy')
+									else
+										alertThis({
+											message:
+												'Please hold while auctions get uploaded. Try again sometime later',
+											forConfirmation: false,
+										})
 								})
 							}}
 						>

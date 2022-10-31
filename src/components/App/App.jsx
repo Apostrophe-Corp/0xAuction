@@ -4,7 +4,7 @@ import app from '../../styles/App.module.css'
 import { useReach, fmtClasses as cf } from '../../hooks'
 
 const App = () => {
-	const { setView, checkForContract } = useReach()
+	const { setView, checkForContract, alertThis, auctions } = useReach()
 	return (
 		<div className={cf(s.wMax, s.window)}>
 			{/* The Hero */}
@@ -68,10 +68,14 @@ const App = () => {
 						app.cardForest
 					)}
 				>
-					<div className={ cf(app.card) } onClick={ () => {
-						checkForContract(() => {
-						setView('Create')})
-					}}>
+					<div
+						className={cf(app.card)}
+						onClick={() => {
+							checkForContract(() => {
+								setView('Create')
+							})
+						}}
+					>
 						<div className={cf(app.cardAction)}>Create</div>
 						<div className={cf(s.flex, s.flex_dColumn, app.cardPurpose)}>
 							<div className={cf(app.cardPurposeText)}>Mint NFts</div>
@@ -126,10 +130,14 @@ const App = () => {
 							</svg>
 						</div>
 					</div>
-					<div className={cf(app.card)} onClick={ () => {
-checkForContract(() => {
-						setView('Sell')})
-					}}>
+					<div
+						className={cf(app.card)}
+						onClick={() => {
+							checkForContract(() => {
+								setView('Sell')
+							})
+						}}
+					>
 						<div className={cf(app.cardAction)}>Sell</div>
 						<div className={cf(s.flex, s.flex_dColumn, app.cardPurpose)}>
 							<div className={cf(app.cardPurposeText)}>Auction Assets</div>
@@ -154,10 +162,19 @@ checkForContract(() => {
 							</svg>
 						</div>
 					</div>
-					<div className={cf(app.card)} onClick={ () => {
-						checkForContract(() => {
-						setView('Buy')})
-					}}>
+					<div
+						className={cf(app.card)}
+						onClick={() => {
+							checkForContract(() => {
+								if (auctions.length) setView('Buy')
+								else
+									alertThis({
+										message: 'Please hold while auctions get uploaded. Try again sometime later',
+										forConfirmation: false,
+									})
+							})
+						}}
+					>
 						<div className={cf(app.cardAction)}>Buy</div>
 						<div className={cf(s.flex, s.flex_dColumn, app.cardPurpose)}>
 							<div className={cf(app.cardPurposeText)}>Purchase Assets</div>

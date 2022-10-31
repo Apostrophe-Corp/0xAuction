@@ -40,7 +40,8 @@ const dummyText = [
 		description:
 			'Image by Graphue on Freepik. Some dummy text... Some dummy text... Some dummy Text... Some dummy text... Some dummmy text... Some dummy text...X',
 		desiredPrice: '999.99',
-	},{
+	},
+	{
 		assetID: 912646033,
 		url: 'https://bit.ly/3gD1nFM#i',
 		title: 'NFT Sale for This NFT - 1',
@@ -50,8 +51,15 @@ const dummyText = [
 	},
 ]
 
-const LatestAuction = ({ assetID, url = '', title, description, desiredPrice }) => {
-	const { standardUnit } = useReach()
+const LatestAuction = ({
+	assetID,
+	url = '',
+	title,
+	description,
+	desiredPrice,
+	fullAuction,
+}) => {
+	const { standardUnit, joinAuction } = useReach()
 	const previewRef = useRef()
 
 	const setPreviewBgs = ({ x = '', y = '' } = {}) => {
@@ -88,7 +96,12 @@ const LatestAuction = ({ assetID, url = '', title, description, desiredPrice }) 
 	}, [])
 
 	return (
-		<div className={cf(s.wMax, s.flex, s.flexCenter, buy.latestAuction)}>
+		<div
+			className={cf(s.wMax, s.flex, s.flexCenter, buy.latestAuction)}
+			onClick={() => {
+				joinAuction(fullAuction)
+			}}
+		>
 			<div
 				className={cf(s.w50, s.w480_100, s.w360_100, buy.auctionNFT)}
 				ref={previewRef}
@@ -114,8 +127,15 @@ const LatestAuction = ({ assetID, url = '', title, description, desiredPrice }) 
 	)
 }
 
-const Auction = ({ assetID, title, description, desiredPrice, url='' }) => {
-	const { standardUnit } = useReach()
+const Auction = ({
+	assetID,
+	title,
+	description,
+	desiredPrice,
+	url = '',
+	fullAuction,
+}) => {
+	const { standardUnit, joinAuction } = useReach()
 	const auctionNFTRef = useRef()
 
 	const setPreviewBgs = ({ x = '', y = '' } = {}) => {
@@ -155,10 +175,11 @@ const Auction = ({ assetID, title, description, desiredPrice, url='' }) => {
 		<div
 			className={cf(s.flex, s.flexCenter, buy.aucAuction)}
 			ref={auctionNFTRef}
+			onClick={() => {
+				joinAuction(fullAuction)
+			}}
 		>
-			<div
-				className={cf(s.flex, s.flex_dColumn, buy.aucAucDetails)}
-			>
+			<div className={cf(s.flex, s.flex_dColumn, buy.aucAucDetails)}>
 				<h3 className={cf(s.m0, s.p0, s.wMax, buy.aucAucTitleText)}>{title}</h3>
 				<span className={cf(s.wMax, s.dInlineBlock, buy.aucAucDesiredPrice)}>
 					{desiredPrice} {standardUnit}
@@ -169,36 +190,38 @@ const Auction = ({ assetID, title, description, desiredPrice, url='' }) => {
 }
 
 const Buy = () => {
-	const {auctions, latestAuctions, joinAuction} = useReach()
+	const { auctions, latestAuctions, joinAuction } = useReach()
 
 	const latestAuctionRef = useRef()
 
 	useEffect(() => {
-		let progress = 0
-		const slide = setInterval(() => {
-			progress += 100
-			latestAuctionRef.current.style.transform = `translate(-${progress}%,0)`
-			const length = (latestAuctions.length - 1) * 100
-			if (progress === length) {
-				const revert = setTimeout(() => {
-					latestAuctionRef.current.style.transition = `none`
-					progress = 0
-					const restore = setTimeout(() => {
-						latestAuctionRef.current.style.transform = `translate(${progress}%,0)`
-						const animate = setTimeout(() => {
-							latestAuctionRef.current.style.transition = `transform .5s`
-							clearTimeout(animate)
+		if (latestAuctions.length > 2) {
+			let progress = 0
+			const slide = setInterval(() => {
+				progress += 100
+				latestAuctionRef.current.style.transform = `translate(-${progress}%,0)`
+				const length = (latestAuctions.length - 1) * 100
+				if (progress === length) {
+					const revert = setTimeout(() => {
+						latestAuctionRef.current.style.transition = `none`
+						progress = 0
+						const restore = setTimeout(() => {
+							latestAuctionRef.current.style.transform = `translate(${progress}%,0)`
+							const animate = setTimeout(() => {
+								latestAuctionRef.current.style.transition = `transform .5s`
+								clearTimeout(animate)
+							}, 1000)
+							clearTimeout(restore)
 						}, 1000)
-						clearTimeout(restore)
+						clearTimeout(revert)
 					}, 1000)
-					clearTimeout(revert)
-				}, 1000)
+				}
+			}, 4000)
+			return () => {
+				clearInterval(slide)
 			}
-		}, 4000)
-		return () => {
-			clearInterval(slide)
 		}
-	}, [])
+	}, [latestAuctions])
 
 	return (
 		<div className={cf(s.wMax, s.window, buy.buyParent)}>
@@ -217,17 +240,17 @@ const Buy = () => {
 						)}
 						ref={latestAuctionRef}
 					>
-						{latestAuctions.map((el) => (
-							<LatestAuction
-								onClick={ () => {
-									joinAuction(el);
-								} }
-								assetID={el.tokenId}
-								title={el.title}
-								desiredPrice={el.price}
-								description={el.description}
-							/>
-						))}
+						{latestAuctions &&
+							latestAuctions.map((el, i) => (
+								<LatestAuction
+									key={i}
+									fullAuction={el}
+									assetID={el.tokenId}
+									title={el.title}
+									desiredPrice={el.price}
+									description={el.description}
+								/>
+							))}
 					</div>
 				</div>
 			</div>
@@ -245,17 +268,17 @@ const Buy = () => {
 					buy.aucAuctions
 				)}
 			>
-				{auctions.map((el) => (
-					<Auction
-						onClick={ () => {
-							joinAuction(el)
-						}}
-						assetID={el.tokenId}
-						title={el.title}
-						desiredPrice={el.price}
-						description={el.description}
-					/>
-				))}
+				{auctions &&
+					auctions.map((el, i) => (
+						<Auction
+							key={i}
+							fullAuction={el}
+							assetID={el.tokenId}
+							title={el.title}
+							desiredPrice={el.price}
+							description={el.description}
+						/>
+					))}
 			</div>
 		</div>
 	)
