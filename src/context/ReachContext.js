@@ -222,9 +222,14 @@ const ReachContextProvider = ({ children }) => {
 			})
 			setAuctions((previous) => presentAuctions)
 			updateLatestAuctions(presentAuctions)
-			stopWaiting()
-			if (String(user.address) === String(reach.formatAddress(what[3])))
-				setShowBuyer(true)
+			if (String(user.address) === String(reach.formatAddress(what[3]))) {
+				stopWaiting()
+				alertThis({
+					message: 'Your auction is live',
+					forConfirmation: false,
+				})
+				setShowSeller(true)
+			}
 		}
 	}
 
@@ -367,12 +372,9 @@ const ReachContextProvider = ({ children }) => {
 				price: parseInt(what[6]),
 				tokenId: parseInt(what[7]),
 			})
-			alertThis({
-				message: 'Auction has been sent to OxAuction',
-				forConfirmation: false,
-			})
 		} catch (error) {
 			console.log({ error })
+			stopWaiting(false)
 			alertThis({
 				message:
 					'Sorry, unable to send your auction to OxAuction. Just wait a while, and after a few transaction signings, your NFT will be returned to you',
@@ -503,7 +505,7 @@ const ReachContextProvider = ({ children }) => {
 		if (!parseInt(nftBal)) {
 			stopWaiting()
 			alertThis({
-				message: 'You do not own this asset, dishonesty is not condoned here',
+				message: 'You do not own this asset',
 				forConfirmation: false,
 			})
 			return
@@ -536,6 +538,7 @@ const ReachContextProvider = ({ children }) => {
 				forConfirmation: false,
 			})
 			// setShowSeller(true)
+			startWaiting()
 		} catch (error) {
 			console.log({ error })
 			stopWaiting(false)
