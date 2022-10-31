@@ -37,13 +37,14 @@ export const main = Reach.App(() => {
 		end: [UInt, UInt, UInt],
 		// ID, ContractInfo, BlockCreated, Owner, Title, Description
 		create: [UInt, Contract, UInt, Address, Bytes(20), Bytes(80), UInt, Token],
+		passAddress: [Address]
 	})
 
 	init()
 	Admin.publish()
 	commit()
 	Admin.publish()
-
+	Auction.passAddress(Admin)
 	const keepGoing = parallelReduce(true)
 		.invariant(balance() == 0)
 		.while(keepGoing)

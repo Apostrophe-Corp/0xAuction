@@ -68,6 +68,7 @@ const ReachContextProvider = ({ children }) => {
 	const [showConnectAccount, setShowConnectAccount] = useState(false)
 	const [contractInstance, setContractInstance] = useState(null)
 	const [contract, setContract] = useState('')
+	const [adminAddress, setAdminAddress] = useState('')
 
 	const updateLatestAuctions = (auc) => {
 		const length = auc.length
@@ -198,11 +199,15 @@ const ReachContextProvider = ({ children }) => {
 		}
 	}
 
+	const setAdmin = ({ what }) => {
+		setAdminAddress(what[0])
+	}
+
 	const postAuction = ({ what }) => {
 		const presentAuctions = auctions
 		presentAuctions.push({
 			id: parseInt(what[0]),
-			contractInfo: JSON.stringify(what[1],null),
+			contractInfo: JSON.stringify(what[1], null),
 			blockCreated: parseInt(what[2]),
 			owner: what[3],
 			title: what[4],
@@ -260,6 +265,7 @@ const ReachContextProvider = ({ children }) => {
 							const ctcInfoStr = JSON.stringify(infoStr, null)
 							ctc.events.create.monitor(postAuction)
 							ctc.events.end.monitor(dropAuction)
+							ctc.events.passAddress.monitor(setAdmin)
 							setContract({ ctcInfoStr })
 							console.log(ctcInfoStr)
 							stopWaiting()
@@ -288,6 +294,7 @@ const ReachContextProvider = ({ children }) => {
 						setContract({ ctcInfoStr: ctcInfo })
 						ctc.events.create.monitor(postAuction)
 						ctc.events.end.monitor(dropAuction)
+						ctc.events.passAddress.monitor(setAdmin)
 						alertThis({
 							message: 'Successfully attached',
 							forConfirmation: false,
@@ -423,6 +430,7 @@ const ReachContextProvider = ({ children }) => {
 					: 1,
 			deadline,
 			owner: user.address,
+			Admin: adminAddress,
 		}
 
 		try {
@@ -497,8 +505,17 @@ const ReachContextProvider = ({ children }) => {
 		})
 
 		if (join) {
-			const ctc = user.account.contract(auctionCtc, JSON.parse(auctionInfo.contractInfo))
-			setCurrentAuction({...auctionInfo, ctc, liveBid: 0, yourBid: 0, optIn: false})
+			const ctc = user.account.contract(
+				auctionCtc,
+				JSON.parse(auctionInfo.contractInfo)
+			)
+			setCurrentAuction({
+				...auctionInfo,
+				ctc,
+				liveBid: 0,
+				yourBid: 0,
+				optIn: false,
+			})
 			setShowBuyer(true)
 			const bid = await alertThis({
 				message: 'Enter your bidding amount',
@@ -520,9 +537,10 @@ const ReachContextProvider = ({ children }) => {
 					message: `Unable to place bid. Most likely someone's outbid you`,
 					forConfirmation: false,
 				})
-				
+
 				const opt = await alertThis({
-					message: 'To prevent this from happening during this auction, how would you like to opt into Live Bid?',
+					message:
+						'To prevent this from happening during this auction, how would you like to opt into Live Bid?',
 					accept: 'Opt In',
 					decline: 'Decline',
 				})
