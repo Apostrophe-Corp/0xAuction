@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import s from '../../styles/Shared.module.css'
 import auc from '../../styles/Auction.module.css'
 import notFound from '../../assets/images/no_image.jpg'
@@ -8,17 +8,11 @@ import { Arc69 } from '../../ARC69/arc.js'
 const arc69 = new Arc69()
 
 const Seller = () => {
-	const { standardUnit, currentAuction,endAuction } = useReach()
-	const {
-		tokenId: assetID,
-		title,
-		link: url,
-		description,
-		liveBid,
-		price: desiredPrice,
-	} = currentAuction
+	const { standardUnit, currentAuction, endAuction, auctions } = useReach()
 	const aucAsset = useRef()
-
+	const [auction, setAuction] = useState(
+		auctions.filter((el) => Number(el.id) === currentAuction)[0]
+	)
 	const setPreviewBgs = ({ x = '', y = '' } = {}) => {
 		aucAsset.current.style.background = `url(${x}), url(${y}), url(${notFound})`
 		aucAsset.current.style.backgroundPosition = 'center'
@@ -32,25 +26,30 @@ const Seller = () => {
 			.then((data) => {
 				if (data.success && data.url) {
 					console.log('Media URL:', data.url)
-					setPreviewBgs({ x: data.url, y: url })
+					setPreviewBgs({ x: data.url, y: auction?.url })
 				} else {
-					setPreviewBgs({ y: url })
+					setPreviewBgs({ y: auction?.url })
 					console.log('No image url found 🥱')
 				}
 			})
 			.catch((x) => {
-				setPreviewBgs({ y: url })
+				setPreviewBgs({ y: auction?.url })
 				console.log('No image url found 🥱')
 			})
 	}
 
 	useEffect(() => {
-		setPreviewBgs({ y: url })
+		setPreviewBgs({ y: auction?.url })
 	}, [])
 
 	useEffect(() => {
-		fetchAssetMetadata(assetID)
+		fetchAssetMetadata(auction.tokenId)
 	}, [])
+
+	useEffect(() => {
+		setAuction(auctions.filter((el) => Number(el.id) === currentAuction)[0])
+	}, [auctions])
+	
 	return (
 		<div className={cf(s.wMax, s.flex, s.flexCenter, auc.auctionParent)}>
 			<div className={cf(s.wMax, auc.auctionMask)}></div>
@@ -66,7 +65,7 @@ const Seller = () => {
 							auc.aucTitleText
 						)}
 					>
-						{title}
+						{auction.title}
 					</h2>
 				</div>
 				<div
@@ -98,7 +97,7 @@ const Seller = () => {
 					<span
 						className={cf(s.wMax, s.flex, s.flexCenter, auc.currentBidValue)}
 					>
-						{liveBid} {standardUnit}
+						{auction.liveBid} {standardUnit}
 					</span>
 				</div>
 				<div
@@ -126,14 +125,16 @@ const Seller = () => {
 					<span
 						className={cf(s.wMax, s.flex, s.flexCenter, auc.desiredBidValue)}
 					>
-						{desiredPrice} {standardUnit}
+						{auction.price} {standardUnit}
 					</span>
 				</div>
 				<div className={cf(s.wMax, s.flex, s.flexCenter, auc.terminateCon)}>
 					<button
 						className={cf(s.flex, s.flexCenter, auc.terminateBtn)}
 						type='button'
-						onClick={endAuction}
+						onClick={() => {
+							endAuction(auction.contractInfo)
+						}}
 					>
 						End Auction
 					</button>
