@@ -17,9 +17,9 @@ export const main = Reach.App(() => {
 			deadline: UInt,
 			price: UInt,
 			owner: Address,
-			link: Bytes(96),
 			title: Bytes(20),
 			description: Bytes(80),
+			Admin: Address,
 		}),
 	})
 
@@ -31,6 +31,7 @@ export const main = Reach.App(() => {
 
 	const Bidder = API('Bidder', {
 		bid: Fun([UInt], Tuple(Address, UInt)),
+		optIn: Fun([], Bool),
 	})
 
 	const Auctioneer = API('Auctioneer', {
@@ -41,7 +42,7 @@ export const main = Reach.App(() => {
 
 	const Auction = Events({
 		log: [state, UInt, UInt],
-		created: [UInt, Contract, UInt, Bytes(96), Bytes(20), Bytes(80)],
+		created: [UInt, Contract, UInt, Address, Bytes(20), Bytes(80), UInt],
 	})
 	init()
 
@@ -56,9 +57,10 @@ export const main = Reach.App(() => {
 		auctionInfo.id,
 		getContract(),
 		thisConsensusTime(),
-		auctionInfo.link,
+		auctionInfo.owner,
 		auctionInfo.title,
-		auctionInfo.description
+		auctionInfo.description,
+		auctionInfo.price
 	)
 
 	const [timeRemaining, keepGoing] = makeDeadline(auctionInfo.deadline)
@@ -83,6 +85,15 @@ export const main = Reach.App(() => {
 					Auction.log(state.pad('bidSuccess'), auctionInfo.id, bid)
 					return [keepBidding, who, bid, false]
 				},
+			]
+		})
+		.api_(Bidder.optIn, () => {
+			return [
+				100000,
+				(notify) => {
+					notify(true)
+					return [keepBidding, highestBidder, lastPrice, isFirstBid]
+				}, 
 			]
 		})
 		.api(
