@@ -430,7 +430,6 @@ const ReachContextProvider = ({ children }) => {
 			await ctc.getInfo()
 			ctc.events.created.monitor(auctionCreated)
 			ctc.events.log.monitor(handleAuctionLog)
-			// TODO assign Events for log
 			setCurrentAuction({ ...auctionInfo, ctc, liveBid: 0 })
 			stopWaiting()
 			alertThis({
