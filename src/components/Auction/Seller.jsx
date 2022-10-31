@@ -95,7 +95,6 @@ const Seller = () => {
 					>
 						Current Bid
 					</h2>
-					{/* TODO Make this dynamic */}
 					<span
 						className={cf(s.wMax, s.flex, s.flexCenter, auc.currentBidValue)}
 					>
@@ -124,7 +123,6 @@ const Seller = () => {
 					>
 						Desired Bid
 					</h2>
-					{/* TODO Make this dynamic */}
 					<span
 						className={cf(s.wMax, s.flex, s.flexCenter, auc.desiredBidValue)}
 					>

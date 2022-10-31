@@ -18,6 +18,7 @@ export const main = Reach.App(() => {
 		['title', Bytes(20)],
 		['description', Bytes(80)],
 		['price', UInt],
+		['tokenId', Token]
 	])
 
 	const endResponse = Struct([
@@ -35,7 +36,7 @@ export const main = Reach.App(() => {
 		// ID, LastBid, BlockEnded
 		end: [UInt, UInt, UInt],
 		// ID, ContractInfo, BlockCreated, Owner, Title, Description
-		create: [UInt, Contract, UInt, Address, Bytes(20), Bytes(80), UInt],
+		create: [UInt, Contract, UInt, Address, Bytes(20), Bytes(80), UInt, Token],
 	})
 
 	init()
@@ -57,7 +58,8 @@ export const main = Reach.App(() => {
 				auctionObject.owner,
 				auctionObject.title,
 				auctionObject.description,
-				auctionObject.price
+				auctionObject.price,
+				auctionObject.tokenId
 			)
 			return keepGoing
 		})

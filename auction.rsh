@@ -42,7 +42,7 @@ export const main = Reach.App(() => {
 
 	const Auction = Events({
 		log: [state, UInt, UInt],
-		created: [UInt, Contract, UInt, Address, Bytes(20), Bytes(80), UInt],
+		created: [UInt, Contract, UInt, Address, Bytes(20), Bytes(80), UInt, Token],
 	})
 	init()
 
@@ -61,6 +61,7 @@ export const main = Reach.App(() => {
 		auctionInfo.title,
 		auctionInfo.description,
 		auctionInfo.price
+		auctionInfo.tokenId,
 	)
 
 	const [timeRemaining, keepGoing] = makeDeadline(auctionInfo.deadline)

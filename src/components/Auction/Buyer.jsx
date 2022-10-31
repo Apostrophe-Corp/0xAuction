@@ -96,7 +96,6 @@ const Buyer = () => {
 					>
 						Your Bid
 					</h2>
-					{/* TODO Make this dynamic */}
 					<span
 						className={cf(s.wMax, s.flex, s.flexCenter, auc.currentBidValue)}
 					>
@@ -125,7 +124,6 @@ const Buyer = () => {
 					>
 						Desired Bid
 					</h2>
-					{/* TODO Make this dynamic */}
 					<span
 						className={cf(s.wMax, s.flex, s.flexCenter, auc.desiredBidValue)}
 					>
@@ -154,7 +152,6 @@ const Buyer = () => {
 					>
 						Live Bid
 					</h2>
-					{/* TODO Make this dynamic */}
 					<span className={cf(s.wMax, s.flex, s.flexCenter, auc.liveBidValue)}>
 						{currentAuction.optIn ? liveBid : '####'} {standardUnit}
 					</span>
