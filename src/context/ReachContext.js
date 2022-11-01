@@ -211,7 +211,7 @@ const ReachContextProvider = ({ children }) => {
 				id: parseInt(what[0]),
 				contractInfo: JSON.stringify(what[1], null),
 				blockCreated: parseInt(what[2]),
-				owner: what[3],
+				owner: noneNull(what[3]),
 				title: noneNull(what[4]),
 				description: noneNull(what[5]),
 				price: parseInt(what[6]),
@@ -223,7 +223,7 @@ const ReachContextProvider = ({ children }) => {
 			setAuctions((previous) => presentAuctions)
 			updateLatestAuctions(presentAuctions)
 			if (
-				String(user.address) === String(reach.formatAddress(what[3])) &&
+				String(user.address) === noneNull(what[3]) &&
 				currentAuction !== null
 			) {
 				stopWaiting()
@@ -232,6 +232,15 @@ const ReachContextProvider = ({ children }) => {
 					forConfirmation: false,
 				})
 				setShowSeller(true)
+			} else if (
+				String(user.address) === noneNull(what[3]) &&
+				currentAuction === null
+			) {
+				alertThis({
+					message:
+						'The system has detected you have 0xAuction opened in multiple tabs but connected to the same wallet. Please return to the original tab',
+					forConfirmation: false,
+				})
 			}
 		}
 	}
@@ -427,10 +436,7 @@ const ReachContextProvider = ({ children }) => {
 				console.log({ yourBid, owner, ctcInfo, opt, updatedAuctions })
 				setAuctions((previous) => updatedAuctions)
 				updateLatestAuctions(updatedAuctions)
-				if (
-					newBid > yourBid &&
-					reach.formatAddress(owner) !== reach.formatAddress(user.address)
-				) {
+				if (newBid > yourBid && String(owner) !== String(user.address)) {
 					const bidAgain = await alertThis({
 						message: `You just got outbid,${
 							opt ? ` the highest bid is now ${newBid}` : ''
@@ -517,25 +523,27 @@ const ReachContextProvider = ({ children }) => {
 						lastBid: 0,
 					}
 					console.log(object)
-					const endedAuction = auctions.filter((el) => Number(el.id) === parseInt(what[1]))[0]
-					if (
-						reach.formatAddress(endedAuction.owner) === reach.formatAddress(user.address)
-					){
+					const endedAuction = auctions.filter(
+						(el) => Number(el.id) === parseInt(what[1])
+					)[0]
+					if (String(endedAuction.owner) === String(user.address)) {
 						const agreeToBid = await alertThis({
 							message: 'Do you accept the current bid?',
 							accept: 'Yes',
 							decline: 'No',
 						})
-						const endedCtc = user.account.contract(auctionCtc, JSON.parse(endedAuction.contractInfo))
-						try{
-							if(agreeToBid)
-							await endedCtc.a.Auctioneer.acceptSale()
-							else
-							await endedCtc.a.Auctioneer.rejectSale()
-						}catch(error){
-							console.log({error})
+						const endedCtc = user.account.contract(
+							auctionCtc,
+							JSON.parse(endedAuction.contractInfo)
+						)
+						try {
+							if (agreeToBid) await endedCtc.a.Auctioneer.acceptSale()
+							else await endedCtc.a.Auctioneer.rejectSale()
+						} catch (error) {
+							console.log({ error })
 							alertThis({
-								message: 'Unable to process your choice, defaulting to an agreement',
+								message:
+									'Unable to process your choice, defaulting to an agreement',
 								forConfirmation: false,
 							})
 						}
@@ -654,13 +662,13 @@ const ReachContextProvider = ({ children }) => {
 				message: 'Please confirm asset opt-in on your wallet',
 				forConfirmation: false,
 			})
+			setCurrentAuction(auctionInfo.id)
 			try {
 				await user.account.tokenAccept(auctionInfo.tokenId)
 				alertThis({
 					message: 'Opt-In confirmed',
 					forConfirmation: false,
 				})
-				setCurrentAuction(auctionInfo.id)
 			} catch (error) {
 				console.log({ error })
 				alertThis({
@@ -674,7 +682,7 @@ const ReachContextProvider = ({ children }) => {
 				auctionCtc,
 				JSON.parse(auctionInfo.contractInfo)
 			)
-			await ctc.getInfo()
+			// await ctc.getInfo()
 			const bid = await alertThis({
 				message: 'Enter your bidding amount',
 				prompt: true,
@@ -700,6 +708,7 @@ const ReachContextProvider = ({ children }) => {
 					(el) => Number(el.id) === auctionInfo.id
 				)[0]
 				auctionTobeEdited['yourBid'] = bid
+				auctionTobeEdited['liveBid'] = bid
 				const remaininAuctions = auctions.filter(
 					(el) => Number(el.id) !== auctionInfo.id
 				)

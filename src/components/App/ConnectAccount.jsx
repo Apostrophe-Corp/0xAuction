@@ -4,9 +4,17 @@ import ca from '../../styles/ConnectAccount.module.css'
 import { useReach, fmtClasses as cf } from '../../hooks'
 
 const ConnectAccount = () => {
-	const { setShowConnectAccount, connectToWallet, user, alertThis } = useReach()
+	const { setShowConnectAccount, connectToWallet, user, alertThis, contract } = useReach()
 
 	const copyToClipboard = async (e) => {
+		navigator.clipboard.writeText(user.address)
+		alertThis({
+			message: 'Copied to clipboard',
+			forConfirmation: false,
+		})
+	}
+
+	const copyCtcToClipboard = async (e) => {
 		navigator.clipboard.writeText(user.address)
 		alertThis({
 			message: 'Copied to clipboard',
@@ -97,6 +105,25 @@ const ConnectAccount = () => {
 							</span>
 						</div>
 					</div>
+				</div>
+				<div
+					className={cf(
+						s.wMax,
+						s.flex,
+						s.flexCenter,
+						s.p10,
+						s.m10,
+						ca.addressContainer
+					)}
+				>
+					{contract.ctcInfoStr && (
+						<button
+							onClick={copyCtcToClipboard}
+							className={cf(s.wMax, s.dInlineBlock, ca.connectTitle)}
+						>
+							{contract.ctcInfoStr}
+						</button>
+					)}
 				</div>
 			</div>
 		</div>
