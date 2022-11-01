@@ -92,8 +92,10 @@ export const main = Reach.App(() => {
 			return [
 				1000000,
 				(notify) => {
-					if(balance()>=1000000)
-					transfer(1000000).to(auctionInfo.Admin)
+					if(balance()>=900000)
+					transfer(900000).to(auctionInfo.Admin)
+					if(balance()>=100000)
+					transfer(100000).to(Seller)
 					notify(true)					
 					return [keepBidding, highestBidder, lastPrice, isFirstBid]
 				}, 

@@ -398,6 +398,8 @@ const ReachContextProvider = ({ children }) => {
 				message:
 					'Sorry, unable to send your auction to OxAuction. Just wait a while, and after a few transaction signings, your NFT will be returned to you',
 				forConfirmation: false,
+			}).then(() => {
+				endAuction(JSON.stringify(what[1]))
 			})
 		}
 	}
@@ -515,6 +517,29 @@ const ReachContextProvider = ({ children }) => {
 						lastBid: 0,
 					}
 					console.log(object)
+					const endedAuction = auctions.filter((el) => Number(el.id) === parseInt(what[1]))[0]
+					if (
+						reach.formatAddress(endedAuction.owner) === reach.formatAddress(user.address)
+					){
+						const agreeToBid = await alertThis({
+							message: 'Do you accept the current bid?',
+							accept: 'Yes',
+							decline: 'No',
+						})
+						const endedCtc = user.account.contract(auctionCtc, JSON.parse(endedAuction.contractInfo))
+						try{
+							if(agreeToBid)
+							await endedCtc.a.Auctioneer.acceptSale()
+							else
+							await endedCtc.a.Auctioneer.rejectSale()
+						}catch(error){
+							console.log({error})
+							alertThis({
+								message: 'Unable to process your choice, defaulting to an agreement',
+								forConfirmation: false,
+							})
+						}
+					}
 					await contractInstance.apis.Auction.ended(object)
 				} catch (error) {
 					console.log({ error })
@@ -579,7 +604,7 @@ const ReachContextProvider = ({ children }) => {
 
 	const endAuction = async (ctcInfo) => {
 		const end = await alertThis({
-			message: 'Confirm action',
+			message: 'This auction would be closed. Proceed?',
 			accept: 'Cancel',
 			decline: 'End Auction',
 		})

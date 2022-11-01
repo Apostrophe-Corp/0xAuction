@@ -244,12 +244,11 @@ const App = () => {
 								app.joinComDescriptionText
 							)}
 						>
-							With 0xAuction you can mint an NFT, storing it in your wallet
-							or start an auction to sell any collectible you own.
-							You could browse through the list of active 
-							auctions to bid on any NFT in the list. Auctions are safe, 
+							With 0xAuction you can mint an NFT, start an auction to
+							sell any collectible you own, browse through the list of active 
+							auctions to bid on any NFT on the list. Auctions are safe, 
 							fully decentralized, peer-to-peer, and designed 
-							with the best interest of the buyer and seller in mind.
+							with the best interest of the Buyer and Seller in mind.
 						</span>
 					</div>
 					<div
@@ -315,13 +314,14 @@ const App = () => {
 							</svg>
 						</div>
 						<div className={app.comSocialContent}>
-							<div className={app.comSocialName}>Real-time Auctions</div>
+							<div className={app.comSocialName}>Real-time Notifications</div>
 							<div className={app.comSocialDescription}>
 								<span
 									className={cf(s.wMax, s.dInlineBlock, app.comSocialDesText)}
 								>
 									Buyers can all opt-in to receive realtime notifications anytime 
-							   		an a higher bid is made. Get notified n
+									a bid higher than theirs' is made. For every Buyer that opts in,
+									the Seller gets 10% of the opt-in fee as a way of appreciating users for choosing 0xAuction.
 								</span>
 							</div>
 						</div>
@@ -381,8 +381,8 @@ const App = () => {
 								>
 									Auctions are timed and safe as both the NFT and the current 
 								   	highest bid are held in escrow by the contract until the expiry 
-								   	of the set time (however the seller may choose to end the auction 
-								   	at any time), afterwards the seller must then either sign off on 
+								   	of the set time (however the Seller may choose to end the auction 
+								   	at any time), afterwards the Seller must then either sign off on 
 									the sale or reject it and the highest bidder refunded.
 								</span>
 							</div>
@@ -429,8 +429,9 @@ const App = () => {
 								<span
 									className={cf(s.wMax, s.dInlineBlock, app.comSocialDesText)}
 								>
-									Some dummy text...Some dummy text...Some dummy text...Some
-									dummy text...
+									0xAuction is built with Reach and powered by the Algorand Network.
+									Utilizing the Reach verification engine, 0xAuction's contracts are 
+									vetted by the Z3 theorem prover.
 								</span>
 							</div>
 						</div>
