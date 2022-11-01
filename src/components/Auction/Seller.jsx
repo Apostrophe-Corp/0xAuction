@@ -8,7 +8,7 @@ import { Arc69 } from '../../ARC69/arc.js'
 const arc69 = new Arc69()
 
 const Seller = () => {
-	const { standardUnit, currentAuction, endAuction, auctions } = useReach()
+	const { standardUnit, currentAuction, endAuction, auctions, setShowSeller } = useReach()
 	const aucAsset = useRef()
 	const [auction, setAuction] = useState(
 		auctions.filter((el) => Number(el.id) === currentAuction)[0]
@@ -47,9 +47,11 @@ const Seller = () => {
 	}, [])
 
 	useEffect(() => {
+		if(auctions.length === 0) setShowSeller(false)
 		setAuction(auctions.filter((el) => Number(el.id) === currentAuction)[0])
+		console.log(currentAuction, auction, auctions)
 	}, [auctions])
-	
+
 	return (
 		<div className={cf(s.wMax, s.flex, s.flexCenter, auc.auctionParent)}>
 			<div className={cf(s.wMax, auc.auctionMask)}></div>

@@ -8,7 +8,8 @@ import { Arc69 } from '../../ARC69/arc.js'
 const arc69 = new Arc69()
 
 const Buyer = () => {
-	const { standardUnit, currentAuction, optIn, auctions } = useReach()
+	const { standardUnit, currentAuction, optIn, auctions, setShowBuyer } =
+		useReach()
 	const [auction, setAuction] = useState(
 		auctions.filter((el) => Number(el.id) === currentAuction)[0]
 	)
@@ -48,6 +49,7 @@ const Buyer = () => {
 	}, [])
 
 	useEffect(() => {
+		if (auctions.length === 0) setShowBuyer(false)
 		setAuction(auctions.filter((el) => Number(el.id) === currentAuction)[0])
 	}, [auctions])
 
@@ -152,8 +154,7 @@ const Buyer = () => {
 						Live Bid
 					</h2>
 					<span className={cf(s.wMax, s.flex, s.flexCenter, auc.liveBidValue)}>
-						{auction.optIn ? auction.liveBid ?? 'Listening for a bid' : '####'}{' '}
-						{standardUnit}
+						{auction.optIn ? auction.liveBid : '####'} {standardUnit}
 					</span>
 				</div>
 				<div className={cf(s.wMax, s.flex, s.flexCenter, auc.terminateCon)}>
