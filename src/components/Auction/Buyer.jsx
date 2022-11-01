@@ -158,15 +158,17 @@ const Buyer = () => {
 					</span>
 				</div>
 				<div className={cf(s.wMax, s.flex, s.flexCenter, auc.terminateCon)}>
-					<button
-						className={cf(s.flex, s.flexCenter, auc.liveBidBtn)}
-						type='button'
-						onClick={() => {
-							optIn(auction.contractInfo, auction.id)
-						}}
-					>
-						View Live Bid
-					</button>
+					{!auction.optIn && (
+						<button
+							className={cf(s.flex, s.flexCenter, auc.liveBidBtn)}
+							type='button'
+							onClick={() => {
+								optIn(auction.contractInfo, auction.id)
+							}}
+						>
+							View Live Bid
+						</button>
+					)}
 				</div>
 			</div>
 		</div>

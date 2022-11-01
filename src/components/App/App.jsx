@@ -169,7 +169,8 @@ const App = () => {
 								if (auctions.length) setView('Buy')
 								else
 									alertThis({
-										message: 'Please hold while auctions get uploaded. Try again sometime later',
+										message:
+											'Please hold while auctions get uploaded. Try again sometime later',
 										forConfirmation: false,
 									})
 							})
@@ -244,11 +245,11 @@ const App = () => {
 								app.joinComDescriptionText
 							)}
 						>
-							With 0xAuction you can mint an NFT, start an auction to
-							sell any collectible you own, browse through the list of active 
-							auctions to bid on any NFT on the list. Auctions are safe, 
-							fully decentralized, peer-to-peer, and designed 
-							with the best interest of the Buyer and Seller in mind.
+							With 0xAuction you can mint an NFT, start an auction to sell any
+							collectible you own, browse through the list of active auctions to
+							bid on any NFT on the list. Auctions are safe, fully
+							decentralized, peer-to-peer, and designed with the best interest
+							of the Buyer and Seller in mind.
 						</span>
 					</div>
 					<div
@@ -262,11 +263,11 @@ const App = () => {
 					>
 						<a
 							className={cf(app.joinComActionLink)}
-							href='https://twitter.com/reachlang'
+							href='https://www.reach.sh/'
 							target='_blank'
 							rel='noreferrer'
 						>
-							Community
+							Visit Reach
 						</a>
 					</div>
 				</div>
@@ -297,7 +298,12 @@ const App = () => {
 							app.communitySocial
 						)}
 					>
-						<div className={app.comSocialIcon}>
+						<div
+							className={app.comSocialIcon}
+							onClick={() => {
+								window.open(`https://twitter.com/reachlang`, '_blank')
+							}}
+						>
 							<svg
 								data-v-41d372ae=''
 								width='32'
@@ -319,9 +325,10 @@ const App = () => {
 								<span
 									className={cf(s.wMax, s.dInlineBlock, app.comSocialDesText)}
 								>
-									Buyers can all opt-in to receive realtime notifications anytime 
-									a bid higher than theirs' is made. For every Buyer that opts in,
-									the Seller gets 10% of the opt-in fee as a way of appreciating users for choosing 0xAuction.
+									Buyers can all opt-in to receive realtime notifications
+									anytime a bid higher than theirs' is made. For every Buyer
+									that opts in, the Seller gets 10% of the opt-in fee as a way
+									of appreciating users for choosing 0xAuction.
 								</span>
 							</div>
 						</div>
@@ -343,7 +350,12 @@ const App = () => {
 							app.communitySocial
 						)}
 					>
-						<div className={app.comSocialIcon}>
+						<div
+							className={app.comSocialIcon}
+							onClick={() => {
+								window.open(`https://bit.ly/3BnPyKd`, '_blank')
+							}}
+						>
 							<svg
 								data-v-41d372ae=''
 								width='34'
@@ -379,11 +391,12 @@ const App = () => {
 								<span
 									className={cf(s.wMax, s.dInlineBlock, app.comSocialDesText)}
 								>
-									Auctions are timed and safe as both the NFT and the current 
-								   	highest bid are held in escrow by the contract until the expiry 
-								   	of the set time (however the Seller may choose to end the auction 
-								   	at any time), afterwards the Seller must then either sign off on 
-									the sale or reject it and the highest bidder refunded.
+									Auctions are timed and safe as both the NFT and the current
+									highest bid are held in escrow by the contract until the
+									expiry of the set time (however the Seller may choose to end
+									the auction at any time), afterwards the Seller must then
+									either sign off on the sale or reject it and the highest
+									bidder refunded.
 								</span>
 							</div>
 						</div>
@@ -405,7 +418,12 @@ const App = () => {
 							app.communitySocial
 						)}
 					>
-						<div className={app.comSocialIcon}>
+						<div
+							className={app.comSocialIcon}
+							onClick={() => {
+								window.open(`https://www.reach.sh/`, '_blank')
+							}}
+						>
 							<svg
 								xmlns='http://www.w3.org/2000/svg'
 								width='78'
@@ -429,9 +447,9 @@ const App = () => {
 								<span
 									className={cf(s.wMax, s.dInlineBlock, app.comSocialDesText)}
 								>
-									0xAuction is built with Reach and powered by the Algorand Network.
-									Utilizing the Reach verification engine, 0xAuction's contracts are 
-									vetted by the Z3 theorem prover.
+									0xAuction is built with Reach and powered by the Algorand
+									Network. Utilizing the Reach verification engine, 0xAuction's
+									contracts are vetted by the Z3 theorem prover.
 								</span>
 							</div>
 						</div>

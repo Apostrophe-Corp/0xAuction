@@ -13,7 +13,6 @@ import s from '../styles/Shared.module.css'
 import '../styles/Global.module.css'
 import icon from '../assets/images/preview.jpg'
 import app from '../styles/App.module.css'
-import { Preloader } from '../components/Preloader'
 import { Alert } from '../components/Alert'
 import { Buyer, Seller } from '../components/Auction'
 import { ConnectAccount, LoadingPreview } from '../components/App'
@@ -222,13 +221,13 @@ const ReachContextProvider = ({ children }) => {
 			})
 			setAuctions((previous) => presentAuctions)
 			updateLatestAuctions(presentAuctions)
-			console.log(
-				String(user.address) === reach.formatAddress(what[3]) &&
-					currentAuction !== null,
-				String(user.address),
-				reach.formatAddress(what[3]),
-				currentAuction,parseInt(what[0])
-			)
+			// console.log(
+			// 	String(user.address) === reach.formatAddress(what[3]) &&
+			// 		currentAuction !== null,
+			// 	String(user.address),
+			// 	reach.formatAddress(what[3]),
+			// 	currentAuction,parseInt(what[0])
+			// )
 			if (String(user.address) === reach.formatAddress(what[3])) {
 				setCurrentAuction(parseInt(what[0]))
 				stopWaiting()
@@ -297,7 +296,7 @@ const ReachContextProvider = ({ children }) => {
 						await ctc.getInfo().then(async (infoStr) => {
 							const ctcInfoStr = JSON.stringify(infoStr, null)
 							setContract({ ctcInfoStr })
-							console.log(ctcInfoStr)
+							// console.log(ctcInfoStr)
 							stopWaiting()
 							const copy = await alertThis({
 								message: `Deployed successfully, here's the contract info: ${ctcInfoStr}. Copy to clipboard?`,
@@ -365,7 +364,7 @@ const ReachContextProvider = ({ children }) => {
 			if (key === 'name' || key === 'symbol') continue
 			if (opts[key]) launchOpts[key] = opts[key]
 		}
-		console.log(launchOpts)
+		// console.log(launchOpts)
 		const launchedToken = await reach.launchToken(
 			user.account,
 			opts['name'],
@@ -429,13 +428,14 @@ const ReachContextProvider = ({ children }) => {
 					(el) => Number(el.id) !== parseInt(what[1])
 				)
 				const updatedAuctions = [auctionTobeEdited, ...remaininAuctions]
-				console.log({ yourBid, owner, ctcInfo, opt, updatedAuctions })
+				// console.log({ yourBid, owner, ctcInfo, opt, updatedAuctions })
 				setAuctions((previous) => updatedAuctions)
 				updateLatestAuctions(updatedAuctions)
+				// console.log(newBid > yourBid && String(owner) !== String(user.address), newBid, yourBid, String(owner), String(user.address))
 				if (newBid > yourBid && String(owner) !== String(user.address)) {
 					const bidAgain = await alertThis({
 						message: `You just got outbid,${
-							opt ? ` the highest bid is now ${newBid}` : ''
+							opt ? ` the highest bid is now ${newBid} ${standardUnit}` : ''
 						} bid again?`,
 						accept: 'Yes',
 						decline: 'No',
@@ -450,7 +450,7 @@ const ReachContextProvider = ({ children }) => {
 							await reach.balanceOf(user.account),
 							4
 						)
-						console.log(userBal)
+						// console.log(userBal)
 						if (userBal - bid < 0) {
 							stopWaiting()
 							alertThis({
@@ -516,15 +516,18 @@ const ReachContextProvider = ({ children }) => {
 					const object = {
 						id: parseInt(what[1]),
 						blockEnded: blockEnded,
-						lastBid: 0,
+						lastBid: parseInt(what[2]),
 					}
-					console.log(object)
+					// console.log(object)
 					const endedAuction = auctions.filter(
 						(el) => Number(el.id) === parseInt(what[1])
 					)[0]
 					if (String(endedAuction.owner) === String(user.address)) {
 						const agreeToBid = await alertThis({
-							message: 'Do you accept the current bid?',
+							message: `Do you accept the current bid of ${reach.formatCurrency(
+								what[2],
+								4
+							)} ${standardUnit}?`,
 							accept: 'Yes',
 							decline: 'No',
 						})
@@ -543,11 +546,17 @@ const ReachContextProvider = ({ children }) => {
 								forConfirmation: false,
 							})
 						}
+					} else {
+						alertThis({
+							message: 'The auction has ended',
+							forConfirmation: false,
+						})
 					}
 					await contractInstance.apis.Auction.ended(object)
 				} catch (error) {
 					console.log({ error })
 				}
+				setCurrentAuction(null)
 				break
 			case ifState('accepted'):
 				// If the user is opt into this auction's live bid notification (check possibly through an object) then alert that the final bid got accepted
@@ -566,7 +575,7 @@ const ReachContextProvider = ({ children }) => {
 			null,
 			auctionParams.tokenId,
 		])
-		console.log(parseInt(nftBal))
+		// console.log(parseInt(nftBal))
 		if (!parseInt(nftBal)) {
 			stopWaiting()
 			alertThis({
@@ -688,7 +697,7 @@ const ReachContextProvider = ({ children }) => {
 				await reach.balanceOf(user.account),
 				4
 			)
-			console.log(userBal)
+			// console.log(userBal)
 			if (userBal - bid < 0) {
 				stopWaiting()
 				alertThis({
@@ -732,6 +741,7 @@ const ReachContextProvider = ({ children }) => {
 					optIn()
 				}
 			}
+			ctc.events.log.monitor(handleAuctionLog)
 		}
 	}
 
@@ -745,7 +755,7 @@ const ReachContextProvider = ({ children }) => {
 		if (agree && userBal) {
 			startWaiting()
 			try {
-				console.log(currentAuction.ctc)
+				// console.log(currentAuction.ctc)
 				const ctc = user.account.contract(auctionCtc, JSON.parse(info))
 				const didOptin = await ctc.apis.Bidder.optIn()
 				const auctionTobeEdited = auctions.filter(
@@ -904,8 +914,7 @@ const ReachContextProvider = ({ children }) => {
 						0xAuction
 					</div>
 					<div className={cf(s.wMax, app.registered)}>
-						0xAuction is the product of Apostrophe Corp. for the Live Onchain
-						Notifications Algorand Green House Hack Category.
+						0xAuction is the product of Apostrophe Corp. for the Algorand Green House Bounty Hack.
 					</div>
 				</div>
 			</div>
