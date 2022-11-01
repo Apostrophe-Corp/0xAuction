@@ -4,7 +4,8 @@ import ca from '../../styles/ConnectAccount.module.css'
 import { useReach, fmtClasses as cf } from '../../hooks'
 
 const ConnectAccount = () => {
-	const { setShowConnectAccount, connectToWallet, user, alertThis, contract } = useReach()
+	const { setShowConnectAccount, connectToWallet, user, alertThis, contract } =
+		useReach()
 
 	const copyToClipboard = async (e) => {
 		navigator.clipboard.writeText(user.address)
@@ -15,7 +16,7 @@ const ConnectAccount = () => {
 	}
 
 	const copyCtcToClipboard = async (e) => {
-		navigator.clipboard.writeText(user.address)
+		navigator.clipboard.writeText(contract?.ctcInfoStr)
 		alertThis({
 			message: 'Copied to clipboard',
 			forConfirmation: false,
