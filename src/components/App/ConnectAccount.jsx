@@ -116,12 +116,12 @@ const ConnectAccount = () => {
 						ca.addressContainer
 					)}
 				>
-					{contract.ctcInfoStr && (
+					{contract?.ctcInfoStr && (
 						<button
 							onClick={copyCtcToClipboard}
 							className={cf(s.wMax, s.dInlineBlock, ca.connectTitle)}
 						>
-							{contract.ctcInfoStr}
+							{contract?.ctcInfoStr}
 						</button>
 					)}
 				</div>
