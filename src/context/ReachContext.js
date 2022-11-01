@@ -783,6 +783,7 @@ const ReachContextProvider = ({ children }) => {
 		connectToWallet,
 		view,
 		setView,
+		contract,
 		promiseOfConfirmation,
 		setPromiseOfConfirmation,
 		alertInfo,
