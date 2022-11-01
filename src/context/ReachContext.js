@@ -22,7 +22,7 @@ const algoExplorerURI = {
 	MainNet: 'https://algoexplorer.io',
 }['TestNet']
 
-const deadline = 70
+const deadline = 200
 
 const reach = loadStdlib(process.env)
 
@@ -87,6 +87,7 @@ const ReachContextProvider = ({ children }) => {
 		decline = 'No',
 		forConfirmation = true,
 		prompt = false,
+		persist = false,
 	} = {}) => {
 		return new Promise((resolve) => {
 			setPromiseOfConfirmation({ resolve })
@@ -96,6 +97,7 @@ const ReachContextProvider = ({ children }) => {
 				decline,
 				forConfirmation,
 				prompt,
+				persist,
 			}))
 			setShowAlert((lastState) => true)
 		})
@@ -229,13 +231,23 @@ const ReachContextProvider = ({ children }) => {
 			// 	currentAuction,parseInt(what[0])
 			// )
 			if (String(user.address) === reach.formatAddress(what[3])) {
-				setCurrentAuction(parseInt(what[0]))
-				stopWaiting()
-				alertThis({
-					message: 'Your auction is live',
-					forConfirmation: false,
-				})
-				setShowSeller(true)
+				const tempAuctionCtc = user.account.contract(auctionCtc, what[1])
+				try {
+					const stillRunning = await tempAuctionCtc.v.AuctionView.isRunning()
+					console.log(stillRunning)
+					if (stillRunning) {
+						setCurrentAuction(parseInt(what[0]))
+						stopWaiting()
+						alertThis({
+							message: 'Your auction is live',
+							forConfirmation: false,
+						})
+						tempAuctionCtc.events.log.monitor(handleAuctionLog)
+						setShowSeller(true)
+					}
+				} catch (error) {
+					console.log({ error })
+				}
 			}
 		}
 	}
@@ -251,7 +263,7 @@ const ReachContextProvider = ({ children }) => {
 		const remainingAuctions = auctionsTobeEdited.filter(
 			(el) => Number(el.id) !== parseInt(what[0])
 		)
-		if (remainingAuctions.length === 0) setView('App')
+		if (remainingAuctions.length === 0 && view === 'Buy') setView('App')
 		setAuctions((previous) => remainingAuctions)
 		updateLatestAuctions(remainingAuctions)
 	}
@@ -516,7 +528,7 @@ const ReachContextProvider = ({ children }) => {
 					const object = {
 						id: parseInt(what[1]),
 						blockEnded: blockEnded,
-						lastBid: parseInt(what[2]),
+						lastBid: reach.formatCurrency(what[2], 4),
 					}
 					// console.log(object)
 					const endedAuction = auctions.filter(
@@ -666,6 +678,7 @@ const ReachContextProvider = ({ children }) => {
 			alertThis({
 				message: 'Please confirm asset opt-in on your wallet',
 				forConfirmation: false,
+				persist: true,
 			})
 			setCurrentAuction(auctionInfo.id)
 			try {
@@ -720,7 +733,6 @@ const ReachContextProvider = ({ children }) => {
 				const updatedAuctions = [auctionTobeEdited, ...remaininAuctions]
 				setAuctions((previous) => updatedAuctions)
 				updateLatestAuctions(updatedAuctions)
-				setShowBuyer(true)
 				stopWaiting()
 				alertThis({
 					message: 'Bid placed',
@@ -738,14 +750,15 @@ const ReachContextProvider = ({ children }) => {
 				})
 
 				if (opt) {
-					optIn()
+					await optIn(auctionInfo['id'])
 				}
 			}
 			ctc.events.log.monitor(handleAuctionLog)
+			setShowBuyer(true)
 		}
 	}
 
-	const optIn = async (info, id) => {
+	const optIn = async (id) => {
 		const agree = await alertThis({
 			message: `To view Live Bid, you must pay a small token of 1 ${standardUnit}`,
 			accept: 'Pay',
@@ -756,11 +769,14 @@ const ReachContextProvider = ({ children }) => {
 			startWaiting()
 			try {
 				// console.log(currentAuction.ctc)
-				const ctc = user.account.contract(auctionCtc, JSON.parse(info))
-				const didOptin = await ctc.apis.Bidder.optIn()
 				const auctionTobeEdited = auctions.filter(
 					(el) => Number(el.id) === id
 				)[0]
+				const ctc = user.account.contract(
+					auctionCtc,
+					JSON.parse(auctionTobeEdited['contractInfo'])
+				)
+				const didOptin = await ctc.apis.Bidder.optIn()
 				auctionTobeEdited['optIn'] = didOptin
 				const remaininAuctions = auctions.filter((el) => Number(el.id) !== id)
 				const updatedAuctions = [auctionTobeEdited, ...remaininAuctions]
@@ -914,7 +930,8 @@ const ReachContextProvider = ({ children }) => {
 						0xAuction
 					</div>
 					<div className={cf(s.wMax, app.registered)}>
-						0xAuction is the product of Apostrophe Corp. for the Algorand Green House Bounty Hack.
+						0xAuction is the product of Apostrophe Corp. for the Algorand Green
+						House Bounty Hack.
 					</div>
 				</div>
 			</div>
