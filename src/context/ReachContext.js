@@ -59,7 +59,7 @@ const ReachContextProvider = ({ children }) => {
 		useState(false),
 	]
 
-	const [currentAuction, setCurrentAuction] = useState({})
+	const [currentAuction, setCurrentAuction] = useState(null)
 	const [auctions, setAuctions] = useState([])
 	const [latestAuctions, setLatestAuctions] = useState([])
 
@@ -222,7 +222,10 @@ const ReachContextProvider = ({ children }) => {
 			})
 			setAuctions((previous) => presentAuctions)
 			updateLatestAuctions(presentAuctions)
-			if (String(user.address) === String(reach.formatAddress(what[3]))) {
+			if (
+				String(user.address) === String(reach.formatAddress(what[3])) &&
+				currentAuction !== null
+			) {
 				stopWaiting()
 				alertThis({
 					message: 'Your auction is live',
@@ -244,7 +247,7 @@ const ReachContextProvider = ({ children }) => {
 		const remainingAuctions = auctionsTobeEdited.filter(
 			(el) => Number(el.id) !== parseInt(what[0])
 		)
-		if(remainingAuctions.length === 0) setView('App')
+		if (remainingAuctions.length === 0) setView('App')
 		setAuctions((previous) => remainingAuctions)
 		updateLatestAuctions(remainingAuctions)
 	}
@@ -493,7 +496,7 @@ const ReachContextProvider = ({ children }) => {
 					message: `This auction's bidding window has been closed by the Auctioneer`,
 					forConfirmation: false,
 				})
-				if(auctions.length === 1) setView('App')
+				if (auctions.length === 1) setView('App')
 				setShowBuyer(false)
 				setShowSeller(false)
 				const presentAuc = auctions
