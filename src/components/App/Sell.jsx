@@ -117,7 +117,7 @@ const Sell = () => {
 						Start an Auction for your NFT or Collectible!
 					</h1>
 					<h2 className={cf(sell.callOutSub)}>
-						Be your own Sotheby's or Christie's and take full control of your own Auction. No hidden fees, charges or middlemen.\n Get full value for your art by selling directly to a peer like yourself. 
+						Be your own Sotheby's or Christie's and take full control of your own Auction. No hidden fees, charges or middlemen.<br/>Get full value for your art by selling directly to a peer like yourself. 
 					</h2>
 				</div>
 				<div
