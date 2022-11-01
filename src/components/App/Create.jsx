@@ -103,10 +103,10 @@ const Create = () => {
 					)}
 				>
 					<h1 className={cf(s.w480_100, s.w360_100, cr8.callOutMain)}>
-						Create the next big thing!
+						Create the next Bored Ape or Cyberpunks. Become the next Beeple!
 					</h1>
 					<h2 className={cf(cr8.callOutSub)}>
-						Some dummy text... Some dummy text... Some dummy text...
+						Create the NFT of your dreams in a few simple steps by simply filling out the form
 					</h2>
 				</div>
 				<div
