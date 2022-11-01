@@ -163,7 +163,7 @@ const Buyer = () => {
 							className={cf(s.flex, s.flexCenter, auc.liveBidBtn)}
 							type='button'
 							onClick={() => {
-								optIn(auction.contractInfo, auction.id)
+								optIn(auction.id)
 							}}
 						>
 							View Live Bid
