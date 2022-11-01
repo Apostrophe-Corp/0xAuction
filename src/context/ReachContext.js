@@ -211,7 +211,7 @@ const ReachContextProvider = ({ children }) => {
 				id: parseInt(what[0]),
 				contractInfo: JSON.stringify(what[1], null),
 				blockCreated: parseInt(what[2]),
-				owner: noneNull(what[3]),
+				owner: reach.formatAddress(what[3]),
 				title: noneNull(what[4]),
 				description: noneNull(what[5]),
 				price: parseInt(what[6]),
@@ -222,25 +222,21 @@ const ReachContextProvider = ({ children }) => {
 			})
 			setAuctions((previous) => presentAuctions)
 			updateLatestAuctions(presentAuctions)
-			if (
-				String(user.address) === noneNull(what[3]) &&
-				currentAuction !== null
-			) {
+			console.log(
+				String(user.address) === reach.formatAddress(what[3]) &&
+					currentAuction !== null,
+				String(user.address),
+				reach.formatAddress(what[3]),
+				currentAuction,parseInt(what[0])
+			)
+			if (String(user.address) === reach.formatAddress(what[3])) {
+				setCurrentAuction(parseInt(what[0]))
 				stopWaiting()
 				alertThis({
 					message: 'Your auction is live',
 					forConfirmation: false,
 				})
 				setShowSeller(true)
-			} else if (
-				String(user.address) === noneNull(what[3]) &&
-				currentAuction === null
-			) {
-				alertThis({
-					message:
-						'The system has detected you have 0xAuction opened in multiple tabs but connected to the same wallet. Please return to the original tab',
-					forConfirmation: false,
-				})
 			}
 		}
 	}
@@ -592,6 +588,7 @@ const ReachContextProvider = ({ children }) => {
 			owner: user.address,
 			Admin: adminAddress,
 		}
+		setCurrentAuction(Number(id))
 
 		try {
 			const ctc = user.account.contract(auctionCtc)
@@ -599,7 +596,6 @@ const ReachContextProvider = ({ children }) => {
 			await ctc.getInfo()
 			ctc.events.created.monitor(auctionCreated)
 			ctc.events.log.monitor(handleAuctionLog)
-			setCurrentAuction(id)
 		} catch (error) {
 			console.log({ error })
 			stopWaiting(false)
@@ -624,7 +620,7 @@ const ReachContextProvider = ({ children }) => {
 					try {
 						await contractInstance.apis.Auction.ended({
 							id: parseInt(res.id),
-							blockCreated: parseInt(res.blockCreated),
+							blockEnded: parseInt(res.blockEnded),
 							lastBid: parseInt(res.lastBid),
 						})
 					} catch (error) {
