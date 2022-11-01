@@ -230,7 +230,7 @@ const App = () => {
 				>
 					<div className={cf(s.wMax, app.joinComTheme)}>
 						<h1 className={cf(s.wMax, s.p10, s.m0, app.joinComThemeText)}>
-							Meet the worldwide community.
+							Trading has never been this easy.
 						</h1>
 					</div>
 					<div className={cf(s.wMax, app.joinComDescription)}>
@@ -244,9 +244,12 @@ const App = () => {
 								app.joinComDescriptionText
 							)}
 						>
-							Join a fast-growing community of developers and innovators
-							connected all over the world, building the new era of the
-							internet.
+							With 0xAuction you can mint an NFT, storing it in your wallet
+							or start an auction to sell any collectible you own.
+							You could browse through the list of active 
+							auctions to bid on any NFT in the list. Auctions are safe, 
+							fully decentralized, peer-to-peer, and designed 
+							with the best interest of the buyer and seller in mind.
 						</span>
 					</div>
 					<div
@@ -312,13 +315,13 @@ const App = () => {
 							</svg>
 						</div>
 						<div className={app.comSocialContent}>
-							<div className={app.comSocialName}>Twitter</div>
+							<div className={app.comSocialName}>Real-time Auctions</div>
 							<div className={app.comSocialDescription}>
 								<span
 									className={cf(s.wMax, s.dInlineBlock, app.comSocialDesText)}
 								>
-									Some dummy text...Some dummy text...Some dummy text...Some
-									dummy text...
+									Buyers can all opt-in to receive realtime notifications anytime 
+							   		an a higher bid is made. Get notified n
 								</span>
 							</div>
 						</div>
@@ -371,13 +374,16 @@ const App = () => {
 							</svg>
 						</div>
 						<div className={app.comSocialContent}>
-							<div className={app.comSocialName}>Developer Chat</div>
+							<div className={app.comSocialName}>Trustless and Secure</div>
 							<div className={app.comSocialDescription}>
 								<span
 									className={cf(s.wMax, s.dInlineBlock, app.comSocialDesText)}
 								>
-									Some dummy text...Some dummy text...Some dummy text...Some
-									dummy text...
+									Auctions are timed and safe as both the NFT and the current 
+								   	highest bid are held in escrow by the contract until the expiry 
+								   	of the set time (however the seller may choose to end the auction 
+								   	at any time), afterwards the seller must then either sign off on 
+									the sale or reject it and the highest bidder refunded.
 								</span>
 							</div>
 						</div>
