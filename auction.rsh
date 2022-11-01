@@ -124,7 +124,7 @@ export const main = Reach.App(() => {
 			return [keepBidding, highestBidder, lastPrice, isFirstBid]
 		})
 
-	Auction.log(state.pad('down'), auctionInfo.id, 1)
+	Auction.log(state.pad('down'), auctionInfo.id, lastPrice)
 
 	const awaitingDecision = parallelReduce(true)
 		.invariant(balance(tokenId) == balance(tokenId))

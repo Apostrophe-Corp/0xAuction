@@ -229,6 +229,7 @@
 
 .comSocialIcon {
 	width: 50px;
+	cursor: pointer;
 }
 
 .comSocialIcon svg {

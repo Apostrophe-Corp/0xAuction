@@ -142,7 +142,7 @@ const Create = () => {
 								name='name'
 								id='name'
 								onInput={handleInput}
-								placeholder='Image by Graphue on Freepik'
+								placeholder=''
 								className={cf(cr8.formInput)}
 							/>
 						</label>
@@ -156,7 +156,7 @@ const Create = () => {
 								name='symbol'
 								id='symbol'
 								onInput={handleInput}
-								placeholder='IBGF'
+								placeholder=''
 								className={cf(cr8.formInput)}
 							/>
 						</label>
@@ -170,7 +170,7 @@ const Create = () => {
 								name='url'
 								id='url'
 								onInput={handleInput}
-								placeholder='bit.ly/3gD1nFM#i'
+								placeholder=''
 								className={cf(cr8.formInput)}
 							/>
 							<span className={cr8.note}>
@@ -203,7 +203,7 @@ const Create = () => {
 								name='clawback'
 								id='clawback'
 								onInput={handleInput}
-								placeholder='Optional'
+								placeholder=''
 								className={cf(cr8.formInput)}
 							/>
 						</label>
@@ -217,7 +217,7 @@ const Create = () => {
 								name='freeze'
 								id='freeze'
 								onInput={handleInput}
-								placeholder='Optional'
+								placeholder=''
 								className={cf(cr8.formInput)}
 							/>
 						</label>
@@ -231,7 +231,7 @@ const Create = () => {
 								name='reserve'
 								id='reserve'
 								onInput={handleInput}
-								placeholder='Optional'
+								placeholder=''
 								className={cf(cr8.formInput)}
 							/>
 						</label>
@@ -245,7 +245,7 @@ const Create = () => {
 								name='manager'
 								id='manager'
 								onInput={handleInput}
-								placeholder='Optional'
+								placeholder=''
 								className={cf(cr8.formInput)}
 							/>
 						</label>
