@@ -770,7 +770,7 @@ const ReachContextProvider = ({ children }) => {
 			try {
 				// console.log(currentAuction.ctc)
 				const auctionTobeEdited = auctions.filter(
-					(el) => Number(el.id) === id
+					(el) => Number(el.id) === Number(id)
 				)[0]
 				const ctc = user.account.contract(
 					auctionCtc,
