@@ -53,7 +53,7 @@ const Sell = () => {
 		let value = e.currentTarget.value
 
 		if (name === 'title') {
-			value = String(value).slice(0, 32)
+			value = String(value).slice(0, 20)
 			setAuctionParams({
 				...auctionParams,
 				title: value,
