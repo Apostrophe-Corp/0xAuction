@@ -22,7 +22,7 @@ const algoExplorerURI = {
 	MainNet: 'https://algoexplorer.io',
 }['TestNet']
 
-const deadline = 200
+const deadline = 10000
 
 const reach = loadStdlib(process.env)
 
@@ -89,6 +89,7 @@ const ReachContextProvider = ({ children }) => {
 		forConfirmation = true,
 		prompt = false,
 		persist = false,
+		neutral = false,
 	} = {}) => {
 		return new Promise((resolve) => {
 			setPromiseOfConfirmation({ resolve })
@@ -99,6 +100,7 @@ const ReachContextProvider = ({ children }) => {
 				forConfirmation,
 				prompt,
 				persist,
+				neutral,
 			}))
 			setShowAlert((lastState) => true)
 		})
@@ -288,6 +290,7 @@ const ReachContextProvider = ({ children }) => {
 					message: 'Would you be deploying or attaching?',
 					accept: 'Deploying',
 					decline: 'Attaching',
+					neutral: true,
 				})
 
 				if (shouldDeploy) {
@@ -605,7 +608,7 @@ const ReachContextProvider = ({ children }) => {
 		}
 		const auctionInfo = {
 			...auctionParams,
-			id,
+			id:parseInt(id),
 			deadline,
 			owner: user.address,
 			Admin: adminAddress,
@@ -948,7 +951,7 @@ export default ReachContextProvider
 
 // The Recluse    https://bit.ly/3UaJj53#i
 
-// Tranquility        Tranquility
+// Tranquility        https://bit.ly/3fsT4Mv#i
 
 // Axel Rose    https://bit.ly/3U9PGos#i
 
