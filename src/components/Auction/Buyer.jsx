@@ -50,7 +50,9 @@ const Buyer = () => {
 
 	useEffect(() => {
 		if (auctions.length === 0) setShowBuyer(false)
-		setAuction(auctions.filter((el) => Number(el.id) === currentAuction)[0])
+		const updatedAuction = auctions.filter((el) => Number(el?.id) === currentAuction)[0]
+		if (!updatedAuction) setShowBuyer(false)
+		setAuction(updatedAuction)
 	}, [auctions])
 
 	return (
