@@ -14,11 +14,13 @@ const Alert = () => {
 
 	const [active, setActive] = useState(showAlert)
 	const [response, setResponse] = useState('')
-	const [alertClass, setAlertClass] = useState(cf(s.wMax, s.flex, s.flexCenter, alt.alertContainer))
+	const [alertClass, setAlertClass] = useState(
+		cf(s.wMax, s.flex, s.flexCenter, alt.alertContainer)
+	)
 
 	const decide = (decision) => {
-		if (alertInfo.forConfirmation)
-			promiseOfConfirmation.resolve && promiseOfConfirmation.resolve(decision)
+		// if (alertInfo.forConfirmation)
+		promiseOfConfirmation.resolve && promiseOfConfirmation.resolve(decision)
 		setShowAlert(false)
 	}
 
@@ -30,23 +32,27 @@ const Alert = () => {
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	useEffect(() => {
 		if (showAlert === false) {
-				setAlertClass(cf(s.wMax, s.flex, s.flexCenter, alt.alertContainer, alt.invisible))
-				const terminate = setTimeout(() => {
+			setAlertClass(
+				cf(s.wMax, s.flex, s.flexCenter, alt.alertContainer, alt.invisible)
+			)
+			const terminate = setTimeout(() => {
 				setAlertClass(cf(alt.terminate))
 				setActive(false)
-					setAlertInfo({
-						message: 'Confirm Action',
-						accept: 'Yes',
-						decline: 'No',
-						forConfirmation: true,
-					})
-					clearTimeout(terminate)
-				}, 400)
+				setAlertInfo({
+					message: 'Confirm Action',
+					accept: 'Yes',
+					decline: 'No',
+					forConfirmation: true,
+				})
+				clearTimeout(terminate)
+			}, 400)
 		}
 		if (showAlert === true) {
 			setActive(true)
-				setAlertClass(cf(s.wMax, s.flex, s.flexCenter, alt.alertContainer, alt.invisible))
-				const present = setTimeout(() => {
+			setAlertClass(
+				cf(s.wMax, s.flex, s.flexCenter, alt.alertContainer, alt.invisible)
+			)
+			const present = setTimeout(() => {
 				setAlertClass(cf(s.wMax, s.flex, s.flexCenter, alt.alertContainer))
 				clearTimeout(present)
 			}, 200)
@@ -56,9 +62,7 @@ const Alert = () => {
 	return (
 		<>
 			{active && (
-				<div
-					className={alertClass}
-				>
+				<div className={alertClass}>
 					<div className={cf(s.wMax, alt.alertMask)}></div>
 					<div className={cf(s.flex, s.flexCenter, alt.alertDetails)}>
 						<div className={cf(s.wMax, s.flex, s.flexCenter, alt.alertMessage)}>
@@ -146,25 +150,27 @@ const Alert = () => {
 								</button>
 							</div>
 						) : (
-							<div
-								className={cf(
-									s.wMax,
-									s.flex,
-									s.spaceXAround,
-									s.spaceYCenter,
-									alt.confirmationBox
-								)}
-							>
-								<button
-									type='button'
-									onClick={() => {
-										decide(true)
-									}}
-									className={cf(s.flex, s.flexCenter, alt.button, alt.ok)}
+							!alertInfo.persist && (
+								<div
+									className={cf(
+										s.wMax,
+										s.flex,
+										s.spaceXAround,
+										s.spaceYCenter,
+										alt.confirmationBox
+									)}
 								>
-									Okay
-								</button>
-							</div>
+									<button
+										type='button'
+										onClick={() => {
+											decide(true)
+										}}
+										className={cf(s.flex, s.flexCenter, alt.button, alt.ok)}
+									>
+										Okay
+									</button>
+								</div>
+							)
 						)}
 					</div>
 				</div>
