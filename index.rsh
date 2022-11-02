@@ -18,7 +18,7 @@ export const main = Reach.App(() => {
 		['title', Bytes(20)],
 		['description', Bytes(80)],
 		['price', UInt],
-		['tokenId', Token]
+		['tokenId', Token],
 	])
 
 	const endResponse = Struct([
@@ -30,6 +30,7 @@ export const main = Reach.App(() => {
 	const Auctions = API('Auction', {
 		created: Fun([objectRep], Null),
 		ended: Fun([endResponse], Null),
+		getID: Fun([], UInt),
 	})
 
 	const Auction = Events({
@@ -37,7 +38,7 @@ export const main = Reach.App(() => {
 		end: [UInt, UInt, UInt],
 		// ID, ContractInfo, BlockCreated, Owner, Title, Description
 		create: [UInt, Contract, UInt, Address, Bytes(20), Bytes(80), UInt, Token],
-		passAddress: [Address]
+		passAddress: [Address],
 	})
 
 	init()
@@ -45,9 +46,13 @@ export const main = Reach.App(() => {
 	commit()
 	Admin.publish()
 	Auction.passAddress(Admin)
-	const keepGoing = parallelReduce(true)
+	const [keepGoing, auctionID] = parallelReduce([true, 0])
 		.invariant(balance() == 0)
 		.while(keepGoing)
+		.api(Auctions.getID, (notify) => {
+			notify(auctionID)
+			return [keepGoing, auctionID + 1]
+		})
 		.api(Auctions.created, (obj, notify) => {
 			notify(null)
 			const auctionStruct = objectRep.fromObject(obj)
@@ -62,7 +67,7 @@ export const main = Reach.App(() => {
 				auctionObject.price,
 				auctionObject.tokenId
 			)
-			return keepGoing
+			return [keepGoing, auctionID]
 		})
 		.api(Auctions.ended, (obj, notify) => {
 			notify(null)
@@ -73,7 +78,7 @@ export const main = Reach.App(() => {
 				endResponseObject.blockEnded,
 				endResponseObject.lastBid
 			)
-			return keepGoing
+			return [keepGoing, auctionID]
 		})
 	commit()
 	exit()
