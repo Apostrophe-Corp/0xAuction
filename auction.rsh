@@ -44,6 +44,11 @@ export const main = Reach.App(() => {
 		log: [state, UInt, UInt],
 		created: [UInt, Contract, UInt, Address, Bytes(20), Bytes(80), UInt, Token],
 	})
+
+	const AuctionView = View('AuctionView', {
+		isRunning: Bool,
+	})
+
 	init()
 
 	Seller.only(() => {
@@ -75,6 +80,9 @@ export const main = Reach.App(() => {
 		.invariant(balance(tokenId) == amt)
 		.invariant(balance() == (isFirstBid ? 0 : lastPrice))
 		.while(keepGoing() && keepBidding)
+		.define(() => {
+			AuctionView.isRunning.set(keepBidding && keepGoing())
+		})
 		.api_(Bidder.bid, (bid) => {
 			check(bid > lastPrice, 'Your bid is too low, please try again')
 			return [
@@ -92,13 +100,11 @@ export const main = Reach.App(() => {
 			return [
 				1000000,
 				(notify) => {
-					if(balance()>=900000)
-					transfer(900000).to(auctionInfo.Admin)
-					if(balance()>=100000)
-					transfer(100000).to(Seller)
-					notify(true)					
+					if (balance() >= 900000) transfer(900000).to(auctionInfo.Admin)
+					if (balance() >= 100000) transfer(100000).to(Seller)
+					notify(true)
 					return [keepBidding, highestBidder, lastPrice, isFirstBid]
-				}, 
+				},
 			]
 		})
 		.api(
