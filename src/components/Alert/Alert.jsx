@@ -144,7 +144,7 @@ const Alert = () => {
 									onClick={() => {
 										decide(false)
 									}}
-									className={cf(s.flex, s.flexCenter, alt.button, alt.decline)}
+									className={cf(s.flex, s.flexCenter, alt.button, alertInfo.neutral? alt.accept : alt.decline)}
 								>
 									{alertInfo.decline}
 								</button>
