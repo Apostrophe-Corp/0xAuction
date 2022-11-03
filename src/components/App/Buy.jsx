@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react'
 import s from '../../styles/Shared.module.css'
 import buy from '../../styles/Buy.module.css'
-import notFound from '../../assets/images/no_image.jpg'
+import notFound from '../../assets/images/preview.jpg'
 import { useReach, fmtClasses as cf } from '../../hooks'
 import { Arc69 } from '../../ARC69/arc.js'
 
@@ -53,7 +53,6 @@ const dummyText = [
 
 const LatestAuction = ({
 	assetID,
-	url = '',
 	title,
 	description,
 	desiredPrice,
@@ -69,31 +68,22 @@ const LatestAuction = ({
 		previewRef.current.style.backgroundSize = 'contain'
 	}
 
-	const fetchAssetMetadata = (x) => {
-		arc69
-			.fetch(x)
-			.then((data) => {
-				if (data.success && data.url) {
-					console.log('Media URL:', data.url)
-					setPreviewBgs({ x: data.url, y: url })
+	useEffect(() => {
+		const fetchAssetMetadata = async (x) => {
+			try {
+				const expectedData = await arc69.fetch(x)
+				if (expectedData.success && expectedData.url) {
+					console.log('Media URL:', expectedData.url)
+					setPreviewBgs({ x: expectedData.url })
 				} else {
-					setPreviewBgs({ y: url })
 					console.log('No image url found 🥱')
 				}
-			})
-			.catch((x) => {
-				setPreviewBgs({ y: url })
+			} catch (error) {
 				console.log('No image url found 🥱')
-			})
-	}
-
-	useEffect(() => {
-		setPreviewBgs({ y: url })
-	}, [])
-
-	useEffect(() => {
+			}
+		}
 		fetchAssetMetadata(assetID)
-	}, [])
+	}, [assetID])
 
 	return (
 		<div
@@ -127,14 +117,7 @@ const LatestAuction = ({
 	)
 }
 
-const Auction = ({
-	assetID,
-	title,
-	description,
-	desiredPrice,
-	url = '',
-	fullAuction,
-}) => {
+const Auction = ({ assetID, title, desiredPrice, url = '', fullAuction }) => {
 	const { standardUnit, joinAuction } = useReach()
 	const auctionNFTRef = useRef()
 
@@ -145,31 +128,22 @@ const Auction = ({
 		auctionNFTRef.current.style.backgroundSize = 'contain'
 	}
 
-	const fetchAssetMetadata = (x) => {
-		arc69
-			.fetch(x)
-			.then((data) => {
-				if (data.success && data.url) {
-					console.log('Media URL:', data.url)
-					setPreviewBgs({ x: data.url, y: url })
+	useEffect(() => {
+		const fetchAssetMetadata = async (x) => {
+			try {
+				const expectedData = await arc69.fetch(x)
+				if (expectedData.success && expectedData.url) {
+					console.log('Media URL:', expectedData.url)
+					setPreviewBgs({ x: expectedData.url })
 				} else {
-					setPreviewBgs({ y: url })
 					console.log('No image url found 🥱')
 				}
-			})
-			.catch((x) => {
-				setPreviewBgs({ y: url })
+			} catch (error) {
 				console.log('No image url found 🥱')
-			})
-	}
-
-	useEffect(() => {
-		setPreviewBgs({ y: url })
-	}, [])
-
-	useEffect(() => {
+			}
+		}
 		fetchAssetMetadata(assetID)
-	}, [])
+	}, [assetID])
 
 	return (
 		<div
@@ -190,7 +164,7 @@ const Auction = ({
 }
 
 const Buy = () => {
-	const { auctions, latestAuctions, joinAuction } = useReach()
+	const { auctions, latestAuctions } = useReach()
 
 	const latestAuctionRef = useRef()
 
