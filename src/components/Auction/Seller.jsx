@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import s from '../../styles/Shared.module.css'
 import auc from '../../styles/Auction.module.css'
-import notFound from '../../assets/images/no_image.jpg'
+import notFound from '../../assets/images/preview.jpg'
 import { useReach, fmtClasses as cf } from '../../hooks'
 import { Arc69 } from '../../ARC69/arc.js'
 
