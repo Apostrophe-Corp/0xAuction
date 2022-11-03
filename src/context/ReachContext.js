@@ -374,21 +374,30 @@ const ReachContextProvider = ({ children }) => {
 			if (opts[key]) launchOpts[key] = opts[key]
 		}
 		// console.log(launchOpts)
-		const launchedToken = await reach.launchToken(
-			user.account,
-			opts['name'],
-			opts['symbol'],
-			launchOpts
-		)
-		stopWaiting()
-		const viewToken = await alertThis({
-			message: `NFT successfully minted with ID: ${launchedToken.id}. Would you like to view this asset on AlgoExplorer.io now?`,
-			accept: 'Yes',
-			decline: 'No',
-		})
+		try {
+			const launchedToken = await reach.launchToken(
+				user.account,
+				opts['name'],
+				opts['symbol'],
+				launchOpts
+			)
+			stopWaiting()
+			const viewToken = await alertThis({
+				message: `NFT successfully minted with ID: ${launchedToken.id}. Would you like to view this asset on AlgoExplorer.io now?`,
+				accept: 'Yes',
+				decline: 'No',
+			})
 
-		if (viewToken) {
-			window.open(`${algoExplorerURI}/asset/${launchedToken.id}`, '_blank')
+			if (viewToken) {
+				window.open(`${algoExplorerURI}/asset/${launchedToken.id}`, '_blank')
+			}
+		} catch (error) {
+			console.log({ error })
+			stopWaiting()
+			alertThis({
+				message: 'Mint failed',
+				forConfirmation: false,
+			})
 		}
 	}
 
