@@ -495,7 +495,7 @@ const ReachContextProvider = ({ children }) => {
 							})
 
 							if (opt) {
-								optIn()
+								optIn(auctionTobeEdited['id'])
 							}
 						}
 					}
@@ -608,7 +608,7 @@ const ReachContextProvider = ({ children }) => {
 		}
 		const auctionInfo = {
 			...auctionParams,
-			id:parseInt(id),
+			id: parseInt(id),
 			deadline,
 			owner: user.address,
 			Admin: adminAddress,
