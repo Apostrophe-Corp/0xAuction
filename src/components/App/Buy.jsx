@@ -7,50 +7,6 @@ import { Arc69 } from '../../ARC69/arc.js'
 
 const arc69 = new Arc69()
 
-// Asset IDs in dummyText are referencing MainNet NFTs
-const dummyText = [
-	{
-		assetID: 912646033,
-		url: 'https://bit.ly/3gD1nFM#i',
-		title: 'NFT Sale for This NFT - 1',
-		description:
-			'Image by Graphue on Freepik. Some dummy text... Some dummy text... Some dummy Text... Some dummy text... Some dummmy text... Some dummy text...X',
-		desiredPrice: '999.99',
-	},
-	{
-		assetID: 912646040,
-		url: 'https://bit.ly/3gD1nFM#i',
-		title: 'NFT Sale for This NFT - 2',
-		description:
-			'Image by Graphue on Freepik. Some dummy text... Some dummy text... Some dummy Text... Some dummy text... Some dummmy text... Some dummy text...X',
-		desiredPrice: '999.99',
-	},
-	{
-		assetID: 912646047,
-		url: 'https://bit.ly/3gD1nFM#i',
-		title: 'NFT Sale for This NFT - 3',
-		description:
-			'Image by Graphue on Freepik. Some dummy text... Some dummy text... Some dummy Text... Some dummy text... Some dummmy text... Some dummy text...X',
-		desiredPrice: '999.99',
-	},
-	{
-		assetID: 912646027,
-		url: 'https://bit.ly/3gD1nFM#i',
-		title: 'NFT Sale for This NFT - 4',
-		description:
-			'Image by Graphue on Freepik. Some dummy text... Some dummy text... Some dummy Text... Some dummy text... Some dummmy text... Some dummy text...X',
-		desiredPrice: '999.99',
-	},
-	{
-		assetID: 912646033,
-		url: 'https://bit.ly/3gD1nFM#i',
-		title: 'NFT Sale for This NFT - 1',
-		description:
-			'Image by Graphue on Freepik. Some dummy text... Some dummy text... Some dummy Text... Some dummy text... Some dummmy text... Some dummy text...X',
-		desiredPrice: '999.99',
-	},
-]
-
 const LatestAuction = ({
 	assetID,
 	title,
