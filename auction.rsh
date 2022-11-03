@@ -43,10 +43,12 @@ export const main = Reach.App(() => {
 	const Auction = Events({
 		log: [state, UInt, UInt],
 		created: [UInt, Contract, UInt, Address, Bytes(20), Bytes(80), UInt, Token],
+		outcome: [state, Bytes(20), UInt, Address, Address, Token]
 	})
 
 	const AuctionView = View('AuctionView', {
 		isRunning: Bool,
+		awaitingConfirmation: Bool,
 	})
 
 	init()
@@ -134,7 +136,10 @@ export const main = Reach.App(() => {
 
 	const awaitingDecision = parallelReduce(true)
 		.invariant(balance(tokenId) == balance(tokenId))
-		.while(awaitingDecision == true)
+		.while(awaitingDecision)
+		.define(() => {
+			AuctionView.awaitingConfirmation.set(awaitingDecision)
+		})
 		.api(
 			Auctioneer.acceptSale,
 			() => {
@@ -142,11 +147,11 @@ export const main = Reach.App(() => {
 			},
 			() => 0,
 			(notify) => {
-				Auction.log(state.pad('accepted'), auctionInfo.id, lastPrice)
 				// Auction.log(state.pad('down'), auctionInfo.id, 1)
 				transfer(balance(tokenId), tokenId).to(highestBidder)
 				transfer(balance()).to(Seller)
 				notify(true)
+				Auction.outcome(state.pad('accepted'), auctionInfo.title, lastPrice, Seller, highestBidder, tokenId)
 				return false
 			}
 		)
@@ -157,21 +162,21 @@ export const main = Reach.App(() => {
 			},
 			() => 0,
 			(notify) => {
-				Auction.log(state.pad('rejected'), auctionInfo.id, lastPrice)
 				// Auction.log(state.pad('down'), auctionInfo.id, 1)
 				transfer(balance(tokenId), tokenId).to(Seller)
 				transfer(balance()).to(highestBidder)
 				notify(false)
+				Auction.outcome(state.pad('rejected'), auctionInfo.title, lastPrice, Seller, highestBidder, tokenId)
 				return false
 			}
 		)
 		.timeout(relativeTime(DEADLINE), () => {
 			Seller.publish()
-			Auction.log(state.pad('accepted'), auctionInfo.id, lastPrice)
 			// Auction.log(state.pad('down'), auctionInfo.id, 1)
 			transfer(balance(tokenId), tokenId).to(highestBidder)
 			transfer(balance()).to(Seller)
-			return true
+			Auction.outcome(state.pad('accepted'), auctionInfo.title, lastPrice, Seller, highestBidder, tokenId)
+			return false
 		})
 	transfer(balance(tokenId), tokenId).to(highestBidder)
 	transfer(balance()).to(Seller)
