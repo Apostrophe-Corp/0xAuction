@@ -98,18 +98,29 @@ The DApp
 ![Auction](NFTimages/sell.png)
 
 Authors
+
 Owolabi Adeyemi
+
 Emmanuel Agbavwe
+
 Acknowledgements
+
 JP Miller
+
 Nick Stanford
-And the Reach team, the Algorand Foundation and Gitcoin.
+
+And the Algorand Foundation and Gitcoin.
+
 Contributing
+
 This project is open to contributions from great minded developers who share our goal to make development easier, and to bring more developers into Web3 through the Reach Lang and by building on the Algorand network.
 
 To contribute, simply:
 
 Fork this repo, make your updates and additions.
+
 Create a GitHub discussion and bring your new ideas to our notice.
+
 Once approved, set up a pull request.
+
 After revision, your name will forever be among the wonderful develpers who contributed to building the 0xAuction.
