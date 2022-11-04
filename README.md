@@ -56,7 +56,7 @@ npm install
 
 - Head on over to the next browser and connect with a separate wallet, click on the buy button, select the role of an attacher, paste the contarct information and attach. Click on the buy button and you can then go ahead to test the bidding functionality. 
 
-- Repeat the step above with a third wallet and simulate bidding against wallet/ user 2.
+- Repeat the step above with a third wallet and simulate bidding against the other user/wallet.
 
 #### Important points to note
 
