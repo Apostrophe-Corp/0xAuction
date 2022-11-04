@@ -334,7 +334,7 @@ const ReachContextProvider = ({ children }) => {
 					}
 				} else {
 					const ctcInfo = await alertThis({
-						message: `Enter the contract info the 0xAuction you'll to connect to`,
+						message: `Enter the 0xAuction contract information`,
 						prompt: true,
 					})
 					try {
@@ -440,7 +440,12 @@ const ReachContextProvider = ({ children }) => {
 				const auctionToBeEdited = auctions.filter(
 					(el) => Number(el.id) === parseInt(what[1])
 				)[0]
-				auctionToBeEdited['liveBid'] = newBid
+				if (String(owner) !== String(user.address)) {
+					auctionToBeEdited['liveBid'] =
+						newBid > auctionToBeEdited['liveBid']
+							? newBid
+							: auctionToBeEdited['liveBid']
+				} else auctionToBeEdited['liveBid'] = newBid
 				yourBid = auctionToBeEdited['yourBid']
 				owner = auctionToBeEdited['owner']
 				ctcInfo = auctionToBeEdited['contractInfo']
@@ -451,7 +456,11 @@ const ReachContextProvider = ({ children }) => {
 				const updatedAuctions = [auctionToBeEdited, ...leftOutAuctions]
 				setAuctions((previous) => updatedAuctions)
 				updateLatestAuctions(updatedAuctions)
-				if (newBid > yourBid && String(owner) !== String(user.address)) {
+				console.log(auctionToBeEdited['liveBid'], yourBid)
+				if (
+					auctionToBeEdited['liveBid'] > yourBid &&
+					String(owner) !== String(user.address)
+				) {
 					const bidAgain = await alertThis({
 						message: `You just got outbid${
 							opt ? `, the highest bid is now ${newBid} ${standardUnit}` : ''
@@ -496,14 +505,9 @@ const ReachContextProvider = ({ children }) => {
 						blockEnded: blockEnded,
 						lastBid: reach.formatCurrency(what[2], 4),
 					}
-					const endedAuction = auctions.filter(
-						(el) => Number(el.id) === parseInt(what[1])
-					)[0]
-					if (String(endedAuction.owner) === String(user.address)) {
-						const tempAuctionCtc = user.account.contract(
-							auctionCtc,
-							JSON.parse(endedAuction.contractInfo)
-						)
+
+					if (reach.formatAddress(what[3]) === String(user.address)) {
+						const tempAuctionCtc = user.account.contract(auctionCtc, what[4])
 						try {
 							const awaitingConfirmation =
 								await tempAuctionCtc.v.AuctionView.awaitingConfirmation()
@@ -517,13 +521,9 @@ const ReachContextProvider = ({ children }) => {
 									accept: 'Yes',
 									decline: 'No',
 								})
-								const endedCtc = user.account.contract(
-									auctionCtc,
-									JSON.parse(endedAuction.contractInfo)
-								)
 								try {
-									if (agreeToBid) await endedCtc.a.Auctioneer.acceptSale()
-									else await endedCtc.a.Auctioneer.rejectSale()
+									if (agreeToBid) await tempAuctionCtc.a.Auctioneer.acceptSale()
+									else await tempAuctionCtc.a.Auctioneer.rejectSale()
 								} catch (error) {
 									console.log({ error })
 									alertThis({
@@ -544,6 +544,9 @@ const ReachContextProvider = ({ children }) => {
 						})
 						setShowBuyer(false)
 					}
+					const endedAuction = auctions.filter(
+						(el) => el.id === parseInt(what[1])[0]
+					)
 					if (endedAuction) {
 						await contractInstance.apis.Auction.ended(object)
 					}
@@ -555,20 +558,20 @@ const ReachContextProvider = ({ children }) => {
 			case ifState('accepted'):
 				if (reach.formatAddress(what[3]) === String(user.address)) {
 					alertThis({
-						message: `🎊🎉🥳 Congratulations!!! NFT sold at ${reach.formatCurrency(
+						message: `🥳 Congratulations!!! NFT sold at ${reach.formatCurrency(
 							what[2],
 							4
-						)} ${standardUnit} 🥳🎉🎊`,
+						)} ${standardUnit} 🎉`,
 						forConfirmation: false,
 					})
 				} else if (reach.formatAddress(what[4]) === String(user.address)) {
 					const viewToken = await alertThis({
-						message: `🎊🎉🥳 Congratulations!!! You now own this asset: ${parseInt(
+						message: `🥳 Congratulations!!! You now own this asset: ${parseInt(
 							what[5]
 						)}, at the cost of ${reach.formatCurrency(
 							what[2],
 							4
-						)} ${standardUnit} 🥳🎉🎊. Proceed to view on AlgoExplorer.io?`,
+						)} ${standardUnit} 🎉. Proceed to view on AlgoExplorer.io?`,
 						accept: 'Yes',
 						decline: 'No',
 					})
@@ -663,6 +666,7 @@ const ReachContextProvider = ({ children }) => {
 			await ctc.getInfo()
 			ctc.events.created.monitor(auctionCreated)
 			ctc.events.log.monitor(handleAuctionLog)
+			ctc.events.down.monitor(handleAuctionLog)
 			ctc.events.outcome.monitor(handleAuctionLog)
 		} catch (error) {
 			console.log({ error })
@@ -733,7 +737,6 @@ const ReachContextProvider = ({ children }) => {
 		// 	await reach.minimumBalanceOf(user.account),
 		// 	4
 		// )
-		let wasSuccessful = false
 		console.log(resultingBalance, minimumBalance)
 		if (resultingBalance < minimumBalance) {
 			stopWaiting()
@@ -754,15 +757,19 @@ const ReachContextProvider = ({ children }) => {
 				(el) => Number(el.id) === auctionID
 			)[0]
 			auctionToBeEdited['yourBid'] = bid
+			auctionToBeEdited['liveBid'] = bid
 			const remainingAuctions = auctions.filter(
 				(el) => Number(el.id) !== auctionID
 			)
 			const updatedAuctions = [auctionToBeEdited, ...remainingAuctions]
 			setAuctions((previous) => updatedAuctions)
 			updateLatestAuctions(updatedAuctions)
-			stopWaiting()
+			if (justJoining) {
+				ctc.events.log.monitor(handleAuctionLog)
+				ctc.events.down.monitor(handleAuctionLog)
+			}
 			loopVar = false
-			wasSuccessful = true
+			stopWaiting()
 			alertThis({
 				message: 'Bid placed',
 				forConfirmation: false,
@@ -778,8 +785,10 @@ const ReachContextProvider = ({ children }) => {
 				decline: 'Decline',
 			})
 
+			let didOptIn = false
 			if (opt) {
-				await optIn(auctionID)
+				didOptIn = await optIn(auctionID)
+				if (didOptIn) setShowBuyer(true)
 			}
 
 			loopVar = await alertThis({
@@ -787,10 +796,6 @@ const ReachContextProvider = ({ children }) => {
 				accept: 'Yes',
 				decline: 'No',
 			})
-		}
-		if (justJoining && wasSuccessful) {
-			ctc.events.log.monitor(handleAuctionLog)
-			setShowBuyer(true)
 		}
 		return loopVar
 	}
@@ -877,6 +882,7 @@ const ReachContextProvider = ({ children }) => {
 					message: 'OptIn successful',
 					forConfirmation: false,
 				})
+				return true
 			} catch (error) {
 				console.log({ error })
 				stopWaiting(false)
@@ -891,7 +897,7 @@ const ReachContextProvider = ({ children }) => {
 				forConfirmation: false,
 			})
 			setShowBuyer(false)
-			return
+			return false
 		}
 	}
 

@@ -7,7 +7,7 @@
 'reach 0.1'
 
 const state = Bytes(20)
-const DEADLINE = 20
+const DEADLINE = 50
 const amt = 1
 const optToken = 1000000
 export const main = Reach.App(() => {
@@ -44,7 +44,8 @@ export const main = Reach.App(() => {
 	const Auction = Events({
 		log: [state, UInt, UInt],
 		created: [UInt, Contract, UInt, Address, Bytes(20), Bytes(80), UInt, Token],
-		outcome: [state, Bytes(20), UInt, Address, Address, Token]
+		down: [state, UInt, UInt, Address, Contract],
+		outcome: [state, state, UInt, Address, Address, Token]
 	})
 
 	const AuctionView = View('AuctionView', {
@@ -134,7 +135,7 @@ export const main = Reach.App(() => {
 			return [keepBidding, highestBidder, lastPrice, isFirstBid]
 		})
 
-	Auction.log(state.pad('down'), auctionInfo.id, lastPrice)
+	Auction.down(state.pad('down'), auctionInfo.id, lastPrice, Seller, getContract())
 
 	const awaitingDecision = parallelReduce(true)
 		.define(() => {
