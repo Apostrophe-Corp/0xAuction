@@ -82,7 +82,7 @@ const ReachContextProvider = ({ children }) => {
 		setLatestAuctions((previous) => newAuctions)
 	}
 
-	const alertThis = ({
+	const alertThis = async ({
 		message = 'Confirm Action',
 		accept = 'Yes',
 		decline = 'No',
@@ -91,7 +91,9 @@ const ReachContextProvider = ({ children }) => {
 		persist = false,
 		neutral = false,
 	} = {}) => {
-		return new Promise((resolve) => {
+		await sleep(300)
+		promiseOfConfirmation?.resolve && promiseOfConfirmation.resolve()
+		const result = await new Promise((resolve) => {
 			setPromiseOfConfirmation({ resolve })
 			setAlertInfo((previous) => ({
 				message,
@@ -104,6 +106,7 @@ const ReachContextProvider = ({ children }) => {
 			}))
 			setShowAlert((lastState) => true)
 		})
+		return result
 	}
 
 	const startWaiting = async () => {
@@ -459,7 +462,7 @@ const ReachContextProvider = ({ children }) => {
 					if (bidAgain) {
 						let continue_ = true
 						while (continue_) {
-							await handleBid({
+							continue_ = handleBid({
 								auctionID: parseInt(what[1]),
 								loopVar: continue_,
 								ctcInfo,
@@ -485,6 +488,7 @@ const ReachContextProvider = ({ children }) => {
 				updateLatestAuctions(leftoverAuctions)
 				break
 			case ifState('down'):
+				stopWaiting()
 				try {
 					const blockEnded = parseInt(await reach.getNetworkTime())
 					const object = {
@@ -723,10 +727,18 @@ const ReachContextProvider = ({ children }) => {
 		})
 		startWaiting()
 		const userBal = reach.formatCurrency(await reach.balanceOf(user.account), 4)
-		if (userBal - bid < 0) {
+		const resultingBalance = userBal - bid
+		const minimumBalance = reach.formatCurrency(10100000, 4)
+		// 	reach.formatCurrency(
+		// 	await reach.minimumBalanceOf(user.account),
+		// 	4
+		// )
+		let wasSuccessful = false
+		console.log(resultingBalance, minimumBalance)
+		if (resultingBalance < minimumBalance) {
 			stopWaiting()
 			alertThis({
-				message: `Your balance: ${userBal} ${standardUnit}, is insufficient for this bid`,
+				message: `Your balance: ${userBal} ${standardUnit}, is insufficient for this bid due to the minimum balance an account should have after a transfer on this network: ${minimumBalance} ${standardUnit}`,
 				forConfirmation: false,
 			})
 			setShowBuyer(false)
@@ -750,6 +762,7 @@ const ReachContextProvider = ({ children }) => {
 			updateLatestAuctions(updatedAuctions)
 			stopWaiting()
 			loopVar = false
+			wasSuccessful = true
 			alertThis({
 				message: 'Bid placed',
 				forConfirmation: false,
@@ -768,16 +781,18 @@ const ReachContextProvider = ({ children }) => {
 			if (opt) {
 				await optIn(auctionID)
 			}
+
 			loopVar = await alertThis({
-				message: 'Would you like to bid again?',
+				message: `Would you like to bid again?`,
 				accept: 'Yes',
 				decline: 'No',
 			})
 		}
-		if (justJoining) {
+		if (justJoining && wasSuccessful) {
 			ctc.events.log.monitor(handleAuctionLog)
 			setShowBuyer(true)
 		}
+		return loopVar
 	}
 
 	const joinAuction = async (auctionInfo) => {
@@ -815,7 +830,7 @@ const ReachContextProvider = ({ children }) => {
 			)
 			let continue_ = true
 			while (continue_) {
-				await handleBid({
+				continue_ = await handleBid({
 					auctionID: auctionInfo.id,
 					loopVar: continue_,
 					ctc,
@@ -832,7 +847,14 @@ const ReachContextProvider = ({ children }) => {
 			decline: 'Forfeit',
 		})
 		const userBal = reach.formatCurrency(await reach.balanceOf(user.account), 4)
-		if (agree && userBal) {
+		const resultingBalance = userBal - 1 // Opt-In fee
+		const minimumBalance = reach.formatCurrency(10100000, 4)
+		// 	reach.formatCurrency(
+		// 	await reach.minimumBalanceOf(user.account),
+		// 	4
+		// )
+		console.log(resultingBalance, minimumBalance)
+		if (agree && userBal && resultingBalance > minimumBalance) {
 			startWaiting()
 			try {
 				const auctionToBeEdited = auctions.filter(
@@ -863,6 +885,13 @@ const ReachContextProvider = ({ children }) => {
 					forConfirmation: false,
 				})
 			}
+		} else if (resultingBalance < minimumBalance) {
+			alertThis({
+				message: `Your balance: ${userBal} ${standardUnit}, is insufficient for this bid due to the minimum balance an account should have after a transfer on this network: ${minimumBalance} ${standardUnit}`,
+				forConfirmation: false,
+			})
+			setShowBuyer(false)
+			return
 		}
 	}
 
@@ -961,7 +990,7 @@ const ReachContextProvider = ({ children }) => {
 						<li
 							className={cf(s.flex, s.flexCenter, s.p10, s.m0, app.navItem)}
 							onClick={() => {
-								checkForContract(() => {
+								checkForContract(async () => {
 									if (auctions.length) setView('Buy')
 									else
 										alertThis({
