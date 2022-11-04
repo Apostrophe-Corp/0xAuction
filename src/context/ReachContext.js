@@ -769,6 +769,7 @@ const ReachContextProvider = ({ children }) => {
 				ctc.events.down.monitor(handleAuctionLog)
 			}
 			loopVar = false
+			setShowBuyer(true)
 			stopWaiting()
 			alertThis({
 				message: 'Bid placed',
