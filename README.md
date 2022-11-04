@@ -51,7 +51,7 @@ You would then have the oportunity to create an nft, host an auction or buy an N
 
 Please join in another browser window and attach as per the steps above after which you can start an auction or bid on an auction by following the same steps (please note that you would need to use a different wallet to start and auction that the wallet that you use to bid).
 
-####Important points to note
+#### Important points to note
 
 - Signing of transactions is mandatory for a free flow of the DApp's features.
 - A user cannot have more than one instance of the DApp connected to the same 0xAuction contract while they have an auction on.
@@ -89,13 +89,13 @@ Should you encounter any other errors, please tag either goonerlabs#1008 0r Emma
 
 The DApp 
 
-![Landing page](https://imgur.com/a/6K35MYh)
+![Landing page](NFTimages/landingpage.png)
 
-![Auctions](https://imgur.com/DYnvO8u)
+![Auctions](NFTimages/auctions.png)
 
-![Bidding](https://imgur.com/xf2ySPs)
+![Bidding](NFTimages/bidding.png)
 
-![Auction](https://imgur.com/U3E2tc7)
+![Auction](NFTimages/sell.png)
 
 Authors
 Owolabi Adeyemi
