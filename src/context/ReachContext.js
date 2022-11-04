@@ -457,55 +457,14 @@ const ReachContextProvider = ({ children }) => {
 						decline: 'No',
 					})
 					if (bidAgain) {
-						const bid = await alertThis({
-							message: 'Enter your bidding amount',
-							prompt: true,
-						})
-						startWaiting()
-						const userBal = reach.formatCurrency(
-							await reach.balanceOf(user.account),
-							4
-						)
-						if (userBal - bid < 0) {
-							stopWaiting()
-							alertThis({
-								message: `Your balance: ${userBal} ${standardUnit}, is insufficient for this bid`,
-								forConfirmation: false,
+						let continue_ = true
+						while (continue_) {
+							await handleBid({
+								auctionID: parseInt(what[1]),
+								loopVar: continue_,
+								ctcInfo,
+								justJoining: false,
 							})
-							setShowBuyer(false)
-						}
-						try {
-							const ctc = user.account.contract(auctionCtc, JSON.parse(ctcInfo))
-							await ctc.a.Bidder.bid(reach.parseCurrency(bid))
-							const auctionToBeEdited = auctions.filter(
-								(el) => Number(el.id) === parseInt(what[1])
-							)[0]
-							auctionToBeEdited['yourBid'] = bid
-							const remainingAuctions = auctions.filter(
-								(el) => Number(el.id) !== parseInt(what[1])
-							)
-							const updatedAuctions = [auctionToBeEdited, ...remainingAuctions]
-							setAuctions((previous) => updatedAuctions)
-							updateLatestAuctions(updatedAuctions)
-							stopWaiting()
-							alertThis({
-								message: 'Bid placed',
-								forConfirmation: false,
-							})
-						} catch (error) {
-							console.log({ error })
-							stopWaiting()
-
-							const opt = await alertThis({
-								message:
-									'Unable to place bid. Most likely your bid is lower than the current one. To prevent this from happening during this auction, how would you like to opt into Live Bid?',
-								accept: 'Opt In',
-								decline: 'Decline',
-							})
-
-							if (opt) {
-								optIn(auctionToBeEdited['id'])
-							}
 						}
 					}
 				}
@@ -751,6 +710,76 @@ const ReachContextProvider = ({ children }) => {
 		}
 	}
 
+	const handleBid = async ({
+		auctionID = 0,
+		loopVar = false,
+		ctc = null,
+		ctcInfo = null,
+		justJoining = false,
+	} = {}) => {
+		const bid = await alertThis({
+			message: 'Enter your bidding amount',
+			prompt: true,
+		})
+		startWaiting()
+		const userBal = reach.formatCurrency(await reach.balanceOf(user.account), 4)
+		if (userBal - bid < 0) {
+			stopWaiting()
+			alertThis({
+				message: `Your balance: ${userBal} ${standardUnit}, is insufficient for this bid`,
+				forConfirmation: false,
+			})
+			setShowBuyer(false)
+			return
+		}
+		try {
+			if (ctc) await ctc.a.Bidder.bid(reach.parseCurrency(bid))
+			else {
+				ctc = user.account.contract(auctionCtc, JSON.parse(ctcInfo))
+				await ctc.a.Bidder.bid(reach.parseCurrency(bid))
+			}
+			const auctionToBeEdited = auctions.filter(
+				(el) => Number(el.id) === auctionID
+			)[0]
+			auctionToBeEdited['yourBid'] = bid
+			const remainingAuctions = auctions.filter(
+				(el) => Number(el.id) !== auctionID
+			)
+			const updatedAuctions = [auctionToBeEdited, ...remainingAuctions]
+			setAuctions((previous) => updatedAuctions)
+			updateLatestAuctions(updatedAuctions)
+			stopWaiting()
+			loopVar = false
+			alertThis({
+				message: 'Bid placed',
+				forConfirmation: false,
+			})
+		} catch (error) {
+			console.log({ error })
+			stopWaiting()
+
+			const opt = await alertThis({
+				message:
+					'Unable to place bid. Most likely your bid is lower than the current one. To prevent this from happening during this auction, how would you like to opt into Live Bid?',
+				accept: 'Opt In',
+				decline: 'Decline',
+			})
+
+			if (opt) {
+				await optIn(auctionID)
+			}
+			loopVar = await alertThis({
+				message: 'Would you like to bid again?',
+				accept: 'Yes',
+				decline: 'No',
+			})
+		}
+		if (justJoining) {
+			ctc.events.log.monitor(handleAuctionLog)
+			setShowBuyer(true)
+		}
+	}
+
 	const joinAuction = async (auctionInfo) => {
 		const join = await alertThis({
 			message: 'Are you interested in bidding for this auction?',
@@ -784,59 +813,15 @@ const ReachContextProvider = ({ children }) => {
 				auctionCtc,
 				JSON.parse(auctionInfo.contractInfo)
 			)
-			const bid = await alertThis({
-				message: 'Enter your bidding amount',
-				prompt: true,
-			})
-			startWaiting()
-			const userBal = reach.formatCurrency(
-				await reach.balanceOf(user.account),
-				4
-			)
-			if (userBal - bid < 0) {
-				stopWaiting()
-				alertThis({
-					message: `Your balance: ${userBal} ${standardUnit}, is insufficient for this bid`,
-					forConfirmation: false,
+			let continue_ = true
+			while (continue_) {
+				await handleBid({
+					auctionID: auctionInfo.id,
+					loopVar: continue_,
+					ctc,
+					justJoining: true,
 				})
-				setShowBuyer(false)
-				return
 			}
-			try {
-				await ctc.a.Bidder.bid(reach.parseCurrency(bid))
-				const auctionToBeEdited = auctions.filter(
-					(el) => Number(el.id) === auctionInfo.id
-				)[0]
-				auctionToBeEdited['yourBid'] = bid
-				auctionToBeEdited['liveBid'] = bid
-				const leftoverAuctions = auctions.filter(
-					(el) => Number(el.id) !== auctionInfo.id
-				)
-				const updatedAuctions = [auctionToBeEdited, ...leftoverAuctions]
-				setAuctions((previous) => updatedAuctions)
-				updateLatestAuctions(updatedAuctions)
-				stopWaiting()
-				alertThis({
-					message: 'Bid placed',
-					forConfirmation: false,
-				})
-			} catch (error) {
-				console.log({ error })
-				stopWaiting()
-
-				const opt = await alertThis({
-					message:
-						'Unable to place bid. Most likely your bid is lower than the current one. To prevent this from happening during this auction, how would you like to opt into Live Bid?',
-					accept: 'Opt In',
-					decline: 'Decline',
-				})
-
-				if (opt) {
-					await optIn(auctionInfo['id'])
-				}
-			}
-			ctc.events.log.monitor(handleAuctionLog)
-			setShowBuyer(true)
 		}
 	}
 

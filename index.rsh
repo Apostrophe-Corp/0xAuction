@@ -34,9 +34,7 @@ export const main = Reach.App(() => {
 	})
 
 	const Auction = Events({
-		// ID, LastBid, BlockEnded
 		end: [UInt, UInt, UInt],
-		// ID, ContractInfo, BlockCreated, Owner, Title, Description
 		create: [UInt, Contract, UInt, Address, Bytes(20), Bytes(80), UInt, Token],
 		passAddress: [Address],
 	})
@@ -46,12 +44,12 @@ export const main = Reach.App(() => {
 	commit()
 	Admin.publish()
 	Auction.passAddress(Admin)
-	const [keepGoing, auctionID] = parallelReduce([true, 0])
+	const auctionID = parallelReduce(0)
 		.invariant(balance() == 0)
-		.while(keepGoing)
+		.while(true)
 		.api(Auctions.getID, (notify) => {
 			notify(auctionID)
-			return [keepGoing, auctionID + 1]
+			return auctionID + 1
 		})
 		.api(Auctions.created, (obj, notify) => {
 			notify(null)
@@ -67,7 +65,7 @@ export const main = Reach.App(() => {
 				auctionObject.price,
 				auctionObject.tokenId
 			)
-			return [keepGoing, auctionID]
+			return auctionID
 		})
 		.api(Auctions.ended, (obj, notify) => {
 			notify(null)
@@ -78,7 +76,7 @@ export const main = Reach.App(() => {
 				endResponseObject.blockEnded,
 				endResponseObject.lastBid
 			)
-			return [keepGoing, auctionID]
+			return auctionID
 		})
 	commit()
 	exit()

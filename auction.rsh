@@ -9,6 +9,7 @@
 const state = Bytes(20)
 const DEADLINE = 20
 const amt = 1
+const optToken = 1000000
 export const main = Reach.App(() => {
 	const Seller = Participant('Seller', {
 		getAuction: Object({
@@ -100,10 +101,12 @@ export const main = Reach.App(() => {
 		})
 		.api_(Bidder.optIn, () => {
 			return [
-				1000000,
+				optToken,
 				(notify) => {
-					if (balance() >= 900000) transfer(900000).to(auctionInfo.Admin)
-					if (balance() >= 100000) transfer(100000).to(Seller)
+					const adminDue = (optToken / 100) * 90
+					const sellerDue = (optToken / 100) * 10
+					if (balance() >= adminDue) transfer(adminDue).to(auctionInfo.Admin)
+					if (balance() >= sellerDue) transfer(sellerDue).to(Seller)
 					notify(true)
 					return [keepBidding, highestBidder, lastPrice, isFirstBid]
 				},
@@ -122,7 +125,6 @@ export const main = Reach.App(() => {
 					blockEnded: thisConsensusTime(),
 					lastBid: lastPrice,
 				})
-				// Auction.log(state.pad('down'), auctionInfo.id, 1)
 				notify(response)
 				return [false, highestBidder, lastPrice, isFirstBid]
 			}
@@ -135,11 +137,11 @@ export const main = Reach.App(() => {
 	Auction.log(state.pad('down'), auctionInfo.id, lastPrice)
 
 	const awaitingDecision = parallelReduce(true)
-		.invariant(balance(tokenId) == balance(tokenId))
-		.while(awaitingDecision)
 		.define(() => {
 			AuctionView.awaitingConfirmation.set(awaitingDecision)
 		})
+		.invariant(balance(tokenId) == balance(tokenId))
+		.while(awaitingDecision)
 		.api(
 			Auctioneer.acceptSale,
 			() => {
@@ -147,7 +149,6 @@ export const main = Reach.App(() => {
 			},
 			() => 0,
 			(notify) => {
-				// Auction.log(state.pad('down'), auctionInfo.id, 1)
 				transfer(balance(tokenId), tokenId).to(highestBidder)
 				transfer(balance()).to(Seller)
 				notify(true)
@@ -162,7 +163,6 @@ export const main = Reach.App(() => {
 			},
 			() => 0,
 			(notify) => {
-				// Auction.log(state.pad('down'), auctionInfo.id, 1)
 				transfer(balance(tokenId), tokenId).to(Seller)
 				transfer(balance()).to(highestBidder)
 				notify(false)
@@ -172,7 +172,6 @@ export const main = Reach.App(() => {
 		)
 		.timeout(relativeTime(DEADLINE), () => {
 			Seller.publish()
-			// Auction.log(state.pad('down'), auctionInfo.id, 1)
 			transfer(balance(tokenId), tokenId).to(highestBidder)
 			transfer(balance()).to(Seller)
 			Auction.outcome(state.pad('accepted'), auctionInfo.title, lastPrice, Seller, highestBidder, tokenId)
