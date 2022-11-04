@@ -756,6 +756,10 @@ const ReachContextProvider = ({ children }) => {
 			const auctionToBeEdited = auctions.filter(
 				(el) => Number(el.id) === auctionID
 			)[0]
+			if (justJoining) {
+				ctc.events.log.monitor(handleAuctionLog)
+				ctc.events.down.monitor(handleAuctionLog)
+			}
 			auctionToBeEdited['yourBid'] = bid
 			auctionToBeEdited['liveBid'] = bid
 			const remainingAuctions = auctions.filter(
@@ -764,10 +768,6 @@ const ReachContextProvider = ({ children }) => {
 			const updatedAuctions = [auctionToBeEdited, ...remainingAuctions]
 			setAuctions((previous) => updatedAuctions)
 			updateLatestAuctions(updatedAuctions)
-			if (justJoining) {
-				ctc.events.log.monitor(handleAuctionLog)
-				ctc.events.down.monitor(handleAuctionLog)
-			}
 			loopVar = false
 			setShowBuyer(true)
 			stopWaiting()
@@ -789,7 +789,14 @@ const ReachContextProvider = ({ children }) => {
 			let didOptIn = false
 			if (opt) {
 				didOptIn = await optIn(auctionID)
-				if (didOptIn) setShowBuyer(true)
+				if (didOptIn) {
+					setShowBuyer(true)
+					if (ctc) ctc.events.log.monitor(handleAuctionLog)
+					else {
+						ctc = user.account.contract(auctionCtc, JSON.parse(ctcInfo))
+						ctc.events.log.monitor(handleAuctionLog)
+					}
+				}
 			}
 
 			loopVar = await alertThis({
@@ -871,12 +878,12 @@ const ReachContextProvider = ({ children }) => {
 					JSON.parse(auctionToBeEdited['contractInfo'])
 				)
 				const didOptIn = await ctc.apis.Bidder.optIn()
+				ctc.events.outcome.monitor(handleAuctionLog)
 				auctionToBeEdited['optIn'] = didOptIn
 				const leftoverAuctions = auctions.filter((el) => Number(el.id) !== id)
 				const updatedAuctions = [auctionToBeEdited, ...leftoverAuctions]
 				setAuctions((previous) => updatedAuctions)
 				updateLatestAuctions(updatedAuctions)
-				ctc.events.outcome.monitor(handleAuctionLog)
 
 				stopWaiting()
 				alertThis({
