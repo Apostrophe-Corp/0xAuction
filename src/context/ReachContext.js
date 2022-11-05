@@ -252,7 +252,7 @@ const ReachContextProvider = ({ children }) => {
 	}
 
 	const dropAuction = ({ what }) => {
-		if (view === 'Buy' && auctions.length === 1) setView('App')
+		if (view === 'Buy' && auctions.length <= 1) setView('App')
 		if ((showBuyer || showSeller) && currentAuction === parseInt(what[0])) {
 			setView('App')
 			setShowBuyer(false)
@@ -470,25 +470,14 @@ const ReachContextProvider = ({ children }) => {
 					})
 					if (bidAgain) {
 						let continue_ = false
-						let count = -1
-						let continueToBid = false
 						do {
-							// if (count > 0 && continue_) {
-							// 	continueToBid = await alertThis({
-							// 		message: 'Would you like to continue making blind bids?',
-							// 		accept: 'Yes',
-							// 		decline: 'No',
-							// 	})
-							// 	if (!continueToBid) break
-							// }
 							continue_ = await handleBid({
 								auctionID: parseInt(what[1]),
 								loopVar: continue_,
 								ctcInfo,
 								justJoining: false,
 							})
-							count++
-						} while ((count && continueToBid) || continue_)
+						} while (continue_)
 					}
 				}
 				break
@@ -798,7 +787,7 @@ const ReachContextProvider = ({ children }) => {
 					accept: 'Yes',
 					decline: 'No',
 				})
-				if (!opt) return opt
+				return opt
 			} else {
 				opt = await alertThis({
 					message:
@@ -809,10 +798,7 @@ const ReachContextProvider = ({ children }) => {
 			}
 
 			let didOptIn = false
-			if (optInStatus && opt) {
-				loopVar = true
-				return loopVar
-			} else if (!optInStatus && opt) {
+			if (opt) {
 				didOptIn = await optIn(auctionID)
 				if (didOptIn && justJoining) {
 					setShowBuyer(true)
@@ -823,18 +809,14 @@ const ReachContextProvider = ({ children }) => {
 					}
 					loopVar = false
 					return loopVar
-				} else if (optInStatus && !opt) {
-					return false
-				} else if (!optInStatus && !opt) {
-					loopVar = await alertThis({
-						message: 'Would you like to continue making blind bids?',
-						accept: 'Yes',
-						decline: 'No',
-					})
-					return loopVar
 				}
-			} else {
-				return false
+			} else if (!opt) {
+				loopVar = await alertThis({
+					message: 'Would you like to continue making blind bids?',
+					accept: 'Yes',
+					decline: 'No',
+				})
+				return loopVar
 			}
 		}
 		return loopVar
