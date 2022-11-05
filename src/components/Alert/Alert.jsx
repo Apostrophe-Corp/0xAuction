@@ -9,6 +9,7 @@ const Alert = () => {
 		setAlertInfo,
 		showAlert,
 		setShowAlert,
+		sleep,
 		promiseOfConfirmation,
 	} = useReach()
 
@@ -31,31 +32,32 @@ const Alert = () => {
 
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	useEffect(() => {
+		let terminate = null
+		let present = null
 		if (showAlert === false) {
 			setAlertClass(
 				cf(s.wMax, s.flex, s.flexCenter, alt.alertContainer, alt.invisible)
 			)
-			const terminate = setTimeout(() => {
+			terminate = setTimeout(() => {
 				setAlertClass(cf(alt.terminate))
 				setActive(false)
-				setAlertInfo({
-					message: 'Confirm Action',
-					accept: 'Yes',
-					decline: 'No',
-					forConfirmation: true,
-				})
 				clearTimeout(terminate)
-			}, 400)
+			}, 300)
 		}
 		if (showAlert === true) {
+			terminate && clearTimeout(terminate)
 			setActive(true)
 			setAlertClass(
 				cf(s.wMax, s.flex, s.flexCenter, alt.alertContainer, alt.invisible)
 			)
-			const present = setTimeout(() => {
+			present = setTimeout(() => {
 				setAlertClass(cf(s.wMax, s.flex, s.flexCenter, alt.alertContainer))
 				clearTimeout(present)
-			}, 200)
+			}, 300)
+		}
+		return () => {
+			terminate && clearTimeout(terminate)
+			present && clearTimeout(present)
 		}
 	}, [showAlert])
 
@@ -93,6 +95,7 @@ const Alert = () => {
 											name='response'
 											id='response'
 											placeholder='Enter your response'
+											autoFocus={true}
 											onChange={(e) => {
 												setResponse(e.currentTarget.value)
 											}}
@@ -144,7 +147,12 @@ const Alert = () => {
 									onClick={() => {
 										decide(false)
 									}}
-									className={cf(s.flex, s.flexCenter, alt.button, alertInfo.neutral? alt.accept : alt.decline)}
+									className={cf(
+										s.flex,
+										s.flexCenter,
+										alt.button,
+										alertInfo.neutral ? alt.accept : alt.decline
+									)}
 								>
 									{alertInfo.decline}
 								</button>
