@@ -740,7 +740,7 @@ const ReachContextProvider = ({ children }) => {
 		console.log(resultingBalance, minimumBalance)
 		if (resultingBalance < minimumBalance) {
 			stopWaiting();
-			alertThis({
+			await alertThis({
 				message: `Your balance: ${userBal} ${standardUnit}, is insufficient for this bid due to the minimum balance allowed on your account after a transfer: ${minimumBalance} ${standardUnit}`,
 				forConfirmation: false,
 			});
