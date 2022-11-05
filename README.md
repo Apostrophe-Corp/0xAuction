@@ -66,7 +66,7 @@ Then run the following commands to start up the dApp:
 
 - To experience all the features of our dApp, we advise you open at least 3 browser windows (For instance one Incognito Google Chrome tab, one Guest Google Chrome tab and one Brave browser tab).
 
-- Navigate to the app at the URL <http://localhost:3000>.
+- Navigate to the app at the URL `http://localhost:3000`.
 
 - Click on the Connect Wallet button to activate Wallet Connect and scan the QR code.
 
