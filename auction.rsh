@@ -45,7 +45,7 @@ export const main = Reach.App(() => {
 		log: [state, UInt, UInt],
 		created: [UInt, Contract, UInt, Address, Bytes(20), Bytes(80), UInt, Token],
 		down: [state, UInt, UInt, Address, Contract],
-		outcome: [state, state, UInt, Address, Address, Token]
+		outcome: [state, state, UInt, Address, Address, Token],
 	})
 
 	const AuctionView = View('AuctionView', {
@@ -134,8 +134,15 @@ export const main = Reach.App(() => {
 			Seller.publish()
 			return [keepBidding, highestBidder, lastPrice, isFirstBid]
 		})
+	AuctionView.isRunning.set(keepGoing() && keepBidding)
 
-	Auction.down(state.pad('down'), auctionInfo.id, lastPrice, Seller, getContract())
+	Auction.down(
+		state.pad('down'),
+		auctionInfo.id,
+		lastPrice,
+		Seller,
+		getContract()
+	)
 
 	const awaitingDecision = parallelReduce(true)
 		.define(() => {
@@ -153,7 +160,14 @@ export const main = Reach.App(() => {
 				transfer(balance(tokenId), tokenId).to(highestBidder)
 				transfer(balance()).to(Seller)
 				notify(true)
-				Auction.outcome(state.pad('accepted'), auctionInfo.title, lastPrice, Seller, highestBidder, tokenId)
+				Auction.outcome(
+					state.pad('accepted'),
+					auctionInfo.title,
+					lastPrice,
+					Seller,
+					highestBidder,
+					tokenId
+				)
 				return false
 			}
 		)
@@ -167,7 +181,14 @@ export const main = Reach.App(() => {
 				transfer(balance(tokenId), tokenId).to(Seller)
 				transfer(balance()).to(highestBidder)
 				notify(false)
-				Auction.outcome(state.pad('rejected'), auctionInfo.title, lastPrice, Seller, highestBidder, tokenId)
+				Auction.outcome(
+					state.pad('rejected'),
+					auctionInfo.title,
+					lastPrice,
+					Seller,
+					highestBidder,
+					tokenId
+				)
 				return false
 			}
 		)
@@ -175,7 +196,14 @@ export const main = Reach.App(() => {
 			Seller.publish()
 			transfer(balance(tokenId), tokenId).to(highestBidder)
 			transfer(balance()).to(Seller)
-			Auction.outcome(state.pad('accepted'), auctionInfo.title, lastPrice, Seller, highestBidder, tokenId)
+			Auction.outcome(
+				state.pad('accepted'),
+				auctionInfo.title,
+				lastPrice,
+				Seller,
+				highestBidder,
+				tokenId
+			)
 			return false
 		})
 	transfer(balance(tokenId), tokenId).to(highestBidder)

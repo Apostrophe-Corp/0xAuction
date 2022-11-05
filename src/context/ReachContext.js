@@ -301,28 +301,28 @@ const ReachContextProvider = ({ children }) => {
 					try {
 						const ctc = user.account.contract(mainCtc)
 						setContractInstance(ctc)
-						ctc.p.Admin({})
+						ctc.p.Admin({
+							deployed: async (infoStr) => {
+								const ctcInfoStr = JSON.stringify(infoStr, null)
+								setContract({ ctcInfoStr })
+								stopWaiting()
+								const copy = await alertThis({
+									message: `Deployed successfully, here's the contract info: ${ctcInfoStr}. Copy to clipboard?`,
+									accept: 'Yes',
+									decline: 'No',
+								})
+								if (copy) {
+									navigator.clipboard.writeText(ctcInfoStr)
+									alertThis({
+										message: 'Copied to clipboard',
+										forConfirmation: false,
+									})
+								}
+							},
+						})
 						ctc.events.create.monitor(postAuction)
 						ctc.events.end.monitor(dropAuction)
 						ctc.events.passAddress.monitor(setAdmin)
-						await ctc.getInfo().then(async (infoStr) => {
-							const ctcInfoStr = JSON.stringify(infoStr, null)
-							setContract({ ctcInfoStr })
-							// console.log(ctcInfoStr)
-							stopWaiting()
-							const copy = await alertThis({
-								message: `Deployed successfully, here's the contract info: ${ctcInfoStr}. Copy to clipboard?`,
-								accept: 'Yes',
-								decline: 'No',
-							})
-							if (copy) {
-								navigator.clipboard.writeText(ctcInfoStr)
-								alertThis({
-									message: 'Copied to clipboard',
-									forConfirmation: false,
-								})
-							}
-						})
 						func()
 					} catch (error) {
 						console.log({ error })
@@ -469,25 +469,26 @@ const ReachContextProvider = ({ children }) => {
 						decline: 'No',
 					})
 					if (bidAgain) {
-						let continue_ = true
-						let count = 0
-						while (continue_) {
-							let continueToBid = false
-							if (count) {
-								continueToBid = await alertThis({
-									message: 'Would you like to continue making blind bids?',
-									accept: 'Yes',
-									decline: 'No',
-								})
-							}
+						let continue_ = false
+						let count = -1
+						let continueToBid = false
+						do {
+							// if (count > 0 && continue_) {
+							// 	continueToBid = await alertThis({
+							// 		message: 'Would you like to continue making blind bids?',
+							// 		accept: 'Yes',
+							// 		decline: 'No',
+							// 	})
+							// 	if (!continueToBid) break
+							// }
 							continue_ = await handleBid({
 								auctionID: parseInt(what[1]),
-								loopVar: (count && continueToBid) || !count,
+								loopVar: continue_,
 								ctcInfo,
 								justJoining: false,
 							})
 							count++
-						}
+						} while ((count && continueToBid) || continue_)
 					}
 				}
 				break
@@ -742,30 +743,29 @@ const ReachContextProvider = ({ children }) => {
 		startWaiting()
 		const userBal = reach.formatCurrency(await reach.balanceOf(user.account), 4)
 		const resultingBalance = userBal - bid
-		const minimumBalance = reach.formatCurrency(10100000, 4)
-		// 	reach.formatCurrency(
-		// 	await reach.minimumBalanceOf(user.account),
-		// 	4
-		// )
+		const minimumBalance = reach.formatCurrency(
+			await reach.minimumBalanceOf(user.account),
+			4
+		)
 		console.log(resultingBalance, minimumBalance)
 		if (resultingBalance < minimumBalance) {
 			stopWaiting()
 			alertThis({
-				message: `Your balance: ${userBal} ${standardUnit}, is insufficient for this bid due to the minimum balance an account should have after a transfer on this network: ${minimumBalance} ${standardUnit}`,
+				message: `Your balance: ${userBal} ${standardUnit}, is insufficient for this bid due to the minimum balance allowed on your account after a transfer: ${minimumBalance} ${standardUnit}`,
 				forConfirmation: false,
 			})
 			setShowBuyer(false)
 			return
 		}
+		const auctionToBeEdited = auctions.filter(
+			(el) => Number(el.id) === auctionID
+		)[0]
 		try {
 			if (ctc) await ctc.a.Bidder.bid(reach.parseCurrency(bid))
 			else {
 				ctc = user.account.contract(auctionCtc, JSON.parse(ctcInfo))
 				await ctc.a.Bidder.bid(reach.parseCurrency(bid))
 			}
-			const auctionToBeEdited = auctions.filter(
-				(el) => Number(el.id) === auctionID
-			)[0]
 			if (justJoining) {
 				ctc.events.log.monitor(handleAuctionLog)
 				ctc.events.down.monitor(handleAuctionLog)
@@ -789,15 +789,30 @@ const ReachContextProvider = ({ children }) => {
 			console.log({ error })
 			stopWaiting()
 
-			const opt = await alertThis({
-				message:
-					'Unable to place bid. Most likely your bid is lower than the current one. To prevent this from happening during this auction, how would you like to opt into Live Bid?',
-				accept: 'Opt In',
-				decline: 'Decline',
-			})
+			let opt = null
+			const optInStatus = auctionToBeEdited['optIn']
+			if (optInStatus) {
+				opt = await alertThis({
+					message:
+						'Unable to place bid, as your bid is lower than the current one, would you like to bid again?',
+					accept: 'Yes',
+					decline: 'No',
+				})
+				if (!opt) return opt
+			} else {
+				opt = await alertThis({
+					message:
+						'Unable to place bid. Most likely your bid is lower than the current one. To prevent this from happening during this auction, how would you like to opt into Live Bid?',
+					accept: 'Opt In',
+					decline: 'Decline',
+				})
+			}
 
 			let didOptIn = false
-			if (opt) {
+			if (optInStatus && opt) {
+				loopVar = true
+				return loopVar
+			} else if (!optInStatus && opt) {
 				didOptIn = await optIn(auctionID)
 				if (didOptIn && justJoining) {
 					setShowBuyer(true)
@@ -806,17 +821,20 @@ const ReachContextProvider = ({ children }) => {
 						ctc = user.account.contract(auctionCtc, JSON.parse(ctcInfo))
 						ctc.events.log.monitor(handleAuctionLog)
 					}
+					loopVar = false
+					return loopVar
+				} else if (optInStatus && !opt) {
+					return false
+				} else if (!optInStatus && !opt) {
+					loopVar = await alertThis({
+						message: 'Would you like to continue making blind bids?',
+						accept: 'Yes',
+						decline: 'No',
+					})
+					return loopVar
 				}
-			}
-
-			if (justJoining && !didOptIn) {
-				loopVar = await alertThis({
-					message: 'Would you like to make a blind bid this time?',
-					accept: 'Yes',
-					decline: 'No',
-				})
 			} else {
-				loopVar = !opt
+				return false
 			}
 		}
 		return loopVar
