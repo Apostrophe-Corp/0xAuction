@@ -8,7 +8,9 @@
 const state = Bytes(20)
 
 export const main = Reach.App(() => {
-	const Admin = Participant('Admin', {})
+	const Admin = Participant('Admin', {
+		deployed: Fun([Contract],Null)
+	})
 
 	const objectRep = Struct([
 		['id', UInt],
@@ -43,6 +45,7 @@ export const main = Reach.App(() => {
 	Admin.publish()
 	commit()
 	Admin.publish()
+	Admin.interact.deployed(getContract())
 	Auction.passAddress(Admin)
 	const auctionID = parallelReduce(0)
 		.invariant(balance() == 0)
