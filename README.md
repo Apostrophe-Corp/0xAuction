@@ -109,7 +109,7 @@ Please run the following commands:
 
 - Should you encounter any other errors, please tag either `goonerlabs#1008` 0r `Emmanuel Agbavwe#2954` on [Reach's Discord server](https://bit.ly/3BnPyKd).
 
-The DApp
+## The DApp
 
 ![Landing page](project_images/hero_view.png)  
 ![Features](project_images/feature_view.png)
