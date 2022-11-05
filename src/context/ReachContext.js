@@ -548,6 +548,7 @@ const ReachContextProvider = ({ children }) => {
 						(el) => el.id === parseInt(what[1])[0]
 					)
 					if (endedAuction) {
+						dropAuction({ what: [endedAuction.id] })
 						await contractInstance.apis.Auction.ended(object)
 					}
 				} catch (error) {
@@ -738,12 +739,16 @@ const ReachContextProvider = ({ children }) => {
 		)
 		console.log(resultingBalance, minimumBalance)
 		if (resultingBalance < minimumBalance) {
-			stopWaiting()
+			stopWaiting();
 			alertThis({
 				message: `Your balance: ${userBal} ${standardUnit}, is insufficient for this bid due to the minimum balance allowed on your account after a transfer: ${minimumBalance} ${standardUnit}`,
 				forConfirmation: false,
-			})
-			setShowBuyer(false)
+			});
+			await alertThis({
+				message: 'At this point, would you prefer to exit this auction, you will still be notified of the outcome at the close of the auction?',
+				accept: 'Stay',
+				decline: 'Exit',
+			}).then((decision) => {setShowBuyer(decision)})
 			return
 		}
 		const auctionToBeEdited = auctions.filter(
