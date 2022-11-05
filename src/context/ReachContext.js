@@ -270,7 +270,7 @@ const ReachContextProvider = ({ children }) => {
 	const checkForContract = async (func) => {
 		if (!user.account) {
 			const connect = await alertThis({
-				message: 'Connect your wallet account first',
+				message: 'Connect your wallet account first, and try that again',
 				accept: 'Connect now',
 				decline: 'Not now',
 			})
@@ -442,11 +442,11 @@ const ReachContextProvider = ({ children }) => {
 				)[0]
 				if (String(owner) !== String(user.address)) {
 					auctionToBeEdited['liveBid'] =
-						newBid > auctionToBeEdited['liveBid']
+						newBid > Number(auctionToBeEdited['yourBid'])
 							? newBid
-							: auctionToBeEdited['liveBid']
+							: Number(auctionToBeEdited['yourBid'])
 				} else auctionToBeEdited['liveBid'] = newBid
-				yourBid = auctionToBeEdited['yourBid']
+				yourBid = Number(auctionToBeEdited['yourBid'])
 				owner = auctionToBeEdited['owner']
 				ctcInfo = auctionToBeEdited['contractInfo']
 				opt = auctionToBeEdited['optIn']
@@ -470,13 +470,23 @@ const ReachContextProvider = ({ children }) => {
 					})
 					if (bidAgain) {
 						let continue_ = true
+						let count = 0
 						while (continue_) {
-							continue_ = handleBid({
+							let continueToBid = false
+							if (count) {
+								continueToBid = await alertThis({
+									message: 'Would you like to continue making blind bids?',
+									accept: 'Yes',
+									decline: 'No',
+								})
+							}
+							continue_ = await handleBid({
 								auctionID: parseInt(what[1]),
-								loopVar: continue_,
+								loopVar: (count && continueToBid) || !count,
 								ctcInfo,
 								justJoining: false,
 							})
+							count++
 						}
 					}
 				}
@@ -789,7 +799,7 @@ const ReachContextProvider = ({ children }) => {
 			let didOptIn = false
 			if (opt) {
 				didOptIn = await optIn(auctionID)
-				if (didOptIn) {
+				if (didOptIn && justJoining) {
 					setShowBuyer(true)
 					if (ctc) ctc.events.log.monitor(handleAuctionLog)
 					else {
@@ -799,11 +809,15 @@ const ReachContextProvider = ({ children }) => {
 				}
 			}
 
-			loopVar = await alertThis({
-				message: `Would you like to bid again?`,
-				accept: 'Yes',
-				decline: 'No',
-			})
+			if (justJoining && !didOptIn) {
+				loopVar = await alertThis({
+					message: 'Would you like to make a blind bid this time?',
+					accept: 'Yes',
+					decline: 'No',
+				})
+			} else {
+				loopVar = !opt
+			}
 		}
 		return loopVar
 	}
