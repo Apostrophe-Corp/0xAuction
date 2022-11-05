@@ -68,7 +68,7 @@ Then run the following commands to start up the dApp:
 
 - Navigate to the app at the URL `http://localhost:3000`.
 
-- Click on the Connect Wallet button to activate Wallet Connect and scan the QR code.
+- Click on the **Connect Account** button and select the **Other Wallet** option to activate Wallet Connect and scan the QR code.
 
 - Click on any of the features of the dApp, Create, Sell, or Buy to start the process to launch or connect to, an 0xAuction contract.
 
