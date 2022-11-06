@@ -17,8 +17,10 @@ const LatestAuction = ({
 	const { standardUnit, joinAuction } = useReach()
 	const previewRef = useRef()
 
-	const setPreviewBgs = ({ x = '', y = '' } = {}) => {
-		previewRef.current.style.background = `url(${x}), url(${y}), url(${notFound})`
+	const setPreviewBgs = ({ x = '', y = '', found = false } = {}) => {
+		previewRef.current.style.background = `url(${x}), url(${y}), url(${
+			found ? '' : notFound
+		})`
 		previewRef.current.style.backgroundPosition = 'center'
 		previewRef.current.style.backgroundRepeat = 'no-repeat'
 		previewRef.current.style.backgroundSize = 'contain'
@@ -30,7 +32,7 @@ const LatestAuction = ({
 				const expectedData = await arc69.fetch(x)
 				if (expectedData.success && expectedData.url) {
 					console.log('Media URL:', expectedData.url)
-					setPreviewBgs({ x: expectedData.url })
+					setPreviewBgs({ x: expectedData.url, found: true })
 				} else {
 					console.log('No image url found 🥱')
 				}
@@ -77,8 +79,10 @@ const Auction = ({ assetID, title, desiredPrice, url = '', fullAuction }) => {
 	const { standardUnit, joinAuction } = useReach()
 	const auctionNFTRef = useRef()
 
-	const setPreviewBgs = ({ x = '', y = '' } = {}) => {
-		auctionNFTRef.current.style.background = `linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.7)), url(${x}), url(${y}), url(${notFound})`
+	const setPreviewBgs = ({ x = '', y = '', found = false } = {}) => {
+		auctionNFTRef.current.style.background = `linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.7)), url(${x}), url(${y}), url(${
+			found ? '' : notFound
+		})`
 		auctionNFTRef.current.style.backgroundPosition = 'center'
 		auctionNFTRef.current.style.backgroundRepeat = 'no-repeat'
 		auctionNFTRef.current.style.backgroundSize = 'contain'
@@ -90,7 +94,7 @@ const Auction = ({ assetID, title, desiredPrice, url = '', fullAuction }) => {
 				const expectedData = await arc69.fetch(x)
 				if (expectedData.success && expectedData.url) {
 					console.log('Media URL:', expectedData.url)
-					setPreviewBgs({ x: expectedData.url })
+					setPreviewBgs({ x: expectedData.url, found: true })
 				} else {
 					console.log('No image url found 🥱')
 				}
