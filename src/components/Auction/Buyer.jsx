@@ -15,8 +15,10 @@ const Buyer = () => {
 	)
 	const aucAsset = useRef()
 
-	const setPreviewBgs = ({ x = '', y = '' } = {}) => {
-		aucAsset.current.style.background = `url(${x}), url(${y}), url(${notFound})`
+	const setPreviewBgs = ({ x = '', y = '', found = false } = {}) => {
+		aucAsset.current.style.background = `url(${x}), url(${y}), url(${
+			found ? '' : notFound
+		})`
 		aucAsset.current.style.backgroundPosition = 'center'
 		aucAsset.current.style.backgroundRepeat = 'no-repeat'
 		aucAsset.current.style.backgroundSize = 'contain'
@@ -28,7 +30,7 @@ const Buyer = () => {
 			.then((data) => {
 				if (data.success && data.url) {
 					console.log('Media URL:', data.url)
-					setPreviewBgs({ x: data.url, y: auction?.url })
+					setPreviewBgs({ x: data.url, y: auction?.url, found: true })
 				} else {
 					setPreviewBgs({ y: auction?.url })
 					console.log('No image url found 🥱')
@@ -50,7 +52,9 @@ const Buyer = () => {
 
 	useEffect(() => {
 		if (auctions.length === 0) setShowBuyer(false)
-		const updatedAuction = auctions.filter((el) => Number(el?.id) === currentAuction)[0]
+		const updatedAuction = auctions.filter(
+			(el) => Number(el?.id) === currentAuction
+		)[0]
 		if (!updatedAuction) setShowBuyer(false)
 		setAuction(updatedAuction)
 	}, [auctions])
