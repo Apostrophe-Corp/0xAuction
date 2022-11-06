@@ -50,7 +50,7 @@ Then run the following commands to start up the dApp:
 
 >> ./reach compile auction.rsh
 
->> ./reach react
+>> REACH_CONNECTOR_MODE=ALGO ./reach react
 
 ```
 
