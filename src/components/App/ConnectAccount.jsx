@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import s from '../../styles/Shared.module.css'
 import ca from '../../styles/ConnectAccount.module.css'
 import { useReach, fmtClasses as cf } from '../../hooks'
