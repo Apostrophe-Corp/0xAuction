@@ -44,7 +44,7 @@ export const main = Reach.App(() => {
 	const Auction = Events({
 		log: [state, UInt, UInt],
 		created: [UInt, Contract, UInt, Address, Bytes(20), Bytes(80), UInt, Token],
-		down: [state, UInt, UInt, Address, Contract],
+		down: [state, UInt, UInt, Address, Contract, UInt],
 		outcome: [state, state, UInt, Address, Address, Token],
 	})
 
@@ -62,10 +62,12 @@ export const main = Reach.App(() => {
 	commit()
 	Seller.pay([[amt, tokenId]])
 
+	const createdAt = thisConsensusTime()
+
 	Auction.created(
 		auctionInfo.id,
 		getContract(),
-		thisConsensusTime(),
+		createdAt,
 		auctionInfo.owner,
 		auctionInfo.title,
 		auctionInfo.description,
@@ -141,7 +143,8 @@ export const main = Reach.App(() => {
 		auctionInfo.id,
 		lastPrice,
 		Seller,
-		getContract()
+		getContract(),
+		createdAt
 	)
 
 	const awaitingDecision = parallelReduce(true)
