@@ -512,7 +512,11 @@ const ReachContextProvider = ({ children }) => {
 							const awaitingConfirmation =
 								await tempAuctionCtc.v.AuctionView.awaitingConfirmation()
 							console.log(awaitingConfirmation)
-							if (awaitingConfirmation) {
+							const time = await reach.getNetworkTime()
+							if (
+								awaitingConfirmation &&
+								time < parseInt(what[5]) + deadline + 50
+							) {
 								const agreeToBid = await alertThis({
 									message: `Do you accept the current bid of ${reach.formatCurrency(
 										what[2],
@@ -739,16 +743,19 @@ const ReachContextProvider = ({ children }) => {
 		)
 		console.log(resultingBalance, minimumBalance)
 		if (resultingBalance < minimumBalance) {
-			stopWaiting();
+			stopWaiting()
 			await alertThis({
 				message: `Your balance: ${userBal} ${standardUnit}, is insufficient for this bid due to the minimum balance allowed on your account after a transfer: ${minimumBalance} ${standardUnit}`,
 				forConfirmation: false,
-			});
+			})
 			await alertThis({
-				message: 'At this point, would you prefer to exit this auction, you will still be notified of the outcome at the close of the auction?',
+				message:
+					'At this point, would you prefer to exit this auction, you will still be notified of the outcome at the close of the auction?',
 				accept: 'Stay',
 				decline: 'Exit',
-			}).then((decision) => {setShowBuyer(decision)})
+			}).then((decision) => {
+				setShowBuyer(decision)
+			})
 			return
 		}
 		const auctionToBeEdited = auctions.filter(
