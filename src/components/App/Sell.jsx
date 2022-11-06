@@ -2,7 +2,6 @@ import React, { useState, useRef } from 'react'
 import s from '../../styles/Shared.module.css'
 import sell from '../../styles/CreateAndSell.module.css'
 import { useReach, fmtClasses as cf } from '../../hooks'
-import previewImg from '../../assets/images/preview.jpg'
 import notFound from '../../assets/images/no_image.jpg'
 import { Arc69 } from '../../ARC69/arc.js'
 
@@ -11,10 +10,6 @@ const arc69 = new Arc69()
 const Sell = () => {
 	const [auctionParams, setAuctionParams] = useState({})
 	const [assetTimeout, setAssetTimeout] = useState(null)
-	const [[manualMedia, setManualMedia], [defaultMedia, setDefaultMedia]] = [
-		useState(''),
-		useState(''),
-	]
 
 	const { standardUnit, createAuction } = useReach()
 
@@ -33,17 +28,14 @@ const Sell = () => {
 			.then((data) => {
 				if (data.success && data.url) {
 					console.log('Media URL:', data.url)
-					setDefaultMedia(data.url)
-					setPreviewBgs({ x: data.url, y: manualMedia })
+					setPreviewBgs({ x: data.url })
 				} else {
-					setDefaultMedia('')
-					setPreviewBgs({ y: manualMedia })
+					setPreviewBgs()
 					console.log('No image url found 🥱')
 				}
 			})
 			.catch((x) => {
-				setDefaultMedia('')
-				setPreviewBgs({ y: manualMedia })
+				setPreviewBgs()
 				console.log('No image url found 🥱')
 			})
 	}

@@ -4,7 +4,6 @@ import cr8 from '../../styles/CreateAndSell.module.css'
 import { useReach, fmtClasses as cf } from '../../hooks'
 import previewImg from '../../assets/images/preview.jpg'
 import notFound from '../../assets/images/404.jpg'
-// import LoadingPreview from './LoadingPreview'
 
 const Create = () => {
 	const { mintNFT } = useReach()
