@@ -104,7 +104,7 @@ Please run the following commands:
 
 >> sudo service docker start
 
->> ./reach react
+>> REACH_CONNECTOR_MODE=ALGO ./reach react
 ```
 
 - Should you encounter any other errors, please tag either `goonerlabs#1008` 0r `Emmanuel Agbavwe#2954` on [Reach's Discord server](https://bit.ly/3BnPyKd).
