@@ -1,6 +1,6 @@
 # 0xAuction
 
-This project was created for the Greenhouse hack 2, organized by Algorand and hosted on Gitcoin.
+This project was created for the Greenhouse Hack 2, organized by Algorand and hosted on Gitcoin.
 
 The dApp allows users to create NFTs, auction NFTs, and buy NFTs and other collectibles by submitting bids for them.
 
