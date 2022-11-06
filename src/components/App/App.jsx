@@ -78,7 +78,7 @@ const App = () => {
 					>
 						<div className={cf(app.cardAction)}>Create</div>
 						<div className={cf(s.flex, s.flex_dColumn, app.cardPurpose)}>
-							<div className={cf(app.cardPurposeText)}>Mint NFts</div>
+							<div className={cf(app.cardPurposeText)}>Mint NFTs</div>
 							<div className={cf(app.cardDescription)}>
 								Create your very own collectibles on the Algorand blockchain.
 							</div>
