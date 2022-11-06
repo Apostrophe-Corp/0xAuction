@@ -4,7 +4,7 @@ This project was created for the Greenhouse hack 2, organized by Algorand and ho
 
 The dApp allows users to create NFTs, auction NFTs, and buy NFTs and other collectibles by submitting bids for them.
 
-Users can start an auction for the NFTs they own and other users can bid on them. Users can also optionally opt in to see the current highest bid for each auction, for every user that opts in to view the live bid of an auction, the auctioneer gets 10% of the opt-in fee as a token of appreciation for using our platform. The NFT and current highest bid are always held in escrow by the contract and lesser bids previously made are returned to the respective bidders and new bids not higher than the highest bid are rejected.  
+Users can start an auction for the NFTs they own and other users can bid on them. Users can also optionally opt in to see the current highest bid for each auction, for every user that opts in to view the live bid of an auction, the auctioneer gets 10% of the opt-in fee, and the rest is sent to the deployer of the 0xAuction contract as a token of appreciation for using our platform. The NFT and current highest bid are always held in escrow by the contract and lesser bids previously made are returned to the respective bidders and new bids not higher than the highest bid are rejected.  
 
 The end game is for users to be able to create, buy and sell NFTs and other collectibles without a central dependency.
 
@@ -106,6 +106,10 @@ Please run the following commands:
 
 >> REACH_CONNECTOR_MODE=ALGO ./reach react
 ```
+
+- `Unable to connect with a different wallet on the same browser even after closing the browser and launching it back again`
+
+On most browsers, simply clear the cookies used by `http://localhost:3000`, on Firefox, you can use the `Forget About This Site` feature, after right-clicking on `0xAuction | NFT Marketplace` on your `History` view.
 
 - Should you encounter any other errors, please tag either `goonerlabs#1008` 0r `Emmanuel Agbavwe#2954` on [Reach's Discord server](https://bit.ly/3BnPyKd).
 

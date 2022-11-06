@@ -8,13 +8,16 @@ import { Arc69 } from '../../ARC69/arc.js'
 const arc69 = new Arc69()
 
 const Seller = () => {
-	const { standardUnit, currentAuction, endAuction, auctions, setShowSeller } = useReach()
+	const { standardUnit, currentAuction, endAuction, auctions, setShowSeller } =
+		useReach()
 	const aucAsset = useRef()
 	const [auction, setAuction] = useState(
 		auctions.filter((el) => Number(el.id) === currentAuction)[0]
 	)
-	const setPreviewBgs = ({ x = '', y = '' } = {}) => {
-		aucAsset.current.style.background = `url(${x}), url(${y}), url(${notFound})`
+	const setPreviewBgs = ({ x = '', y = '', found = false } = {}) => {
+		aucAsset.current.style.background = `url(${x}), url(${y}), url(${
+			found ? '' : notFound
+		})`
 		aucAsset.current.style.backgroundPosition = 'center'
 		aucAsset.current.style.backgroundRepeat = 'no-repeat'
 		aucAsset.current.style.backgroundSize = 'contain'
@@ -26,7 +29,7 @@ const Seller = () => {
 			.then((data) => {
 				if (data.success && data.url) {
 					console.log('Media URL:', data.url)
-					setPreviewBgs({ x: data.url, y: auction?.url })
+					setPreviewBgs({ x: data.url, y: auction?.url, found: true })
 				} else {
 					setPreviewBgs({ y: auction?.url })
 					console.log('No image url found 🥱')
@@ -47,8 +50,10 @@ const Seller = () => {
 	}, [])
 
 	useEffect(() => {
-		if(auctions.length === 0) setShowSeller(false)
-		const updatedAuction = auctions.filter((el) => Number(el?.id) === currentAuction)[0]
+		if (auctions.length === 0) setShowSeller(false)
+		const updatedAuction = auctions.filter(
+			(el) => Number(el?.id) === currentAuction
+		)[0]
 		if (!updatedAuction) setShowSeller(false)
 		setAuction(updatedAuction)
 	}, [auctions])
