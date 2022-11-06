@@ -107,6 +107,10 @@ Please run the following commands:
 >> REACH_CONNECTOR_MODE=ALGO ./reach react
 ```
 
+- `Unable to connect with a different wallet on the same browser even after closing the browser and launching it back again`
+
+On most browsers, simply clear the cookies used by `http://localhost:3000`, on Firefox, you can use the `Forget About This Site` feature, after right-clicking on `0xAuction | NFT Marketplace` on your `History` view.
+
 - Should you encounter any other errors, please tag either `goonerlabs#1008` 0r `Emmanuel Agbavwe#2954` on [Reach's Discord server](https://bit.ly/3BnPyKd).
 
 ## The DApp
