@@ -693,23 +693,22 @@ const ReachContextProvider = ({ children }) => {
 			startWaiting()
 			try {
 				const ctc = user.account.contract(auctionCtc, JSON.parse(ctcInfo))
-				await ctc.a.Auctioneer.stopAuction().then(async (res) => {
-					try {
-						await contractInstance.apis.Auction.ended({
-							id: parseInt(res.id),
-							blockEnded: parseInt(res.blockEnded),
-							lastBid: parseInt(res.lastBid),
-						})
-					} catch (error) {
-						console.log({ error })
-						stopWaiting(false)
-						alertThis({
-							message:
-								'Unable to inform OxAuction of the close of this auction',
-							forConfirmation: false,
-						})
-					}
-				})
+				const res = await ctc.a.Auctioneer.stopAuction()
+				try {
+					await contractInstance.apis.Auction.ended({
+						id: parseInt(res.id),
+						blockEnded: parseInt(res.blockEnded),
+						lastBid: parseInt(res.lastBid),
+					})
+				} catch (error) {
+					console.log({ error })
+					stopWaiting(false)
+					alertThis({
+						message:
+							'Unable to inform OxAuction of the close of this auction',
+						forConfirmation: false,
+					})
+				}			
 				// stopWaiting()
 				setShowSeller(false)
 			} catch (error) {
@@ -819,6 +818,8 @@ const ReachContextProvider = ({ children }) => {
 						ctc = user.account.contract(auctionCtc, JSON.parse(ctcInfo))
 						ctc.events.log.monitor(handleAuctionLog)
 					}
+					return true
+				} else if (didOptIn) {
 					return true
 				}
 			} else {
