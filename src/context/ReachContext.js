@@ -233,7 +233,7 @@ const ReachContextProvider = ({ children }) => {
 				const tempAuctionCtc = user.account.contract(auctionCtc, what[1])
 				try {
 					const stillRunning = await tempAuctionCtc.v.AuctionView.isRunning()
-					console.log(stillRunning)
+					// console.log(stillRunning)
 					if (stillRunning) {
 						setCurrentAuction(parseInt(what[0]))
 						stopWaiting()
@@ -456,7 +456,7 @@ const ReachContextProvider = ({ children }) => {
 				const updatedAuctions = [auctionToBeEdited, ...leftOutAuctions]
 				setAuctions((previous) => updatedAuctions)
 				updateLatestAuctions(updatedAuctions)
-				console.log(auctionToBeEdited['liveBid'], yourBid)
+				// console.log(auctionToBeEdited['liveBid'], yourBid)
 				if (
 					auctionToBeEdited['liveBid'] > yourBid &&
 					String(owner) !== String(user.address) &&
@@ -512,7 +512,7 @@ const ReachContextProvider = ({ children }) => {
 						try {
 							const awaitingConfirmation =
 								await tempAuctionCtc.v.AuctionView.awaitingConfirmation()
-							console.log(awaitingConfirmation)
+							// console.log(awaitingConfirmation)
 							const time = await reach.getNetworkTime()
 							if (
 								awaitingConfirmation &&
@@ -742,7 +742,7 @@ const ReachContextProvider = ({ children }) => {
 			await reach.minimumBalanceOf(user.account),
 			4
 		)
-		console.log(resultingBalance, minimumBalance)
+		// console.log(resultingBalance, minimumBalance)
 		if (resultingBalance < minimumBalance) {
 			stopWaiting()
 			await alertThis({
@@ -895,7 +895,7 @@ const ReachContextProvider = ({ children }) => {
 				await reach.minimumBalanceOf(user.account),
 				4
 			)
-			console.log(resultingBalance, minimumBalance)
+			// console.log(resultingBalance, minimumBalance)
 			if (userBal && resultingBalance > minimumBalance) {
 				startWaiting()
 				try {

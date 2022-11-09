@@ -27,7 +27,7 @@ const Sell = () => {
 			.fetch(x)
 			.then((data) => {
 				if (data.success && data.url) {
-					console.log('Media URL:', data.url)
+					// console.log('Media URL:', data.url)
 					setPreviewBgs({ x: data.url })
 				} else {
 					setPreviewBgs()
@@ -85,7 +85,7 @@ const Sell = () => {
 
 	const handleSubmit = (e) => {
 		e.preventDefault()
-		console.log(auctionParams)
+		// console.log(auctionParams)
 		createAuction(auctionParams)
 	}
 

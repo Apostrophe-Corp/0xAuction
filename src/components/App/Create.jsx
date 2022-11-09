@@ -85,7 +85,7 @@ const Create = () => {
 
 	const handleSubmit = (e) => {
 		e.preventDefault()
-		console.log(nftParams)
+		// console.log(nftParams)
 		mintNFT(nftParams)
 	}
 
