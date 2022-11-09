@@ -459,8 +459,7 @@ const ReachContextProvider = ({ children }) => {
 				// console.log(auctionToBeEdited['liveBid'], yourBid)
 				if (
 					auctionToBeEdited['liveBid'] > yourBid &&
-					String(owner) !== String(user.address) &&
-					showBuyer
+					String(owner) !== String(user.address)
 				) {
 					const bidAgain = await alertThis({
 						message: `You just got outbid${
@@ -549,13 +548,13 @@ const ReachContextProvider = ({ children }) => {
 						})
 						setShowBuyer(false)
 					}
-					const endedAuction = auctions.filter(
-						(el) => el.id === parseInt(what[1])
-					)?.[0]
-					if (endedAuction) {
-						dropAuction({ what: [endedAuction.id] })
-						await contractInstance.apis.Auction.ended(object)
-					}
+					// const endedAuction = auctions.filter(
+					// 	(el) => el.id === parseInt(what[1])
+					// )?.[0]
+					// if (endedAuction) {
+					// 	dropAuction({ what: [endedAuction.id] })
+					// 	await contractInstance.apis.Auction.ended(object)
+					// }
 				} catch (error) {
 					console.log({ error })
 				}
@@ -820,7 +819,7 @@ const ReachContextProvider = ({ children }) => {
 						ctc = user.account.contract(auctionCtc, JSON.parse(ctcInfo))
 						ctc.events.log.monitor(handleAuctionLog)
 					}
-					return false
+					return true
 				}
 			} else {
 				loopVar = await alertThis({
@@ -867,15 +866,15 @@ const ReachContextProvider = ({ children }) => {
 				auctionCtc,
 				JSON.parse(auctionInfo.contractInfo)
 			)
-			let continue_ = true
-			while (continue_) {
+			let continue_ = false
+			do {
 				continue_ = await handleBid({
 					auctionID: auctionInfo.id,
 					loopVar: continue_,
 					ctc,
 					justJoining: true,
 				})
-			}
+			} while (continue_)
 		}
 	}
 
