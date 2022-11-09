@@ -45,7 +45,11 @@ const Create = () => {
 				value.indexOf('https://ipfs.io/ipfs/') !== 0 &&
 				(value.indexOf('https://') === 0 || value.indexOf('ipfs://') === 0)
 			) {
-				setPreviewBgs(value)
+				let previewPath = value
+				if (value.indexOf('ipfs://') === 0) {
+					previewPath = 'https://gateway.ipfs.io/ipfs/' + value.slice(7)
+				}
+				setPreviewBgs(previewPath)
 			} else {
 				setPreviewBgs(previewImg)
 			}
@@ -105,7 +109,8 @@ const Create = () => {
 						Create the next Bored Ape or Cyberpunks. Become the next Beeple!
 					</h1>
 					<h2 className={cf(cr8.callOutSub)}>
-						Create the NFT of your dreams in a few simple steps by simply filling out the form
+						Create the NFT of your dreams in a few simple steps by simply
+						filling out the form
 					</h2>
 				</div>
 				<div

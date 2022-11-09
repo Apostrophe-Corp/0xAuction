@@ -29,7 +29,7 @@ const Buyer = () => {
 			.fetch(x)
 			.then((data) => {
 				if (data.success && data.url) {
-					console.log('Media URL:', data.url)
+					// console.log('Media URL:', data.url)
 					setPreviewBgs({ x: data.url, y: auction?.url, found: true })
 				} else {
 					setPreviewBgs({ y: auction?.url })
