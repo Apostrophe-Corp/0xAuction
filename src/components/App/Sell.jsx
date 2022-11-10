@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react'
 import s from '../../styles/Shared.module.css'
 import sell from '../../styles/CreateAndSell.module.css'
 import { useReach, fmtClasses as cf } from '../../hooks'
-import notFound from '../../assets/images/no_image.jpg'
+import preview from '../../assets/images/preview.jpg'
 import { Arc69 } from '../../ARC69/arc.js'
 
 const arc69 = new Arc69()
@@ -15,8 +15,8 @@ const Sell = () => {
 
 	const previewRef = useRef()
 
-	const setPreviewBgs = ({ x = '', y = '' } = {}) => {
-		previewRef.current.style.background = `url(${x}), url(${y}), url(${notFound})`
+	const setPreviewBgs = (x = preview) => {
+		previewRef.current.style.background = `url(${x})`
 		previewRef.current.style.backgroundPosition = 'center'
 		previewRef.current.style.backgroundRepeat = 'no-repeat'
 		previewRef.current.style.backgroundSize = 'contain'
@@ -28,7 +28,7 @@ const Sell = () => {
 			.then((data) => {
 				if (data.success && data.url) {
 					// console.log('Media URL:', data.url)
-					setPreviewBgs({ x: data.url })
+					setPreviewBgs(data.url)
 				} else {
 					setPreviewBgs()
 					console.log('No image url found 🥱')

@@ -3,7 +3,6 @@ import s from '../../styles/Shared.module.css'
 import cr8 from '../../styles/CreateAndSell.module.css'
 import { useReach, fmtClasses as cf } from '../../hooks'
 import previewImg from '../../assets/images/preview.jpg'
-import notFound from '../../assets/images/404.jpg'
 
 const Create = () => {
 	const { mintNFT } = useReach()
@@ -12,7 +11,7 @@ const Create = () => {
 	const previewRef = useRef()
 
 	const setPreviewBgs = (x) => {
-		previewRef.current.style.background = `url(${x}))`
+		previewRef.current.style.background = `url(${x})`
 		previewRef.current.style.backgroundPosition = 'center'
 		previewRef.current.style.backgroundRepeat = 'no-repeat'
 		previewRef.current.style.backgroundSize = 'contain'
