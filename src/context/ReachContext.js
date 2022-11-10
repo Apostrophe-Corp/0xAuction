@@ -548,13 +548,13 @@ const ReachContextProvider = ({ children }) => {
 						})
 						setShowBuyer(false)
 					}
-					// const endedAuction = auctions.filter(
-					// 	(el) => el.id === parseInt(what[1])
-					// )?.[0]
-					// if (endedAuction) {
-					// 	dropAuction({ what: [endedAuction.id] })
-					// 	await contractInstance.apis.Auction.ended(object)
-					// }
+					const endedAuction = auctions.filter(
+						(el) => el.id === parseInt(what[1])
+					)?.[0]
+					if (endedAuction) {
+						dropAuction({ what: [endedAuction.id] })
+						await contractInstance.apis.Auction.ended(object)
+					}
 				} catch (error) {
 					console.log({ error })
 				}
