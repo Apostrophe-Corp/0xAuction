@@ -708,7 +708,7 @@ const ReachContextProvider = ({ children }) => {
 							'Unable to inform OxAuction of the close of this auction',
 						forConfirmation: false,
 					})
-				}			
+				}
 				// stopWaiting()
 				setShowSeller(false)
 			} catch (error) {
