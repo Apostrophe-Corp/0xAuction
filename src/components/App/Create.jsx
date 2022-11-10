@@ -12,7 +12,7 @@ const Create = () => {
 	const previewRef = useRef()
 
 	const setPreviewBgs = (x) => {
-		previewRef.current.style.background = `url(${x}), url(${notFound})`
+		previewRef.current.style.background = `url(${x}))`
 		previewRef.current.style.backgroundPosition = 'center'
 		previewRef.current.style.backgroundRepeat = 'no-repeat'
 		previewRef.current.style.backgroundSize = 'contain'
