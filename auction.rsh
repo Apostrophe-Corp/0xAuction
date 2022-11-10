@@ -147,12 +147,15 @@ export const main = Reach.App(() => {
 		createdAt
 	)
 
-	const awaitingDecision = parallelReduce(true)
+	const end = thisConsensusTime() + DEADLINE
+
+	const [awaitingDecision, agreed] = parallelReduce([true, true])
 		.define(() => {
 			AuctionView.awaitingConfirmation.set(awaitingDecision)
 		})
-		.invariant(balance(tokenId) == balance(tokenId))
-		.while(awaitingDecision)
+		.invariant(balance() == (isFirstBid ? 0 : lastPrice))
+		.invariant(balance(tokenId) == amt)
+		.while(thisConsensusTime() <= end && awaitingDecision)
 		.api(
 			Auctioneer.acceptSale,
 			() => {
@@ -160,18 +163,8 @@ export const main = Reach.App(() => {
 			},
 			() => 0,
 			(notify) => {
-				transfer(balance(tokenId), tokenId).to(highestBidder)
-				transfer(balance()).to(Seller)
 				notify(true)
-				Auction.outcome(
-					state.pad('accepted'),
-					auctionInfo.title,
-					lastPrice,
-					Seller,
-					highestBidder,
-					tokenId
-				)
-				return false
+				return [false, true]
 			}
 		)
 		.api(
@@ -181,36 +174,33 @@ export const main = Reach.App(() => {
 			},
 			() => 0,
 			(notify) => {
-				transfer(balance(tokenId), tokenId).to(Seller)
-				transfer(balance()).to(highestBidder)
 				notify(false)
-				Auction.outcome(
-					state.pad('rejected'),
-					auctionInfo.title,
-					lastPrice,
-					Seller,
-					highestBidder,
-					tokenId
-				)
-				return false
+				return [false, false]
 			}
 		)
-		.timeout(relativeTime(DEADLINE), () => {
-			Seller.publish()
-			transfer(balance(tokenId), tokenId).to(highestBidder)
-			transfer(balance()).to(Seller)
-			Auction.outcome(
-				state.pad('accepted'),
-				auctionInfo.title,
-				lastPrice,
-				Seller,
-				highestBidder,
-				tokenId
-			)
-			return false
-		})
-	transfer(balance(tokenId), tokenId).to(highestBidder)
-	transfer(balance()).to(Seller)
+	if (agreed) {
+		transfer(balance(tokenId), tokenId).to(highestBidder)
+		transfer(balance()).to(Seller)
+		Auction.outcome(
+			state.pad('accepted'),
+			auctionInfo.title,
+			lastPrice,
+			Seller,
+			highestBidder,
+			tokenId
+		)
+	} else {
+		transfer(balance(tokenId), tokenId).to(Seller)
+		transfer(balance()).to(highestBidder)
+		Auction.outcome(
+			state.pad('rejected'),
+			auctionInfo.title,
+			lastPrice,
+			Seller,
+			highestBidder,
+			tokenId
+		)
+	}
 	commit()
 	exit()
 })
