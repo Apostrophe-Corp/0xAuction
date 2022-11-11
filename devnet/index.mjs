@@ -2,11 +2,12 @@ import { loadStdlib } from '@reach-sh/stdlib'
 import * as mainCtc from './build/index.main.mjs'
 import * as auctionCtc from './build/auction.main.mjs'
 
-const stdlib = loadStdlib(process.env)
+const stdlib = loadStdlib({ ...process.env, REACH_NO_WARN: 'Y' })
 
 const startingBalance = stdlib.parseCurrency(1000)
 
-const deadline = 50
+const deadline = 10000
+let done = false
 
 const accAdmin = await stdlib.newTestAccount(startingBalance)
 const adminAdd = stdlib.formatAddress(accAdmin.getAddress())
@@ -37,6 +38,8 @@ const noneNull = (byte) => {
 	return string
 }
 
+const createPromise = {}
+
 const ifState = (x) => x.padEnd(20, '\u0000')
 
 const { standardUnit } = stdlib
@@ -45,11 +48,6 @@ const setAdmin = ({ what }) => {
 	adminAddress = stdlib.formatAddress(what[0])
 }
 
-console.log('Deploying the main contract')
-const ctcInstance = accAdmin.contract(mainCtc)
-const ctcInfo = await ctcInstance.getInfo()
-// ctcInstance.passAddress.monitor(setAdmin)
-
 const ecoSystem = {
 	acc1: {
 		ctcInstance: null,
@@ -57,6 +55,7 @@ const ecoSystem = {
 		auctions: [],
 		currentAuction: 0,
 		adminAddress,
+		endAuction: null,
 	},
 	acc2: {
 		ctcInstance: null,
@@ -64,6 +63,7 @@ const ecoSystem = {
 		auctions: [],
 		currentAuction: 0,
 		adminAddress,
+		endAuction: null,
 	},
 	acc3: {
 		ctcInstance: null,
@@ -71,6 +71,7 @@ const ecoSystem = {
 		auctions: [],
 		currentAuction: 0,
 		adminAddress,
+		endAuction: null,
 	},
 	acc4: {
 		ctcInstance: null,
@@ -78,21 +79,20 @@ const ecoSystem = {
 		auctions: [],
 		currentAuction: 0,
 		adminAddress,
+		endAuction: null,
 	},
 }
 
-// ctcInstance.passAddress.monitor(setAdmin)
-const ecoKeys = Object.keys(ecoSystem)
-const ecoLength = ecoKeys.length
-
-console.log('Connecting all test accounts to the main contract and setting up')
-for (
-	let i = 1, ecoInfo = { tokenId: null, auctionInfo: null };
-	i <= ecoLength;
-	i++
-) {
+const startTestOp = async (i, infoStr, { ...ecoInfo } = {}) => {
 	const index = i
+
+	const setAdmin = ({ what }) => {
+		console.log('setAdmin got fired')
+		ecoSystem['acc' + index].adminAddress = stdlib.formatAddress(what[0])
+	}
+
 	const postAuction = async ({ what }) => {
+		console.log('postAuction got fired')
 		const time = await stdlib.getNetworkTime()
 		if (time < parseInt(what[2]) + deadline) {
 			const presentAuctions = ecoSystem['acc' + index].auctions
@@ -127,10 +127,12 @@ for (
 					console.log({ error })
 				}
 			}
+			createPromise?.resolve && createPromise.resolve()
 		}
 	}
 
 	const dropAuction = ({ what }) => {
+		console.log('dropAuction got fired')
 		const auctionsToBeEdited = ecoSystem['acc' + index].auctions
 		const remainingAuctions = auctionsToBeEdited.filter(
 			(el) => Number(el.id) !== parseInt(what[0])
@@ -142,9 +144,10 @@ for (
 		switch (what[0]) {
 			case ifState('bidSuccess'):
 				const newBid = stdlib.formatCurrency(what[2], 4)
-				const auctionToBeEdited = ecoSystem['acc' + index].auctions.filter(
-					(el) => Number(el.id) === parseInt(what[1])
-				)[0]
+				const auctionToBeEdited =
+					ecoSystem['acc' + index].auctions.filter(
+						(el) => Number(el.id) === parseInt(what[1])
+					)[0] ?? {}
 				let yourBid = Number(auctionToBeEdited['yourBid']),
 					owner = auctionToBeEdited['owner']
 				if (String(owner) !== String(testAddresses[index - 1])) {
@@ -164,6 +167,7 @@ for (
 				) {
 					console.log('acc' + index + ' just got outbid by ' + newBid + 'ALGO')
 				}
+
 				break
 			case ifState('endSuccess'):
 				console.log('The auction window has ended')
@@ -289,7 +293,10 @@ for (
 
 	ecoSystem['acc' + index].endAuction = async (ctcInfo) => {
 		try {
-			const ctc = testAccounts[index - 1].contract(auctionCtc, ctcInfo)
+			const ctc = testAccounts[index - 1].contract(
+				auctionCtc,
+				JSON.parse(ctcInfo)
+			)
 			const res = await ctc.a.Auctioneer.stopAuction()
 			try {
 				await ecoSystem['acc' + index].ctcInstance.apis.Auction.ended({
@@ -308,35 +315,37 @@ for (
 		}
 	}
 
-	const auctionCreated = async ({ what }) => {
-		try {
-			await ecoSystem['acc' + index].ctcInstance.apis.Auction.created({
-				id: parseInt(what[0]),
-				contractInfo: what[1],
-				blockCreated: parseInt(what[2]),
-				owner: what[3],
-				title: what[4],
-				description: what[5],
-				price: parseInt(what[6]),
-				tokenId: parseInt(what[7]),
-			})
-		} catch (error) {
-			console.log({ error })
-			console.log(
-				'Sorry, unable to send your auction to OxAuction. Just wait a while, and after a few transaction signings, your NFT will be returned to you'
-			)
-			await ecoSystem['acc' + index].endAuction(JSON.stringify(what[1]))
-		}
-	}
-
 	ecoSystem['acc' + index].ctcInstance = testAccounts[i - 1].contract(
 		mainCtc,
-		ctcInfo
+		infoStr
 	)
 	ecoSystem['acc' + index].ctcInstance.events.create.monitor(postAuction)
 	ecoSystem['acc' + index].ctcInstance.events.end.monitor(dropAuction)
+	ecoSystem['acc' + index].ctcInstance.events.passAddress.monitor(setAdmin)
 
 	if (index === 1) {
+		const auctionCreated = async ({ what }) => {
+			try {
+				await ecoSystem['acc' + index].ctcInstance.apis.Auction.created({
+					id: parseInt(what[0]),
+					contractInfo: what[1],
+					blockCreated: parseInt(what[2]),
+					owner: what[3],
+					title: what[4],
+					description: what[5],
+					price: parseInt(what[6]),
+					tokenId: parseInt(what[7]),
+				})
+			} catch (error) {
+				// console.log({ error })
+				console.log(
+					'Sorry, unable to send your auction to OxAuction. Just wait a while, and after a few transaction signings, your NFT will be returned to you'
+				)
+				// await ecoSystem['acc' + index].endAuction(JSON.stringify(what[1]))
+				createPromise?.reject && createPromise.reject(error)
+			}
+		}
+
 		const mintNFT = async (opts) => {
 			const optKeys = Object.keys(opts)
 			const len = optKeys.length
@@ -378,10 +387,9 @@ for (
 				return
 			}
 
-			let id = 0
-
+			let id = 1
 			try {
-				id = await ecoSystem['acc' + index].ctcInstance.apis.Auction.getID()
+				// id = await ecoSystem['acc' + index].ctcInstance.apis.Auction.getID()
 			} catch (error) {
 				console.log({ error })
 				console.log('Sorry, unable to create auction')
@@ -392,19 +400,18 @@ for (
 				id: parseInt(id),
 				deadline,
 				owner: testAddresses[index - 1],
-				Admin: ecoSystem['acc' + index].adminAddress,
+				Admin: ecoSystem['acc' + index].adminAddress ?? adminAdd,
 			}
 			ecoSystem['acc' + index].currentAuction = parseInt(id)
-
 			try {
 				const ctc = testAccounts[index - 1].contract(auctionCtc)
 				ctc.p.Seller({ getAuction: auctionInfo })
-				await ctc.getInfo()
+				const aucCtcInfo = await ctc.getInfo()
 				ctc.events.created.monitor(auctionCreated)
 				ctc.events.log.monitor(handleAuctionLog)
 				ctc.events.down.monitor(handleAuctionLog)
 				ctc.events.outcome.monitor(handleAuctionLog)
-				ecoInfo.auctionInfo = auctionInfo
+				ecoInfo.auctionInfo = { ...auctionInfo, contractInfo: aucCtcInfo }
 			} catch (error) {
 				console.log({ error })
 				console.log('Sorry, unable to create auction')
@@ -412,14 +419,22 @@ for (
 		}
 
 		const auctionParams = {
-			tokenId: ecoInfo.tokenId,
+			tokenId: parseInt(ecoInfo.tokenId),
 			price: 9999,
 			title: '0xAuction Token',
 			description: '0xAuction Token Early Access Sale',
 		}
 		console.log('Starting the auction')
-		await createAuction(auctionParams)
-		console.log('Auction is live')
+		// await new Promise(async (resolve, reject) => {
+			// createPromise['resolve'] = resolve
+			// createPromise['reject'] = reject
+			await createAuction(auctionParams)			
+		// }).then(()=>{
+			console.log('Auction is live')
+		// }).catch(error=>{
+		// 	console.log({error})
+		// })		
+		// await stdlib.wait(10)
 	} else {
 		const handleBid = async ({
 			auctionID = 0,
@@ -427,12 +442,14 @@ for (
 			ctcInfo = null,
 			justJoining = false,
 		} = {}) => {
-			const bid = index
+			const bid = 10 + index
+			 // 1
 			const userBal = stdlib.formatCurrency(
 				await stdlib.balanceOf(testAccounts[index - 1]),
 				4
 			)
 			const resultingBalance = userBal - bid
+			 // 2
 			const minimumBalance = stdlib.formatCurrency(
 				await stdlib.minimumBalanceOf(testAccounts[index - 1]),
 				4
@@ -443,15 +460,23 @@ for (
 					`Your balance: ${userBal} ${standardUnit}, is insufficient for this bid due to the minimum balance allowed on your account after a transfer: ${minimumBalance} ${standardUnit}`
 				)
 			}
-			const auctionToBeEdited = ecoSystem['acc' + index].auctions.filter(
-				(el) => Number(el.id) === auctionID
-			)[0]
+			 // 3
+			const auctionToBeEdited =
+				ecoSystem['acc' + index].auctions.filter(
+					(el) => Number(el.id) === auctionID
+				)[0] ?? {}
 			try {
+				 // 4
+				// console.log(ctcInfo, ctc)
 				if (ctc) await ctc.a.Bidder.bid(stdlib.parseCurrency(bid))
 				else {
 					ctc = testAccounts[index - 1].contract(auctionCtc, ctcInfo)
-					await ctc.a.Bidder.bid(stdlib.parseCurrency(bid))
+					 // 5
+					// console.log(ctcInfo, ctc)
+					const x = await ctc.apis.Bidder.bid(stdlib.parseCurrency(bid))
+					console.log(stdlib.formatAddress(x[0]), stdlib.formatCurrency(x[1],4), 'On acc' + index + ' call to bid')
 				}
+				 // 6
 				if (justJoining) {
 					ctc.events.log.monitor(handleAuctionLog)
 					ctc.events.down.monitor(handleAuctionLog)
@@ -466,43 +491,103 @@ for (
 			} catch (error) {
 				console.log({ error })
 			}
+			 // 6
 		}
 
-		const joinAuction = async (auctionInfo) => {			
-				setCurrentAuction(auctionInfo.id)
-				try {
-					await testAccounts[index - 1].tokenAccept(auctionInfo.tokenId)
-					console.log('Opt-In confirmed')
-				} catch (error) {
-					console.log({ error })
-					console.log('Opt-In failed and as such you cannot bid for this NFT at this point. But you can try again')
-					return
-				}
-				const ctc = testAccounts[index - 1].contract(
-					auctionCtc,
-					JSON.parse(auctionInfo.contractInfo)
+		const joinAuction = async (auctionInfo) => {
+			ecoSystem['acc' + index].currentAuction = auctionInfo.id
+			try {
+				await testAccounts[index - 1].tokenAccept(auctionInfo.tokenId)
+				console.log('Opt-In confirmed')
+			} catch (error) {
+				console.log({ error })
+				console.log(
+					'Opt-In failed and as such you cannot bid for this NFT at this point. But you can try again'
 				)
-				let continue_ = false
-				do {
-					continue_ = await handleBid({
-						auctionID: auctionInfo.id,
-						loopVar: continue_,
-						ctc,
-						justJoining: true,
-					})
-				} while (continue_)
+				return
 			}
+			
+			const ctc = testAccounts[index - 1].contract(
+				auctionCtc,
+				auctionInfo.contractInfo
+			)
+			
+			await handleBid({
+				auctionID: auctionInfo.id,
+				ctcInfo: auctionInfo.contractInfo,
+				justJoining: true,
+			})
 		}
-	
+
+		console.log(`acc${index} joining the auction`)
+		await joinAuction(ecoInfo.auctionInfo)
+		console.log(`acc${index} joined auction`)
+
+	}
+	console.log(
+		ecoSystem['acc' + index].auctions,
+		ecoSystem['acc' + index].currentAuction,
+		ecoSystem['acc' + index].adminAddress
+	)
+	return ecoInfo
 }
-console.log('Test account connections and setup complete')
 
-// const auctionInfo = {}
+const deployed = async (infoStr) => {
+	const ctcInfoStr = JSON.stringify(infoStr, null)
+	console.log(`Deployed successfully, here's the contract info: ${ctcInfoStr}`)
 
-// let i = 1
+	const ecoKeys = Object.keys(ecoSystem)
+	const ecoLength = ecoKeys.length
+	let ecoInfoAfter = {}
+	console.log(
+		'Connecting all test accounts to the main contract and setting up'
+	)
+	const auctionInfo = await startTestOp(1, infoStr)
+	await startTestOp(2, infoStr, auctionInfo)
+	await startTestOp(3, infoStr, auctionInfo)
+	await startTestOp(4, infoStr, auctionInfo)
+	console.log('Test account connections and setup complete')
+		
+	console.log(`Having acc1 end the auction`)
+	await ecoSystem['acc1'].endAuction(
+		JSON.parse(auctionInfo.auctionInfo.contractInfo)
+	)
+	console.log('acc1 ended the auction')
 
-// for (i; i <= ecoLength; i++) {
-// 	const index = i
-// }
+	for (let i = 1; i < ecoLength; i++) {
+		const index = i
+		console.log(
+			ecoSystem['acc' + index].auctions,
+			ecoSystem['acc' + index].currentAuction,
+			ecoSystem['acc' + index].adminAddress
+		)
+	}
 
-// ecoSystem.acc1.ctcInstance = acc1.contract(mainCtc, ctcInfo)
+	let i = 0,
+		tLength = testAccounts.length
+	for (i; i < tLength; i++) {
+		const [amt, amtNFT] = await stdlib.balancesOf(testAccounts[i], [
+			null,
+			parseInt(auctionInfo.tokenId),
+		])
+		console.log(
+			`acc${i} has ${stdlib.formatCurrency(
+				amt,
+				4
+			)} ${standardUnit} and ${amtNFT} of the 0xAuction Token`
+		)
+	}
+	process.exit(0)
+}
+console.log('Deploying the main contract')
+const ctcInstance = accAdmin.contract(mainCtc)
+ctcInstance.p.Admin({
+	deployed: async (x) => {
+		await deployed(x)
+	},
+})
+const ctcInfo = await ctcInstance.getInfo()
+ctcInstance.events.passAddress.monitor(setAdmin)
+
+// ctcInstance.passAddress.monitor(setAdmin)
+
