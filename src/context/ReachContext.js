@@ -433,23 +433,23 @@ const ReachContextProvider = ({ children }) => {
 		switch (what[0]) {
 			case ifState('bidSuccess'):
 				const newBid = reach.formatCurrency(what[2], 4)
-				let yourBid = 0,
-					owner = null,
-					ctcInfo = null,
-					opt = false
 				const auctionToBeEdited = auctions.filter(
 					(el) => Number(el.id) === parseInt(what[1])
 				)[0]
+				// let yourBid = 0,
+				// 	owner = null,
+				// 	ctcInfo = null,
+				// 	opt = false
+				let yourBid = Number(auctionToBeEdited['yourBid']),
+					owner = auctionToBeEdited['owner'],
+					ctcInfo = auctionToBeEdited['contractInfo'],
+					opt = auctionToBeEdited['optIn']
 				if (String(owner) !== String(user.address)) {
 					auctionToBeEdited['liveBid'] =
 						newBid > Number(auctionToBeEdited['yourBid'])
 							? newBid
 							: Number(auctionToBeEdited['yourBid'])
 				} else auctionToBeEdited['liveBid'] = newBid
-				yourBid = Number(auctionToBeEdited['yourBid'])
-				owner = auctionToBeEdited['owner']
-				ctcInfo = auctionToBeEdited['contractInfo']
-				opt = auctionToBeEdited['optIn']
 				const leftOutAuctions = auctions.filter(
 					(el) => Number(el.id) !== parseInt(what[1])
 				)
@@ -704,8 +704,7 @@ const ReachContextProvider = ({ children }) => {
 					console.log({ error })
 					stopWaiting(false)
 					alertThis({
-						message:
-							'Unable to inform OxAuction of the close of this auction',
+						message: 'Unable to inform OxAuction of the close of this auction',
 						forConfirmation: false,
 					})
 				}
