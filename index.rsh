@@ -5,8 +5,6 @@
 /* eslint-disable no-undef */
 'reach 0.1'
 
-const state = Bytes(20)
-
 export const main = Reach.App(() => {
 	const Admin = Participant('Admin', {
 		deployed: Fun([Contract],Null)
@@ -29,16 +27,16 @@ export const main = Reach.App(() => {
 		['lastBid', UInt],
 	])
 
-	const Auctions = API('Auction', {
+	const Auctions = API('Auctions', {
 		created: Fun([objectRep], Null),
 		ended: Fun([endResponse], Null),
 		getID: Fun([], UInt),
+		getAdminAddress: Fun([], Address),
 	})
 
 	const Auction = Events({
 		end: [UInt, UInt, UInt],
 		create: [UInt, Contract, UInt, Address, Bytes(20), Bytes(80), UInt, Token],
-		passAddress: [Address],
 	})
 
 	init()
@@ -46,16 +44,15 @@ export const main = Reach.App(() => {
 	commit()
 	Admin.publish()
 	Admin.interact.deployed(getContract())
-	Auction.passAddress(Admin)
 	const auctionID = parallelReduce(0)
 		.invariant(balance() == 0)
 		.while(true)
-		.api(Auctions.getID, (notify) => {
-			notify(auctionID)
+		.api(Auctions.getID, (ret) => {
+			ret(auctionID)
 			return auctionID + 1
 		})
-		.api(Auctions.created, (obj, notify) => {
-			notify(null)
+		.api(Auctions.created, (obj, ret) => {
+			ret(null)
 			const auctionStruct = objectRep.fromObject(obj)
 			const auctionObject = objectRep.toObject(auctionStruct)
 			Auction.create(
@@ -70,8 +67,8 @@ export const main = Reach.App(() => {
 			)
 			return auctionID
 		})
-		.api(Auctions.ended, (obj, notify) => {
-			notify(null)
+		.api(Auctions.ended, (obj, ret) => {
+			ret(null)
 			const endResponseStruct = endResponse.fromObject(obj)
 			const endResponseObject = endResponse.toObject(endResponseStruct)
 			Auction.end(
@@ -79,6 +76,10 @@ export const main = Reach.App(() => {
 				endResponseObject.blockEnded,
 				endResponseObject.lastBid
 			)
+			return auctionID
+		})
+		.api(Auctions.getAdminAddress, (ret) => {
+			ret(Admin)
 			return auctionID
 		})
 	commit()

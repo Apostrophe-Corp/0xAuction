@@ -24,7 +24,7 @@ const algoExplorerURI = {
 
 const deadline = 10000
 
-const reach = loadStdlib(process.env)
+const reach = loadStdlib({ ...process.env, REACH_NO_WARN: 'Y' })
 
 export const ReachContext = React.createContext()
 
@@ -67,7 +67,6 @@ const ReachContextProvider = ({ children }) => {
 	const [showConnectAccount, setShowConnectAccount] = useState(false)
 	const [contractInstance, setContractInstance] = useState(null)
 	const [contract, setContract] = useState('')
-	const [adminAddress, setAdminAddress] = useState('')
 
 	const updateLatestAuctions = (auc) => {
 		if (auc.length === 0) setLatestAuctions((previous) => [])
@@ -206,10 +205,6 @@ const ReachContextProvider = ({ children }) => {
 		}
 	}
 
-	const setAdmin = ({ what }) => {
-		setAdminAddress(reach.formatAddress(what[0]))
-	}
-
 	const postAuction = async ({ what }) => {
 		const time = await reach.getNetworkTime()
 		if (time < parseInt(what[2]) + deadline) {
@@ -231,22 +226,23 @@ const ReachContextProvider = ({ children }) => {
 			updateLatestAuctions(presentAuctions)
 			if (String(user.address) === reach.formatAddress(what[3])) {
 				const tempAuctionCtc = user.account.contract(auctionCtc, what[1])
-				try {
-					const stillRunning = await tempAuctionCtc.v.AuctionView.isRunning()
-					// console.log(stillRunning)
-					if (stillRunning) {
-						setCurrentAuction(parseInt(what[0]))
-						stopWaiting()
-						alertThis({
-							message: 'Your auction is live',
-							forConfirmation: false,
-						})
-						tempAuctionCtc.events.log.monitor(handleAuctionLog)
-						setShowSeller(true)
+				sleep(2000).then(async () => {
+					try {
+						const stillRunning = await tempAuctionCtc.v.AuctionView.isRunning()
+						if (stillRunning) {
+							setCurrentAuction(parseInt(what[0]))
+							stopWaiting()
+							alertThis({
+								message: 'Your auction is live',
+								forConfirmation: false,
+							})
+							tempAuctionCtc.events.log.monitor(handleAuctionLog)
+							setShowSeller(true)
+						}
+					} catch (error) {
+						console.log({ error })
 					}
-				} catch (error) {
-					console.log({ error })
-				}
+				})
 			}
 		}
 	}
@@ -322,7 +318,6 @@ const ReachContextProvider = ({ children }) => {
 						})
 						ctc.events.create.monitor(postAuction)
 						ctc.events.end.monitor(dropAuction)
-						ctc.events.passAddress.monitor(setAdmin)
 						func()
 					} catch (error) {
 						console.log({ error })
@@ -347,7 +342,6 @@ const ReachContextProvider = ({ children }) => {
 						})
 						ctc.events.create.monitor(postAuction)
 						ctc.events.end.monitor(dropAuction)
-						ctc.events.passAddress.monitor(setAdmin)
 						func()
 					} catch (error) {
 						console.log({ error })
@@ -376,7 +370,6 @@ const ReachContextProvider = ({ children }) => {
 			if (key === 'name' || key === 'symbol') continue
 			if (opts[key]) launchOpts[key] = opts[key]
 		}
-		// console.log(launchOpts)
 		try {
 			const launchedToken = await reach.launchToken(
 				user.account,
@@ -404,31 +397,6 @@ const ReachContextProvider = ({ children }) => {
 		}
 	}
 
-	const auctionCreated = async ({ what }) => {
-		try {
-			await contractInstance.apis.Auction.created({
-				id: parseInt(what[0]),
-				contractInfo: what[1],
-				blockCreated: parseInt(what[2]),
-				owner: what[3],
-				title: what[4],
-				description: what[5],
-				price: parseInt(what[6]),
-				tokenId: parseInt(what[7]),
-			})
-		} catch (error) {
-			console.log({ error })
-			stopWaiting(false)
-			alertThis({
-				message:
-					'Sorry, unable to send your auction to OxAuction. Just wait a while, and after a few transaction signings, your NFT will be returned to you',
-				forConfirmation: false,
-			}).then(() => {
-				endAuction(JSON.stringify(what[1]))
-			})
-		}
-	}
-
 	const handleAuctionLog = async ({ what }) => {
 		switch (what[0]) {
 			case ifState('bidSuccess'):
@@ -436,10 +404,6 @@ const ReachContextProvider = ({ children }) => {
 				const auctionToBeEdited = auctions.filter(
 					(el) => Number(el.id) === parseInt(what[1])
 				)[0]
-				// let yourBid = 0,
-				// 	owner = null,
-				// 	ctcInfo = null,
-				// 	opt = false
 				let yourBid = Number(auctionToBeEdited['yourBid']),
 					owner = auctionToBeEdited['owner'],
 					ctcInfo = auctionToBeEdited['contractInfo'],
@@ -456,7 +420,6 @@ const ReachContextProvider = ({ children }) => {
 				const updatedAuctions = [auctionToBeEdited, ...leftOutAuctions]
 				setAuctions((previous) => updatedAuctions)
 				updateLatestAuctions(updatedAuctions)
-				// console.log(auctionToBeEdited['liveBid'], yourBid)
 				if (
 					auctionToBeEdited['liveBid'] > yourBid &&
 					String(owner) !== String(user.address)
@@ -482,10 +445,6 @@ const ReachContextProvider = ({ children }) => {
 				}
 				break
 			case ifState('endSuccess'):
-				alertThis({
-					message: `This auction's bidding window has been closed by the Auctioneer`,
-					forConfirmation: false,
-				})
 				if (auctions.length === 1) setView('App')
 				setShowBuyer(false)
 				setShowSeller(false)
@@ -499,19 +458,11 @@ const ReachContextProvider = ({ children }) => {
 			case ifState('down'):
 				stopWaiting()
 				try {
-					const blockEnded = parseInt(await reach.getNetworkTime())
-					const object = {
-						id: parseInt(what[1]),
-						blockEnded: blockEnded,
-						lastBid: reach.formatCurrency(what[2], 4),
-					}
-
 					if (reach.formatAddress(what[3]) === String(user.address)) {
 						const tempAuctionCtc = user.account.contract(auctionCtc, what[4])
 						try {
 							const awaitingConfirmation =
 								await tempAuctionCtc.v.AuctionView.awaitingConfirmation()
-							// console.log(awaitingConfirmation)
 							const time = await reach.getNetworkTime()
 							if (
 								awaitingConfirmation &&
@@ -547,13 +498,6 @@ const ReachContextProvider = ({ children }) => {
 							forConfirmation: false,
 						})
 						setShowBuyer(false)
-					}
-					const endedAuction = auctions.filter(
-						(el) => el.id === parseInt(what[1])
-					)?.[0]
-					if (endedAuction) {
-						dropAuction({ what: [endedAuction.id] })
-						await contractInstance.apis.Auction.ended(object)
 					}
 				} catch (error) {
 					console.log({ error })
@@ -642,34 +586,16 @@ const ReachContextProvider = ({ children }) => {
 			})
 			return
 		}
-
-		let id = 0
-
-		try {
-			id = await contractInstance.apis.Auction.getID()
-		} catch (error) {
-			console.log({ error })
-			stopWaiting(false)
-			alertThis({
-				message: 'Sorry, unable to create auction',
-				forConfirmation: false,
-			})
-			return
-		}
 		const auctionInfo = {
 			...auctionParams,
-			id: parseInt(id),
 			deadline,
 			owner: user.address,
-			Admin: adminAddress,
+			adminContract: JSON.parse(contract.ctcInfoStr),
 		}
-		setCurrentAuction(parseInt(id))
 
 		try {
 			const ctc = user.account.contract(auctionCtc)
 			ctc.p.Seller({ getAuction: auctionInfo })
-			await ctc.getInfo()
-			ctc.events.created.monitor(auctionCreated)
 			ctc.events.log.monitor(handleAuctionLog)
 			ctc.events.down.monitor(handleAuctionLog)
 			ctc.events.outcome.monitor(handleAuctionLog)
@@ -693,22 +619,8 @@ const ReachContextProvider = ({ children }) => {
 			startWaiting()
 			try {
 				const ctc = user.account.contract(auctionCtc, JSON.parse(ctcInfo))
-				const res = await ctc.a.Auctioneer.stopAuction()
-				try {
-					await contractInstance.apis.Auction.ended({
-						id: parseInt(res.id),
-						blockEnded: parseInt(res.blockEnded),
-						lastBid: parseInt(res.lastBid),
-					})
-				} catch (error) {
-					console.log({ error })
-					stopWaiting(false)
-					alertThis({
-						message: 'Unable to inform OxAuction of the close of this auction',
-						forConfirmation: false,
-					})
-				}
-				// stopWaiting()
+				await ctc.a.Auctioneer.stopAuction()
+				stopWaiting()
 				setShowSeller(false)
 			} catch (error) {
 				console.log({ error })
@@ -739,7 +651,6 @@ const ReachContextProvider = ({ children }) => {
 			await reach.minimumBalanceOf(user.account),
 			4
 		)
-		// console.log(resultingBalance, minimumBalance)
 		if (resultingBalance < minimumBalance) {
 			stopWaiting()
 			await alertThis({
@@ -894,7 +805,6 @@ const ReachContextProvider = ({ children }) => {
 				await reach.minimumBalanceOf(user.account),
 				4
 			)
-			// console.log(resultingBalance, minimumBalance)
 			if (userBal && resultingBalance > minimumBalance) {
 				startWaiting()
 				try {
