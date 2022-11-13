@@ -145,13 +145,13 @@ export const main = Reach.App(() => {
 			},
 			() => 0,
 			(notify) => {
-				Auction.log(state.pad('endSuccess'), id, lastPrice)
 				const response = endResponse.fromObject({
-					id,
+					id: id,
 					blockEnded: thisConsensusTime(),
 					lastBid: lastPrice,
 				})
 				externalCalls.Auctions_ended(response)
+				Auction.log(state.pad('endSuccess'), id, lastPrice)
 				notify(response)
 				return [false, highestBidder, lastPrice, isFirstBid]
 			}
@@ -160,13 +160,12 @@ export const main = Reach.App(() => {
 	AuctionView.isRunning.set(false)
 	if (thisConsensusTime() > timeRemaining && keepBidding) {
 		const response = endResponse.fromObject({
-			id,
+			id: id,
 			blockEnded: thisConsensusTime(),
 			lastBid: lastPrice,
 		})
 		externalCalls.Auctions_ended(response)
 	}
-
 
 	Auction.down(
 		state.pad('down'),
@@ -207,7 +206,8 @@ export const main = Reach.App(() => {
 				notify(false)
 				return [false, false]
 			}
-		)
+	)
+	
 	if (agreed) {
 		transfer(balance(tokenId), tokenId).to(highestBidder)
 		transfer(balance()).to(Seller)
