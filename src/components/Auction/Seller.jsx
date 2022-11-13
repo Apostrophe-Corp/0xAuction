@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useLayoutEffect, useRef } from 'react'
 import s from '../../styles/Shared.module.css'
 import auc from '../../styles/Auction.module.css'
 import notFound from '../../assets/images/preview.jpg'
@@ -8,8 +8,24 @@ import { Arc69 } from '../../ARC69/arc.js'
 const arc69 = new Arc69()
 
 const Seller = () => {
-	const { standardUnit, currentAuction, endAuction, auctions, setShowSeller } =
-		useReach()
+	const {
+		standardUnit,
+		currentAuction,
+		endAuction,
+		auctions,
+		setShowSeller,
+		alertThis,
+	} = useReach()
+
+	useLayoutEffect(() => {
+		if (auctions.length === 0) setShowSeller(false)
+		const updatedAuction = auctions.filter(
+			(el) => Number(el?.id) === currentAuction
+		)[0]
+		if (!updatedAuction) setShowSeller(false)
+		setAuction(updatedAuction)
+	}, [auctions])
+
 	const aucAsset = useRef()
 	const [auction, setAuction] = useState(
 		auctions.filter((el) => Number(el.id) === currentAuction)[0]
@@ -145,6 +161,21 @@ const Seller = () => {
 						}}
 					>
 						End Auction
+					</button>
+					<button
+						className={cf(s.flex, s.flexCenter, auc.terminateBtn)}
+						type='button'
+						onClick={async () => {
+							const decision = await alertThis({
+								message:
+									'Are you sure you want to stop monitoring this auction?',
+								accept: 'No',
+								decline: 'Yes',
+							})
+							setShowSeller(decision)
+						}}
+					>
+						Exit
 					</button>
 				</div>
 			</div>

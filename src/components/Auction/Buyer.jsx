@@ -8,8 +8,14 @@ import { Arc69 } from '../../ARC69/arc.js'
 const arc69 = new Arc69()
 
 const Buyer = () => {
-	const { standardUnit, currentAuction, optIn, auctions, setShowBuyer } =
-		useReach()
+	const {
+		standardUnit,
+		currentAuction,
+		optIn,
+		auctions,
+		setShowBuyer,
+		alertThis,
+	} = useReach()
 	const [auction, setAuction] = useState(
 		auctions.filter((el) => Number(el.id) === currentAuction)[0]
 	)
@@ -175,6 +181,20 @@ const Buyer = () => {
 							View Live Bid
 						</button>
 					)}
+					<button
+						className={cf(s.flex, s.flexCenter, auc.terminateBtn)}
+						type='button'
+						onClick={async () => {
+							const decision = await alertThis({
+								message: 'Are you sure you want to pull out of this auction?',
+								accept: 'No',
+								decline: 'Yes',
+							})
+							setShowBuyer(decision)
+						}}
+					>
+						Exit
+					</button>
 				</div>
 			</div>
 		</div>

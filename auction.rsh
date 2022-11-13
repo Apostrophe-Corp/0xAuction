@@ -51,14 +51,11 @@ export const main = Reach.App(() => {
 		rejectSale: Fun([], Bool),
 	})
 
-	const Auction = Events({
+	const Auction = Events({	
 		log: [state, UInt, UInt],
 		down: [state, UInt, UInt, Address, Contract, UInt],
 		outcome: [state, state, UInt, Address, Address, Token],
-	})
-
-	const AuctionView = View('AuctionView', {
-		isRunning: Bool,
+		created: [state, UInt, Address],
 	})
 
 	init()
@@ -102,7 +99,7 @@ export const main = Reach.App(() => {
 	const balAfter1stCall = balance()
 	const timeRemaining = thisConsensusTime() + auctionInfo.deadline
 
-	AuctionView.isRunning.set(true)
+	Auction.created(state.pad('created'), id, Seller)
 	const [keepBidding, highestBidder, lastPrice, isFirstBid, endRes] =
 		parallelReduce([
 			true,
@@ -165,7 +162,6 @@ export const main = Reach.App(() => {
 				}
 			)
 
-	AuctionView.isRunning.set(false)
 	externalCalls.Auctions_ended(endRes)
 
 	const balAfter2ndCall = balance()

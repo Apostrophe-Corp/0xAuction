@@ -224,26 +224,6 @@ const ReachContextProvider = ({ children }) => {
 			})
 			setAuctions((previous) => presentAuctions)
 			updateLatestAuctions(presentAuctions)
-			if (String(user.address) === reach.formatAddress(what[3])) {
-				const tempAuctionCtc = user.account.contract(auctionCtc, what[1])
-				sleep(2000).then(async () => {
-					try {
-						const stillRunning = await tempAuctionCtc.v.AuctionView.isRunning()
-						if (stillRunning) {
-							setCurrentAuction(parseInt(what[0]))
-							stopWaiting()
-							alertThis({
-								message: 'Your auction is live',
-								forConfirmation: false,
-							})
-							tempAuctionCtc.events.log.monitor(handleAuctionLog)
-							setShowSeller(true)
-						}
-					} catch (error) {
-						console.log({ error })
-					}
-				})
-			}
 		}
 	}
 
@@ -401,6 +381,27 @@ const ReachContextProvider = ({ children }) => {
 
 	const handleAuctionLog = async ({ what }) => {
 		switch (what[0]) {
+			case ifState('created'):
+				if (String(user.address) === reach.formatAddress(what[2])) {
+					try {
+						const auction = auctions.filter(
+							(el) => el.id === parseInt(what[1])
+						)[0]
+						console.log(auction)
+						if (auction) {
+							setCurrentAuction(parseInt(what[1]))
+							stopWaiting()
+							alertThis({
+								message: 'Your auction is live',
+								forConfirmation: false,
+							})
+							setShowSeller(true)
+						}
+					} catch (error) {
+						console.log({ error })
+					}
+				}
+				break
 			case ifState('bidSuccess'):
 				const newBid = reach.formatCurrency(what[2], 4)
 				const auctionToBeEdited = auctions.filter(
@@ -596,6 +597,7 @@ const ReachContextProvider = ({ children }) => {
 			ctc.events.log.monitor(handleAuctionLog)
 			ctc.events.down.monitor(handleAuctionLog)
 			ctc.events.outcome.monitor(handleAuctionLog)
+			ctc.events.created.monitor(handleAuctionLog)
 		} catch (error) {
 			console.log({ error })
 			stopWaiting(false)
@@ -603,6 +605,18 @@ const ReachContextProvider = ({ children }) => {
 				message: 'Sorry, unable to create auction',
 				forConfirmation: false,
 			})
+		}
+	}
+
+	const rejoinAuction = ({ contractInfo = '', id = null } = {}) => {
+		if (contractInfo && id !== null) {
+			const aucCtc = user.account.contract(auctionCtc, JSON.parse(contractInfo))
+			setCurrentAuction(id)
+			aucCtc.events.log.monitor(handleAuctionLog)
+			aucCtc.events.down.monitor(handleAuctionLog)
+			aucCtc.events.outcome.monitor(handleAuctionLog)
+			aucCtc.events.created.monitor(handleAuctionLog)
+			setShowSeller(true)
 		}
 	}
 
@@ -626,6 +640,63 @@ const ReachContextProvider = ({ children }) => {
 					message: 'An error occurred while closing this auction',
 					forConfirmation: false,
 				})
+			}
+		}
+	}
+
+	const joinAuction = async (auctionInfo) => {
+		if (String(auctionInfo.owner) === String(user.address)) {
+			const rejoin = await alertThis({
+				message:
+					'This is your auction, and as such you are not allowed to place a bid. Would you like to return to monitoring it?',
+				accept: 'Yes',
+				decline: 'No',
+			})
+			if (rejoin) {
+				await rejoinAuction({ ...auctionInfo })
+			}
+		} else {
+			const join = await alertThis({
+				message: 'Are you interested in bidding for this NFT?',
+				accept: 'Yes',
+				decline: 'No',
+			})
+
+			if (join) {
+				alertThis({
+					message: 'Please confirm asset opt-in on your wallet',
+					forConfirmation: false,
+					persist: true,
+				})
+				setCurrentAuction(auctionInfo.id)
+				try {
+					await user.account.tokenAccept(auctionInfo.tokenId)
+					alertThis({
+						message: 'Opt-In confirmed',
+						forConfirmation: false,
+					})
+				} catch (error) {
+					console.log({ error })
+					alertThis({
+						message:
+							'Opt-In failed and as such you cannot bid for this NFT at this point. But you can try again',
+						forConfirmation: false,
+					})
+					return
+				}
+				const ctc = user.account.contract(
+					auctionCtc,
+					JSON.parse(auctionInfo.contractInfo)
+				)
+				let continue_ = false
+				do {
+					continue_ = await handleBid({
+						auctionID: auctionInfo.id,
+						loopVar: continue_,
+						ctc,
+						justJoining: true,
+					})
+				} while (continue_)
 			}
 		}
 	}
@@ -698,10 +769,12 @@ const ReachContextProvider = ({ children }) => {
 
 			let opt = null
 			const hadOptIn = auctionToBeEdited['optIn']
+			const liveBid = auctionToBeEdited['liveBid']
 			if (hadOptIn) {
 				opt = await alertThis({
-					message:
-						"Unable to place bid, as your bid isn't higher than the current one, would you like to bid again?",
+					message: `Unable to place bid, as your bid isn't higher than the current ${
+						liveBid ? `bid of ${liveBid} ${standardUnit}` : 'one'
+					}, would you like to bid again?`,
 					accept: 'Yes',
 					decline: 'No',
 				})
@@ -739,51 +812,6 @@ const ReachContextProvider = ({ children }) => {
 			}
 		}
 		return loopVar
-	}
-
-	const joinAuction = async (auctionInfo) => {
-		const join = await alertThis({
-			message: 'Are you interested in bidding for this NFT?',
-			accept: 'Yes',
-			decline: 'No',
-		})
-
-		if (join) {
-			alertThis({
-				message: 'Please confirm asset opt-in on your wallet',
-				forConfirmation: false,
-				persist: true,
-			})
-			setCurrentAuction(auctionInfo.id)
-			try {
-				await user.account.tokenAccept(auctionInfo.tokenId)
-				alertThis({
-					message: 'Opt-In confirmed',
-					forConfirmation: false,
-				})
-			} catch (error) {
-				console.log({ error })
-				alertThis({
-					message:
-						'Opt-In failed and as such you cannot bid for this NFT at this point. But you can try again',
-					forConfirmation: false,
-				})
-				return
-			}
-			const ctc = user.account.contract(
-				auctionCtc,
-				JSON.parse(auctionInfo.contractInfo)
-			)
-			let continue_ = false
-			do {
-				continue_ = await handleBid({
-					auctionID: auctionInfo.id,
-					loopVar: continue_,
-					ctc,
-					justJoining: true,
-				})
-			} while (continue_)
-		}
 	}
 
 	const optIn = async (id) => {
