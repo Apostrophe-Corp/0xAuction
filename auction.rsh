@@ -59,7 +59,6 @@ export const main = Reach.App(() => {
 
 	const AuctionView = View('AuctionView', {
 		isRunning: Bool,
-		awaitingConfirmation: Bool,
 	})
 
 	init()
@@ -99,73 +98,77 @@ export const main = Reach.App(() => {
 	})
 
 	externalCalls.Auctions_created(auction)
-	
+
+	const balAfter1stCall = balance()
 	const timeRemaining = thisConsensusTime() + auctionInfo.deadline
-	
+
 	AuctionView.isRunning.set(true)
-	const [keepBidding, highestBidder, lastPrice, isFirstBid] = parallelReduce([
-		true,
-		Seller,
-		0,
-		true,
-	])
-		.invariant(balance(tokenId) == amt)
-		.invariant(balance() == (isFirstBid ? 0 : lastPrice))
-		.while(thisConsensusTime() <= timeRemaining && keepBidding)
-		.api_(Bidder.bid, (bid) => {
-			check(bid > lastPrice, 'Your bid is too low, please try again')
-			return [
-				bid,
-				(notify) => {
-					notify([highestBidder, lastPrice])
-					if (!isFirstBid) transfer(lastPrice).to(highestBidder)
-					const who = this
-					Auction.log(state.pad('bidSuccess'), id, bid)
-					return [keepBidding, who, bid, false]
+	const [keepBidding, highestBidder, lastPrice, isFirstBid, endRes] =
+		parallelReduce([
+			true,
+			Seller,
+			0,
+			true,
+			endResponse.fromObject({
+				id: 0,
+				blockEnded: 0,
+				lastBid: 0,
+			}),
+		])
+			.invariant(balance(tokenId) == amt)
+			.invariant(
+				balance() ==
+					(isFirstBid ? balAfter1stCall : lastPrice + balAfter1stCall)
+			)
+			.while(thisConsensusTime() <= timeRemaining && keepBidding)
+			.api_(Bidder.bid, (bid) => {
+				check(bid > lastPrice, 'Your bid is too low, please try again')
+				return [
+					bid,
+					(notify) => {
+						notify([highestBidder, lastPrice])
+						if (!isFirstBid) transfer(lastPrice).to(highestBidder)
+						const who = this
+						Auction.log(state.pad('bidSuccess'), id, bid)
+						return [keepBidding, who, bid, false, endRes]
+					},
+				]
+			})
+			.api_(Bidder.optIn, () => {
+				return [
+					optToken,
+					(notify) => {
+						const adminDue = (optToken / 100) * 90
+						const sellerDue = (optToken / 100) * 10
+						if (balance() >= adminDue) transfer(adminDue).to(AdminAddress)
+						if (balance() >= sellerDue) transfer(sellerDue).to(Seller)
+						notify(true)
+						return [keepBidding, highestBidder, lastPrice, isFirstBid, endRes]
+					},
+				]
+			})
+			.api(
+				Auctioneer.stopAuction,
+				() => {
+					check(this == Seller, 'You are not the Seller')
 				},
-			]
-		})
-		.api_(Bidder.optIn, () => {
-			return [
-				optToken,
+				() => 0,
 				(notify) => {
-					const adminDue = (optToken / 100) * 90
-					const sellerDue = (optToken / 100) * 10
-					if (balance() >= adminDue) transfer(adminDue).to(AdminAddress)
-					if (balance() >= sellerDue) transfer(sellerDue).to(Seller)
-					notify(true)
-					return [keepBidding, highestBidder, lastPrice, isFirstBid]
-				},
-			]
-		})
-		.api(
-			Auctioneer.stopAuction,
-			() => {
-				check(this == Seller, 'You are not the Seller')
-			},
-			() => 0,
-			(notify) => {
-				const response = endResponse.fromObject({
-					id: id,
-					blockEnded: thisConsensusTime(),
-					lastBid: lastPrice,
-				})
-				externalCalls.Auctions_ended(response)
-				Auction.log(state.pad('endSuccess'), id, lastPrice)
-				notify(response)
-				return [false, highestBidder, lastPrice, isFirstBid]
-			}
-		)
-		
+					const response = endResponse.fromObject({
+						id: id,
+						blockEnded: thisConsensusTime(),
+						lastBid: lastPrice,
+					})
+					Auction.log(state.pad('endSuccess'), id, lastPrice)
+					notify(response)
+					return [false, highestBidder, lastPrice, isFirstBid, response]
+				}
+			)
+
 	AuctionView.isRunning.set(false)
-	if (thisConsensusTime() > timeRemaining && keepBidding) {
-		const response = endResponse.fromObject({
-			id: id,
-			blockEnded: thisConsensusTime(),
-			lastBid: lastPrice,
-		})
-		externalCalls.Auctions_ended(response)
-	}
+	externalCalls.Auctions_ended(endRes)
+
+	const balAfter2ndCall = balance()
 
 	Auction.down(
 		state.pad('down'),
@@ -179,11 +182,8 @@ export const main = Reach.App(() => {
 	const end = thisConsensusTime() + DEADLINE
 
 	const [awaitingDecision, agreed] = parallelReduce([true, true])
-		.define(() => {
-			AuctionView.awaitingConfirmation.set(awaitingDecision)
-		})
-		.invariant(balance() == (isFirstBid ? 0 : lastPrice))
 		.invariant(balance(tokenId) == amt)
+		.invariant(balance() == balAfter2ndCall)
 		.while(thisConsensusTime() <= end && awaitingDecision)
 		.api(
 			Auctioneer.acceptSale,
@@ -206,8 +206,8 @@ export const main = Reach.App(() => {
 				notify(false)
 				return [false, false]
 			}
-	)
-	
+		)
+
 	if (agreed) {
 		transfer(balance(tokenId), tokenId).to(highestBidder)
 		transfer(balance()).to(Seller)

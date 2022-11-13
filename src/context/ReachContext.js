@@ -463,13 +463,8 @@ const ReachContextProvider = ({ children }) => {
 					if (reach.formatAddress(what[3]) === String(user.address)) {
 						const tempAuctionCtc = user.account.contract(auctionCtc, what[4])
 						try {
-							const awaitingConfirmation =
-								await tempAuctionCtc.v.AuctionView.awaitingConfirmation()
 							const time = await reach.getNetworkTime()
-							if (
-								awaitingConfirmation &&
-								time < parseInt(what[5]) + deadline + 50
-							) {
+							if (time < parseInt(what[5]) + deadline + 50) {
 								const agreeToBid = await alertThis({
 									message: `Do you accept the current bid of ${reach.formatCurrency(
 										what[2],
