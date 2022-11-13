@@ -247,20 +247,22 @@ const ReachContextProvider = ({ children }) => {
 		}
 	}
 
-	const dropAuction = ({ what }) => {
-		if (view === 'Buy' && auctions.length <= 1) setView('App')
-		if ((showBuyer || showSeller) && currentAuction === parseInt(what[0])) {
-			setView('App')
-			setShowBuyer(false)
-			setShowSeller(false)
-		}
-		const auctionsToBeEdited = auctions
-		const remainingAuctions = auctionsToBeEdited.filter(
-			(el) => Number(el.id) !== parseInt(what[0])
-		)
-		if (remainingAuctions.length === 0 && view === 'Buy') setView('App')
-		setAuctions((previous) => remainingAuctions)
-		updateLatestAuctions(remainingAuctions)
+	const dropAuction = async ({ what }) => {
+		sleep(2000).then(() => {
+			if (view === 'Buy' && auctions.length <= 1) setView('App')
+			if ((showBuyer || showSeller) && currentAuction === parseInt(what[0])) {
+				setView('App')
+				setShowBuyer(false)
+				setShowSeller(false)
+			}
+			const auctionsToBeEdited = auctions
+			const remainingAuctions = auctionsToBeEdited.filter(
+				(el) => Number(el.id) !== parseInt(what[0])
+			)
+			if (remainingAuctions.length === 0 && view === 'Buy') setView('App')
+			setAuctions((previous) => remainingAuctions)
+			updateLatestAuctions(remainingAuctions)
+		})
 	}
 
 	const checkForContract = async (func) => {
