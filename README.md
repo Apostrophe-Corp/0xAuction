@@ -81,12 +81,10 @@ Then run the following commands to start up the dApp:
 #### Important points to note
 
 - Signing of transactions is mandatory for a free flow of the dApp's features.
-- A user cannot have more than one instance of the dApp connected to the same 0xAuction contract while they have an auction on, for all views will have the auction on display.
-- A user can have multiple instances of 0xAuction, for the purpose of bidding on multiple auctions at a time, but can only have one instance while an auction of theirs is live.
 - Asset opt-in is mandatory before bidding for an asset. If this fails, good, but if it stalls, or the request never comes up on the user's wallet, refresh the page, connect to the same 0xAuction contract and attempt the bid again; it's completely decentralized so no information of theirs is lost in this process.
 - Only users who opt-in to Live bid get to see the outcome of the auction at its end, else they only get notified that the auction has ended.
 - Failure on the Auctioneer's part to give a reply on the prompt to decide whether to accept the highest bid or not, would be regarded as an approval to sell to the highest bidder.
-- Users are not advised to use a URL shortener as opposed to the demo, this was only stated for testing purposes as real NFTs must have a reliable media link to their NFT media file, as URL shortener providers could someday crash and their links rendered useless.
+- Users are not advised to use a URL shortener as opposed to the demo, this was only stated for testing purposes as real NFTs must have a reliable media link to their NFT media file, preferably from one hosted on IPFS, as URL shortener providers could someday crash and their links rendered useless.
 - 0xAuction is provided as a completely one-instance maintainable service, anyone can have their own instance and with many others connected to this one instance for the sake of having a pool of auctions in one place for others to bid upon, raising the likelihood of getting a bid. But at the same time, 0xAuction can be used for the sole purpose of auctioning a single asset, as long as the contract information where the asset was published is shared with others to connect to, to have access to the published auction.
 
 We encourage you to play around with the dApp and create NFTs, auction NFTs or bid on items at 0xAuction's pool of auctions.
