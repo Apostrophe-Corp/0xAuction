@@ -222,7 +222,7 @@ const ReachContextProvider = ({ children }) => {
 				optIn: false,
 				liveBid: 0,
 			})
-			setAuctions((previous) => presentAuctions)
+			setAuctions((previous) => [...presentAuctions])
 			updateLatestAuctions(presentAuctions)
 		}
 	}
@@ -384,19 +384,24 @@ const ReachContextProvider = ({ children }) => {
 			case ifState('created'):
 				if (String(user.address) === reach.formatAddress(what[2])) {
 					try {
-						const auction = auctions.filter(
-							(el) => el.id === parseInt(what[1])
-						)[0]
-						console.log(auction)
-						if (auction) {
-							setCurrentAuction(parseInt(what[1]))
-							stopWaiting()
-							alertThis({
-								message: 'Your auction is live',
-								forConfirmation: false,
-							})
-							setShowSeller(true)
-						}
+						let auction = null
+						do {
+							await sleep(2000)
+							const presentAuctions = auctions
+							auction = presentAuctions.filter(
+								(el) => Number(el.id) === parseInt(what[1])
+							)[0]
+							console.log(presentAuctions, auctions, auction, parseInt(what[1]), auction?.id)
+							if (auction) {
+								setCurrentAuction(parseInt(what[1]))
+								stopWaiting()
+								alertThis({
+									message: 'Your auction is live',
+									forConfirmation: false,
+								})
+								setShowSeller(true)
+							}
+						} while (!auction)
 					} catch (error) {
 						console.log({ error })
 					}
@@ -427,6 +432,7 @@ const ReachContextProvider = ({ children }) => {
 					auctionToBeEdited['liveBid'] > yourBid &&
 					String(owner) !== String(user.address)
 				) {
+					console.log({ showBuyer, showSeller })
 					const bidAgain = await alertThis({
 						message: `You just got outbid${
 							opt ? `, the highest bid is now ${newBid} ${standardUnit}` : ''
