@@ -24,7 +24,7 @@ const algoExplorerURI = {
 
 const deadline = 10000
 
-const reach = loadStdlib(process.env)
+const reach = loadStdlib({...process.env, REACH_CONNECTOR_MODE: 'ALGO', REACH_NO_WARN: 'Y'})
 
 export const ReachContext = React.createContext()
 
