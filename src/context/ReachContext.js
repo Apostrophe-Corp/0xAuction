@@ -6,8 +6,8 @@ import {
 	ALGO_WalletConnect as WalletConnect,
 	ALGO_PeraConnect as PeraConnect,
 } from '@reach-sh/stdlib'
-import * as auctionCtc from '../../build/auction.main.mjs'
-import * as mainCtc from '../../build/index.main.mjs'
+import * as auctionCtc from '../contracts/build/auction.main.mjs'
+import * as mainCtc from '../contracts/build/index.main.mjs'
 import { fmtClasses as cf } from '../hooks/fmtClasses'
 import s from '../styles/Shared.module.css'
 import '../styles/Global.module.css'
