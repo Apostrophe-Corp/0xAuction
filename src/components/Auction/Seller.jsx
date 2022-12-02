@@ -23,31 +23,31 @@ const Seller = () => {
 		aucAsset.current.style.backgroundSize = 'contain'
 	}
 
-	const fetchAssetMetadata = (x) => {
-		arc69
-			.fetch(x)
-			.then((data) => {
-				if (data.success && data.url) {
-					// console.log('Media URL:', data.url)
-					setPreviewBgs({ x: data.url, y: auction?.url, found: true })
-				} else {
-					setPreviewBgs({ y: auction?.url })
-					console.log('No image url found 🥱')
-				}
-			})
-			.catch((x) => {
-				setPreviewBgs({ y: auction?.url })
-				console.log('No image url found 🥱')
-			})
-	}
-
 	useEffect(() => {
 		setPreviewBgs({ y: auction?.url })
-	}, [])
+	}, [auction?.url])
 
 	useEffect(() => {
+		const fetchAssetMetadata = (x) => {
+			arc69
+				.fetch(x)
+				.then((data) => {
+					if (data.success && data.url) {
+						// console.log('Media URL:', data.url)
+						setPreviewBgs({ x: data.url, y: auction?.url, found: true })
+					} else {
+						setPreviewBgs({ y: auction?.url })
+						console.log('No image url found 🥱')
+					}
+				})
+				.catch((x) => {
+					setPreviewBgs({ y: auction?.url })
+					console.log('No image url found 🥱')
+				})
+		}
+
 		fetchAssetMetadata(auction.tokenId)
-	}, [])
+	}, [auction.tokenId, auction?.url])
 
 	useEffect(() => {
 		if (auctions.length === 0) setShowSeller(false)
@@ -56,7 +56,7 @@ const Seller = () => {
 		)[0]
 		if (!updatedAuction) setShowSeller(false)
 		setAuction(updatedAuction)
-	}, [auctions])
+	}, [auctions, currentAuction, setShowSeller])
 
 	return (
 		<div className={cf(s.wMax, s.flex, s.flexCenter, auc.auctionParent)}>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import s from '../../styles/Shared.module.css'
 import alt from '../../styles/Alert.module.css'
 import { useReach, fmtClasses as cf } from '../../hooks'
@@ -6,10 +6,8 @@ import { useReach, fmtClasses as cf } from '../../hooks'
 const Alert = () => {
 	const {
 		alertInfo,
-		setAlertInfo,
 		showAlert,
 		setShowAlert,
-		sleep,
 		promiseOfConfirmation,
 	} = useReach()
 

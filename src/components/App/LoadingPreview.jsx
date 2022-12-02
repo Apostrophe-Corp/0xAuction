@@ -12,7 +12,6 @@ const LoadingPreview = () => {
 		setPreloaderClass(styles.container)
 	}, [])
 
-	// eslint-disable-next-line react-hooks/exhaustive-deps
 	useEffect(() => {
 		const close = async () => {
 			const fadeOff = async () => {
@@ -26,7 +25,7 @@ const LoadingPreview = () => {
 			}
 		}
 		close()
-	}, [showPreloader])
+	}, [showPreloader, setProcessing, sleep])
 
 	return (
 		<div className={preloaderClass}>
