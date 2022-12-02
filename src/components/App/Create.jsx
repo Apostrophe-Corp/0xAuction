@@ -3,7 +3,6 @@ import s from '../../styles/Shared.module.css'
 import cr8 from '../../styles/CreateAndSell.module.css'
 import { useReach, fmtClasses as cf } from '../../hooks'
 import previewImg from '../../assets/images/preview.jpg'
-import notFound from '../../assets/images/404.jpg'
 
 const Create = () => {
 	const { mintNFT } = useReach()
@@ -12,7 +11,7 @@ const Create = () => {
 	const previewRef = useRef()
 
 	const setPreviewBgs = (x) => {
-		previewRef.current.style.background = `url(${x}), url(${notFound})`
+		previewRef.current.style.background = `url(${x})`
 		previewRef.current.style.backgroundPosition = 'center'
 		previewRef.current.style.backgroundRepeat = 'no-repeat'
 		previewRef.current.style.backgroundSize = 'contain'
@@ -45,7 +44,11 @@ const Create = () => {
 				value.indexOf('https://ipfs.io/ipfs/') !== 0 &&
 				(value.indexOf('https://') === 0 || value.indexOf('ipfs://') === 0)
 			) {
-				setPreviewBgs(value)
+				let previewPath = value
+				if (value.indexOf('ipfs://') === 0) {
+					previewPath = 'https://gateway.ipfs.io/ipfs/' + value.slice(7)
+				}
+				setPreviewBgs(previewPath)
 			} else {
 				setPreviewBgs(previewImg)
 			}
@@ -81,7 +84,7 @@ const Create = () => {
 
 	const handleSubmit = (e) => {
 		e.preventDefault()
-		console.log(nftParams)
+		// console.log(nftParams)
 		mintNFT(nftParams)
 	}
 
@@ -105,7 +108,8 @@ const Create = () => {
 						Create the next Bored Ape or Cyberpunks. Become the next Beeple!
 					</h1>
 					<h2 className={cf(cr8.callOutSub)}>
-						Create the NFT of your dreams in a few simple steps by simply filling out the form
+						Create the NFT of your dreams in a few simple steps by simply
+						filling out the form
 					</h2>
 				</div>
 				<div

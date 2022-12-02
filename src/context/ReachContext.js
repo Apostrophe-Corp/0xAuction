@@ -233,7 +233,7 @@ const ReachContextProvider = ({ children }) => {
 				const tempAuctionCtc = user.account.contract(auctionCtc, what[1])
 				try {
 					const stillRunning = await tempAuctionCtc.v.AuctionView.isRunning()
-					console.log(stillRunning)
+					// console.log(stillRunning)
 					if (stillRunning) {
 						setCurrentAuction(parseInt(what[0]))
 						stopWaiting()
@@ -456,7 +456,7 @@ const ReachContextProvider = ({ children }) => {
 				const updatedAuctions = [auctionToBeEdited, ...leftOutAuctions]
 				setAuctions((previous) => updatedAuctions)
 				updateLatestAuctions(updatedAuctions)
-				console.log(auctionToBeEdited['liveBid'], yourBid)
+				// console.log(auctionToBeEdited['liveBid'], yourBid)
 				if (
 					auctionToBeEdited['liveBid'] > yourBid &&
 					String(owner) !== String(user.address)
@@ -511,7 +511,7 @@ const ReachContextProvider = ({ children }) => {
 						try {
 							const awaitingConfirmation =
 								await tempAuctionCtc.v.AuctionView.awaitingConfirmation()
-							console.log(awaitingConfirmation)
+							// console.log(awaitingConfirmation)
 							const time = await reach.getNetworkTime()
 							if (
 								awaitingConfirmation &&
@@ -630,7 +630,7 @@ const ReachContextProvider = ({ children }) => {
 
 	const createAuction = async (auctionParams) => {
 		startWaiting()
-		const [bal, nftBal] = await reach.balancesOf(user.account, [
+		const [, nftBal] = await reach.balancesOf(user.account, [
 			null,
 			auctionParams.tokenId,
 		])
@@ -693,23 +693,22 @@ const ReachContextProvider = ({ children }) => {
 			startWaiting()
 			try {
 				const ctc = user.account.contract(auctionCtc, JSON.parse(ctcInfo))
-				await ctc.a.Auctioneer.stopAuction().then(async (res) => {
-					try {
-						await contractInstance.apis.Auction.ended({
-							id: parseInt(res.id),
-							blockEnded: parseInt(res.blockEnded),
-							lastBid: parseInt(res.lastBid),
-						})
-					} catch (error) {
-						console.log({ error })
-						stopWaiting(false)
-						alertThis({
-							message:
-								'Unable to inform OxAuction of the close of this auction',
-							forConfirmation: false,
-						})
-					}
-				})
+				const res = await ctc.a.Auctioneer.stopAuction()
+				try {
+					await contractInstance.apis.Auction.ended({
+						id: parseInt(res.id),
+						blockEnded: parseInt(res.blockEnded),
+						lastBid: parseInt(res.lastBid),
+					})
+				} catch (error) {
+					console.log({ error })
+					stopWaiting(false)
+					alertThis({
+						message:
+							'Unable to inform OxAuction of the close of this auction',
+						forConfirmation: false,
+					})
+				}
 				// stopWaiting()
 				setShowSeller(false)
 			} catch (error) {
@@ -741,7 +740,7 @@ const ReachContextProvider = ({ children }) => {
 			await reach.minimumBalanceOf(user.account),
 			4
 		)
-		console.log(resultingBalance, minimumBalance)
+		// console.log(resultingBalance, minimumBalance)
 		if (resultingBalance < minimumBalance) {
 			stopWaiting()
 			await alertThis({
@@ -750,7 +749,7 @@ const ReachContextProvider = ({ children }) => {
 			})
 			await alertThis({
 				message:
-					'At this point, would you prefer to exit this auction, you will still be notified of the outcome at the close of the auction?',
+					'At this point, would you prefer to exit this auction? *You will still be notified of the outcome at the close of the auction',
 				accept: 'Stay',
 				decline: 'Exit',
 			}).then((decision) => {
@@ -788,14 +787,14 @@ const ReachContextProvider = ({ children }) => {
 			})
 		} catch (error) {
 			console.log({ error })
-			stopWaiting()
+			stopWaiting(false)
 
 			let opt = null
-			const optInStatus = auctionToBeEdited['optIn']
-			if (optInStatus) {
+			const hadOptIn = auctionToBeEdited['optIn']
+			if (hadOptIn) {
 				opt = await alertThis({
 					message:
-						'Unable to place bid, as your bid is lower than the current one, would you like to bid again?',
+						"Unable to place bid, as your bid isn't higher than the current one, would you like to bid again?",
 					accept: 'Yes',
 					decline: 'No',
 				})
@@ -803,7 +802,7 @@ const ReachContextProvider = ({ children }) => {
 			} else {
 				opt = await alertThis({
 					message:
-						'Unable to place bid. Most likely your bid is lower than the current one. To prevent this from happening during this auction, how would you like to opt into Live Bid?',
+						"Unable to place bid. Most likely your bid isn't higher than the current one. To prevent this from happening during this auction, how would you like to opt into Live Bid?",
 					accept: 'Opt In',
 					decline: 'Decline',
 				})
@@ -819,10 +818,11 @@ const ReachContextProvider = ({ children }) => {
 						ctc = user.account.contract(auctionCtc, JSON.parse(ctcInfo))
 						ctc.events.log.monitor(handleAuctionLog)
 					}
-					loopVar = false
-					return loopVar
+					return true
+				} else if (didOptIn) {
+					return true
 				}
-			} else if (!opt) {
+			} else {
 				loopVar = await alertThis({
 					message: 'Would you like to continue making blind bids?',
 					accept: 'Yes',
@@ -836,7 +836,7 @@ const ReachContextProvider = ({ children }) => {
 
 	const joinAuction = async (auctionInfo) => {
 		const join = await alertThis({
-			message: 'Are you interested in bidding for this auction?',
+			message: 'Are you interested in bidding for this NFT?',
 			accept: 'Yes',
 			decline: 'No',
 		})
@@ -867,15 +867,15 @@ const ReachContextProvider = ({ children }) => {
 				auctionCtc,
 				JSON.parse(auctionInfo.contractInfo)
 			)
-			let continue_ = true
-			while (continue_) {
+			let continue_ = false
+			do {
 				continue_ = await handleBid({
 					auctionID: auctionInfo.id,
 					loopVar: continue_,
 					ctc,
 					justJoining: true,
 				})
-			}
+			} while (continue_)
 		}
 	}
 
@@ -885,53 +885,57 @@ const ReachContextProvider = ({ children }) => {
 			accept: 'Pay',
 			decline: 'Forfeit',
 		})
-		const userBal = reach.formatCurrency(await reach.balanceOf(user.account), 4)
-		const resultingBalance = userBal - 1 // Opt-In fee
-		const minimumBalance = reach.formatCurrency(10100000, 4)
-		// 	reach.formatCurrency(
-		// 	await reach.minimumBalanceOf(user.account),
-		// 	4
-		// )
-		console.log(resultingBalance, minimumBalance)
-		if (agree && userBal && resultingBalance > minimumBalance) {
-			startWaiting()
-			try {
-				const auctionToBeEdited = auctions.filter(
-					(el) => Number(el.id) === Number(id)
-				)[0]
-				const ctc = user.account.contract(
-					auctionCtc,
-					JSON.parse(auctionToBeEdited['contractInfo'])
-				)
-				const didOptIn = await ctc.apis.Bidder.optIn()
-				ctc.events.outcome.monitor(handleAuctionLog)
-				auctionToBeEdited['optIn'] = didOptIn
-				const leftoverAuctions = auctions.filter((el) => Number(el.id) !== id)
-				const updatedAuctions = [auctionToBeEdited, ...leftoverAuctions]
-				setAuctions((previous) => updatedAuctions)
-				updateLatestAuctions(updatedAuctions)
+		if (agree) {
+			const userBal = reach.formatCurrency(
+				await reach.balanceOf(user.account),
+				4
+			)
+			const resultingBalance = userBal - 1 // Opt-In fee
+			const minimumBalance = reach.formatCurrency(
+				await reach.minimumBalanceOf(user.account),
+				4
+			)
+			// console.log(resultingBalance, minimumBalance)
+			if (userBal && resultingBalance > minimumBalance) {
+				startWaiting()
+				try {
+					const auctionToBeEdited = auctions.filter(
+						(el) => Number(el.id) === Number(id)
+					)[0]
+					const ctc = user.account.contract(
+						auctionCtc,
+						JSON.parse(auctionToBeEdited['contractInfo'])
+					)
+					const didOptIn = await ctc.apis.Bidder.optIn()
+					ctc.events.outcome.monitor(handleAuctionLog)
+					auctionToBeEdited['optIn'] = didOptIn
+					const leftoverAuctions = auctions.filter((el) => Number(el.id) !== id)
+					const updatedAuctions = [auctionToBeEdited, ...leftoverAuctions]
+					setAuctions((previous) => updatedAuctions)
+					updateLatestAuctions(updatedAuctions)
 
-				stopWaiting()
+					stopWaiting()
+					alertThis({
+						message: 'OptIn successful',
+						forConfirmation: false,
+					})
+					return true
+				} catch (error) {
+					console.log({ error })
+					stopWaiting(false)
+					alertThis({
+						message: 'OptIn failed',
+						forConfirmation: false,
+					})
+				}
+			} else if (resultingBalance < minimumBalance) {
 				alertThis({
-					message: 'OptIn successful',
+					message: `Your balance: ${userBal} ${standardUnit}, is insufficient for this bid due to the minimum balance an account should have after a transfer on this network: ${minimumBalance} ${standardUnit}`,
 					forConfirmation: false,
 				})
-				return true
-			} catch (error) {
-				console.log({ error })
-				stopWaiting(false)
-				alertThis({
-					message: 'OptIn failed',
-					forConfirmation: false,
-				})
+				setShowBuyer(false)
+				return false
 			}
-		} else if (resultingBalance < minimumBalance) {
-			alertThis({
-				message: `Your balance: ${userBal} ${standardUnit}, is insufficient for this bid due to the minimum balance an account should have after a transfer on this network: ${minimumBalance} ${standardUnit}`,
-				forConfirmation: false,
-			})
-			setShowBuyer(false)
-			return false
 		}
 	}
 

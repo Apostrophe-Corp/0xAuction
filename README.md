@@ -1,6 +1,6 @@
 # 0xAuction
 
-This project was created for the Greenhouse hack 2, organized by Algorand and hosted on Gitcoin.
+This project was created for the Greenhouse Hack 2, organized by Algorand and hosted on Gitcoin.
 
 The dApp allows users to create NFTs, auction NFTs, and buy NFTs and other collectibles by submitting bids for them.
 
@@ -56,7 +56,7 @@ Then run the following commands to start up the dApp:
 
 ### Usage
 
-- When using our dApp, interactions that would require a communication to be made with the blockchain through your account would require you sign some transactions, but the following interactions are to taken note of:  
+- When using our dApp, interactions that would require a communication to be made with the blockchain through your account would require you sign some transactions. The following interactions are to be taken note of:  
   - Deployment of an 0xAuction contract - usually 3 transactions.
   - Minting of a token - just 1.
   - Starting an auction - multiple transactions.

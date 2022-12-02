@@ -31,7 +31,7 @@ const LatestAuction = ({
 			try {
 				const expectedData = await arc69.fetch(x)
 				if (expectedData.success && expectedData.url) {
-					console.log('Media URL:', expectedData.url)
+					// console.log('Media URL:', expectedData.url)
 					setPreviewBgs({ x: expectedData.url, found: true })
 				} else {
 					console.log('No image url found 🥱')
@@ -93,7 +93,7 @@ const Auction = ({ assetID, title, desiredPrice, url = '', fullAuction }) => {
 			try {
 				const expectedData = await arc69.fetch(x)
 				if (expectedData.success && expectedData.url) {
-					console.log('Media URL:', expectedData.url)
+					// console.log('Media URL:', expectedData.url)
 					setPreviewBgs({ x: expectedData.url, found: true })
 				} else {
 					console.log('No image url found 🥱')
