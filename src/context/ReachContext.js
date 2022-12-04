@@ -27,7 +27,7 @@ const algoExplorerURI = {
 
 const polyScanURI = 'https://mumbai.polygonscan.com'
 
-const deadline = 10000
+const deadline = 103680000000
 
 const providerEnv = 'TestNet'
 // const reach = loadStdlib({...process.env, REACH_CONNECTOR_MODE: 'ALGO', REACH_NO_WARN: 'Y'})
