@@ -235,7 +235,11 @@ const Sell = () => {
 							htmlFor='price'
 						>
 							<span className={cf(sell.formText)}>
-								Desired Price ({standardUnit})
+								Desired Price (
+								{process.env.REACT_APP_REACH_CONNECTOR_MODE === 'ETH'
+									? 'MATIC'
+									: standardUnit}
+								)
 							</span>
 							<input
 								type='number'

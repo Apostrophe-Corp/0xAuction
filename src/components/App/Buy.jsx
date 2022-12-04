@@ -72,7 +72,10 @@ const LatestAuction = ({
 				</div>
 				<div className={cf(s.wMax, s.flex, s.flexCenter, buy.desiredPrice)}>
 					<span className={cf(s.wMax, s.dInlineBlock, buy.desiredPriceText)}>
-						{desiredPrice} {standardUnit}
+						{desiredPrice}{' '}
+						{process.env.REACT_APP_REACH_CONNECTOR_MODE === 'ETH'
+							? 'MATIC'
+							: standardUnit}
 					</span>
 				</div>
 			</div>
@@ -131,7 +134,9 @@ const Auction = ({
 			<div className={cf(s.flex, s.flex_dColumn, buy.aucAucDetails)}>
 				<h3 className={cf(s.m0, s.p0, s.wMax, buy.aucAucTitleText)}>{title}</h3>
 				<span className={cf(s.wMax, s.dInlineBlock, buy.aucAucDesiredPrice)}>
-					{desiredPrice} {standardUnit}
+					{desiredPrice} {process.env.REACT_APP_REACH_CONNECTOR_MODE === 'ETH'
+							? 'MATIC'
+							: standardUnit}
 				</span>
 			</div>
 		</div>

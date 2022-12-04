@@ -133,7 +133,9 @@ const Seller = () => {
 					<span
 						className={cf(s.wMax, s.flex, s.flexCenter, auc.desiredBidValue)}
 					>
-						{auction.price} {standardUnit}
+						{auction.price} {process.env.REACT_APP_REACH_CONNECTOR_MODE === 'ETH'
+							? 'MATIC'
+							: standardUnit}
 					</span>
 				</div>
 				<div className={cf(s.wMax, s.flex, s.flexCenter, auc.terminateCon)}>

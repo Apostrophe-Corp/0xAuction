@@ -475,7 +475,7 @@ const ReachContextProvider = ({ children }) => {
 				description: what[5],
 				price: parseInt(what[6]),
 				tokenContract: reach.isBigNumber(what[7]) ? parseInt(what[7]) : what[7],
-				tokenID: parseInt(what[8])
+				tokenID: parseInt(what[8]),
 			})
 		} catch (error) {
 			console.log({ error })
@@ -524,7 +524,13 @@ const ReachContextProvider = ({ children }) => {
 				) {
 					const bidAgain = await alertThis({
 						message: `You just got outbid${
-							opt ? `, the highest bid is now ${newBid} ${standardUnit}` : ''
+							opt
+								? `, the highest bid is now ${newBid} ${
+										process.env.REACT_APP_REACH_CONNECTOR_MODE === 'ETH'
+											? 'MATIC'
+											: standardUnit
+								  }`
+								: ''
 						}. Would you like to bid again?`,
 						accept: 'Yes',
 						decline: 'No',
@@ -582,7 +588,11 @@ const ReachContextProvider = ({ children }) => {
 									message: `Do you accept the current bid of ${reach.formatCurrency(
 										what[2],
 										4
-									)} ${standardUnit}?`,
+									)} ${
+										process.env.REACT_APP_REACH_CONNECTOR_MODE === 'ETH'
+											? 'MATIC'
+											: standardUnit
+									}?`,
 									accept: 'Yes',
 									decline: 'No',
 								})
@@ -627,17 +637,26 @@ const ReachContextProvider = ({ children }) => {
 						message: `🥳 Congratulations!!! NFT sold at ${reach.formatCurrency(
 							what[2],
 							4
-						)} ${standardUnit} 🎉`,
+						)} ${
+							process.env.REACT_APP_REACH_CONNECTOR_MODE === 'ETH'
+								? 'MATIC'
+								: standardUnit
+						} 🎉`,
 						forConfirmation: false,
 					})
 				} else if (reach.formatAddress(what[4]) === String(user.address)) {
 					const viewToken = await alertThis({
 						message: `🥳 Congratulations!!! You now own this asset: ${parseInt(
 							what[5]
-						)}, at the cost of ${reach.formatCurrency(
-							what[2],
-							4
-						)} ${standardUnit} 🎉. Proceed to view on ${process.env.REACT_APP_REACH_CONNECTOR_MODE === 'ALGO'? 'AlgoExplorer.io': 'PolygonScan.com'}?`,
+						)}, at the cost of ${reach.formatCurrency(what[2], 4)} ${
+							process.env.REACT_APP_REACH_CONNECTOR_MODE === 'ETH'
+								? 'MATIC'
+								: standardUnit
+						} 🎉. Proceed to view on ${
+							process.env.REACT_APP_REACH_CONNECTOR_MODE === 'ALGO'
+								? 'AlgoExplorer.io'
+								: 'PolygonScan.com'
+						}?`,
 						accept: 'Yes',
 						decline: 'No',
 					})
@@ -658,10 +677,11 @@ const ReachContextProvider = ({ children }) => {
 					alertThis({
 						message: `'${noneNull(
 							what[1]
-						)}' finally closed at ${reach.formatCurrency(
-							what[2],
-							4
-						)} ${standardUnit}, with the Auctioneer accepting the highest bid`,
+						)}' finally closed at ${reach.formatCurrency(what[2], 4)} ${
+							process.env.REACT_APP_REACH_CONNECTOR_MODE === 'ETH'
+								? 'MATIC'
+								: standardUnit
+						}, with the Auctioneer accepting the highest bid`,
 						forConfirmation: false,
 					})
 				}
@@ -683,10 +703,11 @@ const ReachContextProvider = ({ children }) => {
 					alertThis({
 						message: `'${noneNull(
 							what[1]
-						)}' finally closed at ${reach.formatCurrency(
-							what[2],
-							4
-						)} ${standardUnit}, with the Auctioneer rejecting the highest bid`,
+						)}' finally closed at ${reach.formatCurrency(what[2], 4)} ${
+							process.env.REACT_APP_REACH_CONNECTOR_MODE === 'ETH'
+								? 'MATIC'
+								: standardUnit
+						}, with the Auctioneer rejecting the highest bid`,
 						forConfirmation: false,
 					})
 				}
@@ -818,7 +839,15 @@ const ReachContextProvider = ({ children }) => {
 			if (resultingBalance < minimumBalance) {
 				stopWaiting()
 				await alertThis({
-					message: `Your balance: ${userBal} ${standardUnit}, is insufficient for this bid due to the minimum balance allowed on your account after a transfer: ${minimumBalance} ${standardUnit}`,
+					message: `Your balance: ${userBal} ${
+						process.env.REACT_APP_REACH_CONNECTOR_MODE === 'ETH'
+							? 'MATIC'
+							: standardUnit
+					}, is insufficient for this bid due to the minimum balance allowed on your account after a transfer: ${minimumBalance} ${
+						process.env.REACT_APP_REACH_CONNECTOR_MODE === 'ETH'
+							? 'MATIC'
+							: standardUnit
+					}`,
 					forConfirmation: false,
 				})
 				await alertThis({
@@ -956,7 +985,11 @@ const ReachContextProvider = ({ children }) => {
 
 	const optIn = async (id) => {
 		const agree = await alertThis({
-			message: `To view Live Bid, you must pay a small token of 1 ${standardUnit}`,
+			message: `To view Live Bid, you must pay a small token of 1 ${
+				process.env.REACT_APP_REACH_CONNECTOR_MODE === 'ETH'
+					? 'MATIC'
+					: standardUnit
+			}`,
 			accept: 'Pay',
 			decline: 'Forfeit',
 		})
@@ -1010,7 +1043,15 @@ const ReachContextProvider = ({ children }) => {
 				}
 			} else if (resultingBalance < minimumBalance) {
 				alertThis({
-					message: `Your balance: ${userBal} ${standardUnit}, is insufficient for this bid due to the minimum balance an account should have after a transfer on this network: ${minimumBalance} ${standardUnit}`,
+					message: `Your balance: ${userBal} ${
+						process.env.REACT_APP_REACH_CONNECTOR_MODE === 'ETH'
+							? 'MATIC'
+							: standardUnit
+					}, is insufficient for this bid due to the minimum balance an account should have after a transfer on this network: ${minimumBalance} ${
+						process.env.REACT_APP_REACH_CONNECTOR_MODE === 'ETH'
+							? 'MATIC'
+							: standardUnit
+					}`,
 					forConfirmation: false,
 				})
 				setShowBuyer(false)

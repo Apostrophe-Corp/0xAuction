@@ -106,7 +106,9 @@ const Buyer = () => {
 					<span
 						className={cf(s.wMax, s.flex, s.flexCenter, auc.currentBidValue)}
 					>
-						{auction.yourBid} {standardUnit}
+						{auction.yourBid} {process.env.REACT_APP_REACH_CONNECTOR_MODE === 'ETH'
+							? 'MATIC'
+							: standardUnit}
 					</span>
 				</div>
 				<div
@@ -134,7 +136,9 @@ const Buyer = () => {
 					<span
 						className={cf(s.wMax, s.flex, s.flexCenter, auc.desiredBidValue)}
 					>
-						{auction.price} {standardUnit}
+						{auction.price} {process.env.REACT_APP_REACH_CONNECTOR_MODE === 'ETH'
+							? 'MATIC'
+							: standardUnit}
 					</span>
 				</div>
 				<div
@@ -160,7 +164,9 @@ const Buyer = () => {
 						Live Bid
 					</h2>
 					<span className={cf(s.wMax, s.flex, s.flexCenter, auc.liveBidValue)}>
-						{auction.optIn ? auction.liveBid : '####'} {standardUnit}
+						{auction.optIn ? auction.liveBid : '####'} {process.env.REACT_APP_REACH_CONNECTOR_MODE === 'ETH'
+							? 'MATIC'
+							: standardUnit}
 					</span>
 				</div>
 				<div className={cf(s.wMax, s.flex, s.flexCenter, auc.terminateCon)}>
