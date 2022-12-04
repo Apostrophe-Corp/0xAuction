@@ -79,7 +79,7 @@ We encourage you to play around with the dApp and create NFTs, auction NFTs or b
 
 ### Troubleshooting
 
-- Should you encounter any errors, please tag either `goonerlabs#1008` 0r `Emmanuel Agbavwe#2954` on [Reach's Discord server](https://bit.ly/3BnPyKd).
+- Should you encounter any errors, please tag `Emmanuel Agbavwe#2954` on [Reach's Discord server](https://bit.ly/3BnPyKd).
 
 ## The DApp
 
