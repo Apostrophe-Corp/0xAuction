@@ -16,6 +16,7 @@ import app from '../styles/App.module.css'
 import { Alert } from '../components/Alert'
 import { Buyer, Seller } from '../components/Auction'
 import { ConnectAccount, LoadingPreview } from '../components/App'
+import {stringToUint8Array} from '../utils'
 
 const algoExplorerURI = {
 	TestNet: 'https://testnet.algoexplorer.io',
@@ -415,26 +416,67 @@ const ReachContextProvider = ({ children }) => {
 			func()
 		}
 	}
-
+	
 	const mintNFT = async (opts) => {
 		startWaiting()
 		const optKeys = Object.keys(opts)
 		const len = optKeys.length
-		const note = new Uint8Array(32)
-		const launchOpts = { supply: 1, note, decimals: 0 }
+		const launchOpts = { supply: 1, decimals: 0 }
+		
 		let i = 0
 		for (i; i < len; i++) {
 			const key = optKeys[i]
 			if (key === 'name' || key === 'symbol') continue
 			if (opts[key]) launchOpts[key] = opts[key]
 		}
+		const raw = launchOpts['url']
+		const gateway = (launchOpts['url'].indexOf('ipfs://') === 0) ?						
+		'https://gateway.ipfs.io/ipfs/' + launchOpts['url'].slice(7):launchOpts['url'],	
+		
+		const metaObj = { 
+			title: opts['name'],
+			description: '',
+			tokenUri: {
+				raw,
+				gateway,	
+			},
+			id: {
+				tokenId: 1,
+				tokenMetaData:{
+					tokenType: 'ERC721'
+				}
+			},
+			media: [
+				{
+					raw,
+					gateway, 
+					format: 'image/*',
+				}
+			],
+			metadata: {
+				name:  opts['name'],
+				image: launchOpts['url'],
+				attributes: '',
+			},
+			contractMetadata: {
+				name: opts['name'],
+				symbol: opts['symbol'],
+				totalSupply: 1,
+				tokenType: 'ERC721',
+			}
+		}
+
+		const metaStr = JSON.stringify(metaObj)
+		
+		const note = stringToUint8Array(metaStr)
+		
 		// console.log(launchOpts)
 		try {
 			const launchedToken = await reach.launchToken(
 				user.account,
 				opts['name'],
 				opts['symbol'],
-				launchOpts
+				{...launchOpts, note},
 			)
 			stopWaiting()
 			const viewToken = await alertThis({
