@@ -1189,7 +1189,7 @@ const ReachContextProvider = ({ children }) => {
 							className={cf(s.flex, s.flexCenter, s.p10, s.m0, app.navItem)}
 							onClick={() => {
 								checkForContract(() => {
-									;('Create')
+									setView('Create')
 								})
 							}}
 						>
