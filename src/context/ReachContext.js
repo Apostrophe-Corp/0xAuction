@@ -132,7 +132,7 @@ const ReachContextProvider = ({ children }) => {
 					stopWaiting(false)
 					alertThis({
 						message: 'The process took too long, unable to verify progress',
-						forConfirmation: false
+						forConfirmation: false,
 					})
 				}, 30000)
 			})
@@ -378,12 +378,12 @@ const ReachContextProvider = ({ children }) => {
 										forConfirmation: false,
 									})
 								}
+								ctc.events.create.monitor(postAuction)
+								ctc.events.end.monitor(dropAuction)
+								ctc.events.passAddress.monitor(setAdmin)
+								func()
 							},
 						})
-						ctc.events.create.monitor(postAuction)
-						ctc.events.end.monitor(dropAuction)
-						ctc.events.passAddress.monitor(setAdmin)
-						func()
 					} catch (error) {
 						console.log({ error })
 						stopWaiting(false)
@@ -437,10 +437,11 @@ const ReachContextProvider = ({ children }) => {
 			if (opts[key]) launchOpts[key] = opts[key]
 		}
 		const raw = launchOpts['url'] ?? ''
-		const gateway = launchOpts['url'] ?
-			launchOpts['url'].indexOf('ipfs://') === 0
-				? 'https://gateway.ipfs.io/ipfs/' + launchOpts?.['url'].slice(7) 
-				: launchOpts['url'] : ''
+		const gateway = launchOpts['url']
+			? launchOpts['url'].indexOf('ipfs://') === 0
+				? 'https://gateway.ipfs.io/ipfs/' + launchOpts?.['url'].slice(7)
+				: launchOpts['url']
+			: ''
 
 		const metaObj = {
 			title: opts['name'],
@@ -1177,9 +1178,7 @@ const ReachContextProvider = ({ children }) => {
 				<div
 					className={cf(app.branding, s.w480_100, s.w360_100)}
 					onClick={() => {
-						checkForContract(() => {
-							setView('App')
-						})
+						setView('App')
 					}}
 				>
 					0xAuction
@@ -1190,7 +1189,7 @@ const ReachContextProvider = ({ children }) => {
 							className={cf(s.flex, s.flexCenter, s.p10, s.m0, app.navItem)}
 							onClick={() => {
 								checkForContract(() => {
-									setView('Create')
+									;('Create')
 								})
 							}}
 						>
