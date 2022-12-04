@@ -431,7 +431,7 @@ const ReachContextProvider = ({ children }) => {
 		}
 		const raw = launchOpts['url']
 		const gateway = (launchOpts['url'].indexOf('ipfs://') === 0) ?						
-		'https://gateway.ipfs.io/ipfs/' + launchOpts['url'].slice(7):launchOpts['url'],	
+		'https://gateway.ipfs.io/ipfs/' + launchOpts['url'].slice(7):launchOpts['url']
 		
 		const metaObj = { 
 			title: opts['name'],
