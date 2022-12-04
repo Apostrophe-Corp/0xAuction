@@ -1260,13 +1260,6 @@ const ReachContextProvider = ({ children }) => {
 					>
 						0xAuction
 					</div>
-					<div className={cf(s.wMax, app.registered)}>
-						0xAuction is the product of Apostrophe Corp. for the{' '}
-						{process.env.REACT_APP_REACH_CONNECTOR_MODE !== 'ALGO'
-							? 'Polygon Hackathon'
-							: 'Algorand Green House Bounty Hack'}
-						.
-					</div>
 				</div>
 			</div>
 			<Alert />

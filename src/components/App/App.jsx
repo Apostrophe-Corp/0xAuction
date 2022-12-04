@@ -469,8 +469,8 @@ const App = () => {
 								>
 									0xAuction is built with Reach and powered by the{' '}
 									{process.env.REACT_APP_REACH_CONNECTOR_MODE === 'ALGO'
-										? 'Algorand'
-										: 'Polygon'}
+										? 'Algorand '
+										: 'Polygon '}
 									Network. Utilizing the Reach verification engine, 0xAuction's
 									contracts are vetted by the Z3 theorem prover.
 								</span>
