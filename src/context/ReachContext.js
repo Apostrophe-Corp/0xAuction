@@ -16,7 +16,7 @@ import app from '../styles/App.module.css'
 import { Alert } from '../components/Alert'
 import { Buyer, Seller } from '../components/Auction'
 import { ConnectAccount, LoadingPreview } from '../components/App'
-import {stringToUint8Array} from '../utils'
+import { stringToUint8Array } from '../utils'
 
 const algoExplorerURI = {
 	TestNet: 'https://testnet.algoexplorer.io',
@@ -32,7 +32,7 @@ const deadline = 10000
 const reach = loadStdlib({
 	...process.env,
 	REACH_NO_WARN: 'Y',
-	REACH_CONNECTOR_MODE: 'ETH',
+	REACH_CONNECTOR_MODE: process.env.REACT_APP_REACH_CONNECTOR_MODE,
 })
 
 export const ReachContext = React.createContext()
@@ -169,7 +169,7 @@ const ReachContextProvider = ({ children }) => {
 			// 	adminCtc,
 			// 	JSON.parse(process.env.REACT_APP_ADMIN_CONTRACT_INFO)
 			// )
-			account.setGasLimit(5000000)
+			account.setGasLimit(10000000)
 			setUser({
 				account,
 				balance: async (tokenContract = null) => {
@@ -416,45 +416,47 @@ const ReachContextProvider = ({ children }) => {
 			func()
 		}
 	}
-	
+
 	const mintNFT = async (opts) => {
 		startWaiting()
 		const optKeys = Object.keys(opts)
 		const len = optKeys.length
-		const launchOpts = { supply: 1, decimals: 0 }
-		
+		const launchOpts = { supply: opts['supply'] ?? 1, decimals: 0 }
+
 		let i = 0
 		for (i; i < len; i++) {
 			const key = optKeys[i]
-			if (key === 'name' || key === 'symbol') continue
+			if (key === 'name' || key === 'symbol' || key === 'supply') continue
 			if (opts[key]) launchOpts[key] = opts[key]
 		}
 		const raw = launchOpts['url']
-		const gateway = (launchOpts['url'].indexOf('ipfs://') === 0) ?						
-		'https://gateway.ipfs.io/ipfs/' + launchOpts['url'].slice(7):launchOpts['url']
-		
-		const metaObj = { 
+		const gateway =
+			launchOpts['url'].indexOf('ipfs://') === 0
+				? 'https://gateway.ipfs.io/ipfs/' + launchOpts['url'].slice(7)
+				: launchOpts['url']
+
+		const metaObj = {
 			title: opts['name'],
 			description: '',
 			tokenUri: {
 				raw,
-				gateway,	
+				gateway,
 			},
 			id: {
 				tokenId: 1,
-				tokenMetaData:{
-					tokenType: 'ERC721'
-				}
+				tokenMetaData: {
+					tokenType: 'ERC721',
+				},
 			},
 			media: [
 				{
 					raw,
-					gateway, 
+					gateway,
 					format: 'image/*',
-				}
+				},
 			],
 			metadata: {
-				name:  opts['name'],
+				name: opts['name'],
 				image: launchOpts['url'],
 				attributes: '',
 			},
@@ -463,20 +465,20 @@ const ReachContextProvider = ({ children }) => {
 				symbol: opts['symbol'],
 				totalSupply: 1,
 				tokenType: 'ERC721',
-			}
+			},
 		}
 
 		const metaStr = JSON.stringify(metaObj)
-		
+
 		const note = stringToUint8Array(metaStr)
-		
+
 		// console.log(launchOpts)
 		try {
 			const launchedToken = await reach.launchToken(
 				user.account,
 				opts['name'],
 				opts['symbol'],
-				{...launchOpts, note},
+				{ ...launchOpts, note }
 			)
 			stopWaiting()
 			const viewToken = await alertThis({
@@ -1236,8 +1238,11 @@ const ReachContextProvider = ({ children }) => {
 						0xAuction
 					</div>
 					<div className={cf(s.wMax, app.registered)}>
-						0xAuction is the product of Apostrophe Corp. for the Algorand Green
-						House Bounty Hack.
+						0xAuction is the product of Apostrophe Corp. for the{' '}
+						{process.env.REACT_APP_REACH_CONNECTOR_MODE === 'ALGO'
+							? 'Polygon Hackathon'
+							: 'Algorand Green House Bounty Hack'}
+						.
 					</div>
 				</div>
 			</div>

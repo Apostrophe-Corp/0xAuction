@@ -33,6 +33,12 @@ const Create = () => {
 				...nftParams,
 				symbol: value,
 			})
+		} else if (name === 'supply') {
+			value = Number(value)
+			setNftParams({
+				...nftParams,
+				supply: value,
+			})
 		} else if (name === 'url') {
 			value = String(value).slice(0, 96)
 			setNftParams({
@@ -105,11 +111,15 @@ const Create = () => {
 					)}
 				>
 					<h1 className={cf(s.w480_100, s.w360_100, cr8.callOutMain)}>
-						Create the next Bored Ape or Cyberpunks. Become the next Beeple!
+						{process.env.REACT_APP_REACH_CONNECTOR_MODE === 'ALGO'
+							? 'Create the next Bored Ape or Cyberpunks. Become the next Beeple!'
+							: 'Mint your Project tokens, be it Loyalty, Governance, Liquidity'}
 					</h1>
 					<h2 className={cf(cr8.callOutSub)}>
-						Create the NFT of your dreams in a few simple steps by simply
-						filling out the form
+						{process.env.REACT_APP_REACH_CONNECTOR_MODE === 'ALGO'
+							? 'Create the NFT of your dreams'
+							: 'Make your Project complete'}{' '}
+						in a few simple steps by simply filling out the form
 					</h2>
 				</div>
 				<div
@@ -163,41 +173,57 @@ const Create = () => {
 								className={cf(cr8.formInput)}
 							/>
 						</label>
-						<label
-							className={cf(cr8.formLabel)}
-							htmlFor='url'
-						>
-							<span className={cf(cr8.formText)}>Media URL (Max 96)*</span>
-							<input
-								type='url'
-								name='url'
-								id='url'
-								onInput={handleInput}
-								placeholder=''
-								className={cf(cr8.formInput)}
-							/>
-							<span className={cr8.note}>
-								Note: Link must begin with{' '}
-								<span className={cr8.partLink}>https://</span> or{' '}
-								<span className={cr8.partLink}>ipfs://</span>.<br />
-								Also, suffix the link with{' '}
-								<span className={cr8.partLink}>#i</span> for an{' '}
-								<span className={cr8.partLink}>image</span> or{' '}
-								<span className={cr8.partLink}>#v</span> for a{' '}
-								<span className={cr8.partLink}>video</span> or{' '}
-								<span className={cr8.partLink}>#a</span> for an{' '}
-								<span className={cr8.partLink}>audio</span> or{' '}
-								<span className={cr8.partLink}>#p</span> for a{' '}
-								<span className={cr8.partLink}>PDF</span> or{' '}
-								<span className={cr8.partLink}>#h</span> for a/an{' '}
-								<span className={cr8.partLink}>
-									HTML/interactive digital media
-								</span>
-								.
-							</span>
-						</label>
+						{process.env.REACT_APP_REACH_CONNECTOR_MODE === 'ETH' && (
+							<label
+								className={cf(cr8.formLabel)}
+								htmlFor='supply'
+							>
+								<span className={cf(cr8.formText)}>Supply*</span>
+								<input
+									type='number'
+									name='supply'
+									id='supply'
+									onInput={handleInput}
+									placeholder=''
+									className={cf(cr8.formInput)}
+								/>
+							</label>
+						)}
 						{process.env.REACT_APP_REACH_CONNECTOR_MODE === 'ALGO' && (
 							<>
+								<label
+									className={cf(cr8.formLabel)}
+									htmlFor='url'
+								>
+									<span className={cf(cr8.formText)}>Media URL (Max 96)*</span>
+									<input
+										type='url'
+										name='url'
+										id='url'
+										onInput={handleInput}
+										placeholder=''
+										className={cf(cr8.formInput)}
+									/>
+									<span className={cr8.note}>
+										Note: Link must begin with{' '}
+										<span className={cr8.partLink}>https://</span> or{' '}
+										<span className={cr8.partLink}>ipfs://</span>.<br />
+										Also, suffix the link with{' '}
+										<span className={cr8.partLink}>#i</span> for an{' '}
+										<span className={cr8.partLink}>image</span> or{' '}
+										<span className={cr8.partLink}>#v</span> for a{' '}
+										<span className={cr8.partLink}>video</span> or{' '}
+										<span className={cr8.partLink}>#a</span> for an{' '}
+										<span className={cr8.partLink}>audio</span> or{' '}
+										<span className={cr8.partLink}>#p</span> for a{' '}
+										<span className={cr8.partLink}>PDF</span> or{' '}
+										<span className={cr8.partLink}>#h</span> for a/an{' '}
+										<span className={cr8.partLink}>
+											HTML/interactive digital media
+										</span>
+										.
+									</span>
+								</label>
 								<label
 									className={cf(cr8.formLabel)}
 									htmlFor='clawback'
@@ -283,10 +309,13 @@ const Create = () => {
 									!(
 										nftParams.name &&
 										nftParams.symbol &&
-										nftParams.url &&
-										nftParams.url.indexOf('https://ipfs.io/ipfs/') !== 0 &&
-										(nftParams.url.indexOf('https://') === 0 ||
-											nftParams.url.indexOf('ipfs://') === 0)
+										(process.env.REACT_APP_REACH_CONNECTOR_MODE === 'ALGO' ||
+											nftParams.supply) &&
+										(process.env.REACT_APP_REACH_CONNECTOR_MODE === 'ALGO' ||
+											(nftParams.url &&
+												nftParams.url.indexOf('https://ipfs.io/ipfs/') !== 0 &&
+												(nftParams.url.indexOf('https://') === 0 ||
+													nftParams.url.indexOf('ipfs://') === 0)))
 									)
 								}
 							>

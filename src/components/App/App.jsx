@@ -80,7 +80,15 @@ const App = () => {
 						<div className={cf(s.flex, s.flex_dColumn, app.cardPurpose)}>
 							<div className={cf(app.cardPurposeText)}>Mint NFTs</div>
 							<div className={cf(app.cardDescription)}>
-								Create your very own collectibles on the Algorand blockchain.
+								Create your very own{' '}
+								{process.env.REACT_APP_REACH_CONNECTOR_MODE === 'ALGO'
+									? 'collectibles'
+									: 'token'}{' '}
+								on the{' '}
+								{process.env.REACT_APP_REACH_CONNECTOR_MODE === 'ALGO'
+									? 'Algorand'
+									: 'Polygon'}{' '}
+								blockchain.
 							</div>
 						</div>
 						<div className={cf(app.cardIcon, app.createIcon)}>
@@ -245,11 +253,14 @@ const App = () => {
 								app.joinComDescriptionText
 							)}
 						>
-							With 0xAuction you can mint an NFT, start an auction to sell any
-							collectible you own, browse through the list of active auctions to
-							bid on any NFT on the list. Auctions are safe, fully
-							decentralized, peer-to-peer, and designed with the best interest
-							of the Buyer and Seller in mind.
+							With 0xAuction you can mint{' '}
+							{process.env.REACT_APP_REACH_CONNECTOR_MODE === 'ALGO'
+								? 'an NFT'
+								: 'a token'}
+							, start an auction to sell any collectible you own, browse through
+							the list of active auctions to bid on any NFT on the list.
+							Auctions are safe, fully decentralized, peer-to-peer, and designed
+							with the best interest of the Buyer and Seller in mind.
 						</span>
 					</div>
 					<div
@@ -325,13 +336,14 @@ const App = () => {
 								<span
 									className={cf(s.wMax, s.dInlineBlock, app.comSocialDesText)}
 								>
-									Buyers can all opt-in to receive realtime notifications
-									to see the exact bid amount made anytime a bid higher than 
-									theirs is made, and at the auction's end they get to see the 
-									outcome of the auction, if the highest bid got accepted or rejected. 
-									For every Buyer that opts in, the Seller gets 10% of the opt-in 
-									fee, and the rest is sent to the deployer of the 0xAuction contract
-									as a way of appreciating users for choosing 0xAuction.
+									Buyers can all opt-in to receive realtime notifications to see
+									the exact bid amount made anytime a bid higher than theirs is
+									made, and at the auction's end they get to see the outcome of
+									the auction, if the highest bid got accepted or rejected. For
+									every Buyer that opts in, the Seller gets 10% of the opt-in
+									fee, and the rest is sent to the deployer of the 0xAuction
+									contract as a way of appreciating users for choosing
+									0xAuction.
 								</span>
 							</div>
 						</div>
@@ -450,7 +462,10 @@ const App = () => {
 								<span
 									className={cf(s.wMax, s.dInlineBlock, app.comSocialDesText)}
 								>
-									0xAuction is built with Reach and powered by the Algorand
+									0xAuction is built with Reach and powered by the{' '}
+									{process.env.REACT_APP_REACH_CONNECTOR_MODE === 'ALGO'
+										? 'Algorand'
+										: 'Polygon'}
 									Network. Utilizing the Reach verification engine, 0xAuction's
 									contracts are vetted by the Z3 theorem prover.
 								</span>
