@@ -131,6 +131,13 @@ const ReachContextProvider = ({ children }) => {
 				waitingPro['resolve'] = resolve
 				waitingPro['reject'] = reject
 				shouldDisplay(true)
+				setTimeout(() => {
+					stopWaiting(false)
+					alertThis({
+						message: 'The process took too long, unable to verify progress',
+						forConfirmation: false,
+					})
+				}, 120000)
 			})
 			shouldDisplay(false)
 		} catch (error) {
@@ -172,7 +179,7 @@ const ReachContextProvider = ({ children }) => {
 			// 	adminCtc,
 			// 	JSON.parse(process.env.REACT_APP_ADMIN_CONTRACT_INFO)
 			// )
-			account.setGasLimit(10000000)
+			account.setGasLimit(7920027)
 			setUser({
 				account,
 				balance: async (tokenContract = null) => {
@@ -384,12 +391,12 @@ const ReachContextProvider = ({ children }) => {
 										forConfirmation: false,
 									})
 								}
+								ctc.events.create.monitor(postAuction)
+								ctc.events.end.monitor(dropAuction)
+								ctc.events.passAddress.monitor(setAdmin)
+								func()
 							},
 						})
-						ctc.events.create.monitor(postAuction)
-						ctc.events.end.monitor(dropAuction)
-						ctc.events.passAddress.monitor(setAdmin)
-						func()
 					} catch (error) {
 						console.log({ error })
 						stopWaiting(false)
@@ -442,11 +449,12 @@ const ReachContextProvider = ({ children }) => {
 			if (key === 'name' || key === 'symbol' || key === 'supply') continue
 			if (opts[key]) launchOpts[key] = opts[key]
 		}
-		const raw = launchOpts['url']
-		const gateway =
-			launchOpts['url'].indexOf('ipfs://') === 0
-				? 'https://gateway.ipfs.io/ipfs/' + launchOpts['url'].slice(7)
+		const raw = launchOpts['url'] ?? ''
+		const gateway = launchOpts['url']
+			? launchOpts['url'].indexOf('ipfs://') === 0
+				? 'https://gateway.ipfs.io/ipfs/' + launchOpts?.['url'].slice(7)
 				: launchOpts['url']
+			: ''
 
 		const metaObj = {
 			title: opts['name'],
@@ -1183,9 +1191,7 @@ const ReachContextProvider = ({ children }) => {
 				<div
 					className={cf(app.branding, s.w480_100, s.w360_100)}
 					onClick={() => {
-						checkForContract(() => {
-							setView('App')
-						})
+						setView('App')
 					}}
 				>
 					0xAuction
@@ -1252,7 +1258,7 @@ const ReachContextProvider = ({ children }) => {
 					</div>
 					<div className={cf(s.wMax, app.registered)}>
 						0xAuction is the product of Apostrophe Corp. for the{' '}
-						{process.env.REACT_APP_REACH_CONNECTOR_MODE === 'ALGO'
+						{process.env.REACT_APP_REACH_CONNECTOR_MODE !== 'ALGO'
 							? 'Polygon Hackathon'
 							: 'Algorand Green House Bounty Hack'}
 						.

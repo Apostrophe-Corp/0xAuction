@@ -78,7 +78,12 @@ const App = () => {
 					>
 						<div className={cf(app.cardAction)}>Create</div>
 						<div className={cf(s.flex, s.flex_dColumn, app.cardPurpose)}>
-							<div className={cf(app.cardPurposeText)}>Mint NFTs</div>
+							<div className={cf(app.cardPurposeText)}>
+								Mint{' '}
+								{process.env.REACT_APP_REACH_CONNECTOR_MODE === 'ALGO'
+									? 'NFTs'
+									: 'Tokens'}
+							</div>
 							<div className={cf(app.cardDescription)}>
 								Create your very own{' '}
 								{process.env.REACT_APP_REACH_CONNECTOR_MODE === 'ALGO'
