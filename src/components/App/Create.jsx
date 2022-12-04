@@ -311,7 +311,7 @@ const Create = () => {
 										nftParams.symbol &&
 										(process.env.REACT_APP_REACH_CONNECTOR_MODE === 'ALGO' ||
 											nftParams.supply) &&
-										(process.env.REACT_APP_REACH_CONNECTOR_MODE === 'ALGO' ||
+										(process.env.REACT_APP_REACH_CONNECTOR_MODE === 'ETH' ||
 											(nftParams.url &&
 												nftParams.url.indexOf('https://ipfs.io/ipfs/') !== 0 &&
 												(nftParams.url.indexOf('https://') === 0 ||
