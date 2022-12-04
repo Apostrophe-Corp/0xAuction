@@ -196,80 +196,86 @@ const Create = () => {
 								.
 							</span>
 						</label>
-						<label
-							className={cf(cr8.formLabel)}
-							htmlFor='clawback'
-						>
-							<span className={cf(cr8.formText)}>Clawback Address</span>
-							<input
-								type='text'
-								name='clawback'
-								id='clawback'
-								onInput={handleInput}
-								placeholder=''
-								className={cf(cr8.formInput)}
-							/>
-						</label>
-						<label
-							className={cf(cr8.formLabel)}
-							htmlFor='freeze'
-						>
-							<span className={cf(cr8.formText)}>Freeze Address</span>
-							<input
-								type='text'
-								name='freeze'
-								id='freeze'
-								onInput={handleInput}
-								placeholder=''
-								className={cf(cr8.formInput)}
-							/>
-						</label>
-						<label
-							className={cf(cr8.formLabel)}
-							htmlFor='reserve'
-						>
-							<span className={cf(cr8.formText)}>Reserve Address</span>
-							<input
-								type='text'
-								name='reserve'
-								id='reserve'
-								onInput={handleInput}
-								placeholder=''
-								className={cf(cr8.formInput)}
-							/>
-						</label>
-						<label
-							className={cf(cr8.formLabel)}
-							htmlFor='manager'
-						>
-							<span className={cf(cr8.formText)}>Manager Address</span>
-							<input
-								type='text'
-								name='manager'
-								id='manager'
-								onInput={handleInput}
-								placeholder=''
-								className={cf(cr8.formInput)}
-							/>
-						</label>
-						<label
-							className={cf(cr8.formLabel, s.flexLeft, cr8.checkboxLabel)}
-							htmlFor='defaultFrozen'
-						>
-							<input
-								type='checkbox'
-								name='defaultFrozen'
-								id='defaultFrozen'
-								onInput={handleInput}
-								className={cf(
-									s.dInlineBlock,
-									s.flex,
-									s.flexCenter,
-									cr8.checkbox
-								)}
-							/>
-							<span className={cf(cr8.formText, cr8.forCheckbox)}>Frozen?</span>
-						</label>
+						{process.env.REACT_APP_REACH_CONNECTOR_MODE === 'ALGO' && (
+							<>
+								<label
+									className={cf(cr8.formLabel)}
+									htmlFor='clawback'
+								>
+									<span className={cf(cr8.formText)}>Clawback Address</span>
+									<input
+										type='text'
+										name='clawback'
+										id='clawback'
+										onInput={handleInput}
+										placeholder=''
+										className={cf(cr8.formInput)}
+									/>
+								</label>
+								<label
+									className={cf(cr8.formLabel)}
+									htmlFor='freeze'
+								>
+									<span className={cf(cr8.formText)}>Freeze Address</span>
+									<input
+										type='text'
+										name='freeze'
+										id='freeze'
+										onInput={handleInput}
+										placeholder=''
+										className={cf(cr8.formInput)}
+									/>
+								</label>
+								<label
+									className={cf(cr8.formLabel)}
+									htmlFor='reserve'
+								>
+									<span className={cf(cr8.formText)}>Reserve Address</span>
+									<input
+										type='text'
+										name='reserve'
+										id='reserve'
+										onInput={handleInput}
+										placeholder=''
+										className={cf(cr8.formInput)}
+									/>
+								</label>
+								<label
+									className={cf(cr8.formLabel)}
+									htmlFor='manager'
+								>
+									<span className={cf(cr8.formText)}>Manager Address</span>
+									<input
+										type='text'
+										name='manager'
+										id='manager'
+										onInput={handleInput}
+										placeholder=''
+										className={cf(cr8.formInput)}
+									/>
+								</label>
+								<label
+									className={cf(cr8.formLabel, s.flexLeft, cr8.checkboxLabel)}
+									htmlFor='defaultFrozen'
+								>
+									<input
+										type='checkbox'
+										name='defaultFrozen'
+										id='defaultFrozen'
+										onInput={handleInput}
+										className={cf(
+											s.dInlineBlock,
+											s.flex,
+											s.flexCenter,
+											cr8.checkbox
+										)}
+									/>
+									<span className={cf(cr8.formText, cr8.forCheckbox)}>
+										Frozen?
+									</span>
+								</label>
+							</>
+						)}
 						<div className={cf(s.wMax, s.flex, s.flexCenter, cr8.submitDiv)}>
 							<button
 								type='submit'

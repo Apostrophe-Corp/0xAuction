@@ -4,6 +4,7 @@ import sell from '../../styles/CreateAndSell.module.css'
 import { useReach, fmtClasses as cf } from '../../hooks'
 import preview from '../../assets/images/preview.jpg'
 import { Arc69 } from '../../ARC69/arc.js'
+import { setPfps } from '../../utils'
 
 const arc69 = new Arc69()
 
@@ -50,23 +51,17 @@ const Sell = () => {
 				...auctionParams,
 				title: value,
 			})
-		} else if (name === 'tokenId') {
-			value = value > 0 ? Number(value) : 0
+		} else if (name === 'tokenContract') {
+			value =
+				process.env.REACT_APP_REACH_CONNECTOR_MODE === 'ALGO'
+					? value > 0
+						? Number(value)
+						: 0
+					: String(value)
 			setAuctionParams({
 				...auctionParams,
-				tokenId: value,
+				tokenContract: value,
 			})
-			if (assetTimeout) {
-				clearTimeout(assetTimeout)
-				setAssetTimeout(null)
-			}
-
-			const getMetaData = setTimeout(() => {
-				fetchAssetMetadata(value)
-				clearTimeout(getMetaData)
-				setAssetTimeout(null)
-			}, 2000)
-			setAssetTimeout(getMetaData)
 		} else if (name === 'description') {
 			value = String(value).slice(0, 80)
 			setAuctionParams({
@@ -79,7 +74,34 @@ const Sell = () => {
 				...auctionParams,
 				price: value,
 			})
+		} else if (name === 'tokenID') {
+			value = value > 0 ? Number(value) : 0
+			setAuctionParams({
+				...auctionParams,
+				tokenID: value,
+			})
 		}
+
+		if (
+			name === 'tokenContract' &&
+			(process.env.REACT_APP_REACH_CONNECTOR_MODE !== 'ETH' ||
+				name === 'tokenID')
+		) {
+			if (assetTimeout) {
+				clearTimeout(assetTimeout)
+				setAssetTimeout(null)
+			}
+
+			const getMetaData = setTimeout(() => {
+				if(process.env.REACT_APP_REACH_CONNECTOR_MODE !== 'ETH')
+					fetchAssetMetadata(value)
+				else setPfps([previewRef, auctionParams.tokenID, auctionParams.tokenContract, false])
+				clearTimeout(getMetaData)
+				setAssetTimeout(null)
+			}, 2000)
+			setAssetTimeout(getMetaData)
+		}
+
 		e.currentTarget.value = value
 	}
 
@@ -109,7 +131,11 @@ const Sell = () => {
 						Start an Auction for your NFT or Collectible!
 					</h1>
 					<h2 className={cf(sell.callOutSub)}>
-						Be your own Sotheby's or Christie's and take full control of your own Auction. No hidden fees, charges or middlemen.<br/>Get full value for your art by selling directly to a peer like yourself. 
+						Be your own Sotheby's or Christie's and take full control of your
+						own Auction. No hidden fees, charges or middlemen.
+						<br />
+						Get full value for your art by selling directly to a peer like
+						yourself.
 					</h2>
 				</div>
 				<div
@@ -144,18 +170,38 @@ const Sell = () => {
 						</span>
 						<label
 							className={cf(sell.formLabel)}
-							htmlFor='tokenId'
+							htmlFor='tokenContract'
 						>
-							<span className={cf(sell.formText)}>Asset ID</span>
+							<span className={cf(sell.formText)}>
+								{process.env.REACT_APP_REACH_CONNECTOR_MODE === 'ETH'
+									? 'Token Contract'
+									: 'Asset ID'}
+							</span>
 							<input
-								type='number'
-								name='tokenId'
-								id='tokenId'
+								type='text'
+								name='tokenContract'
+								id='tokenContract'
 								onInput={handleInput}
 								placeholder=''
 								className={cf(sell.formInput)}
 							/>
 						</label>
+						{process.env.REACT_APP_REACH_CONNECTOR_MODE === 'ETH' && (
+							<label
+								className={cf(sell.formLabel)}
+								htmlFor='tokenID'
+							>
+								<span className={cf(sell.formText)}>Token ID</span>
+								<input
+									type='text'
+									name='tokenID'
+									id='tokenID'
+									onInput={handleInput}
+									placeholder=''
+									className={cf(sell.formInput)}
+								/>
+							</label>
+						)}
 						<label
 							className={cf(sell.formLabel)}
 							htmlFor='title'
@@ -206,12 +252,12 @@ const Sell = () => {
 								type='submit'
 								disabled={
 									!(
-										(
-											auctionParams.tokenId &&
-											auctionParams.title &&
-											auctionParams.description &&
-											auctionParams.price
-										)
+										auctionParams.tokenContract &&
+										auctionParams.title &&
+										auctionParams.description &&
+										auctionParams.price &&
+										(process.env.REACT_APP_REACH_CONNECTOR_MODE !== 'ETH' ||
+											auctionParams.tokenID)
 									)
 								}
 							>

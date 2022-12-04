@@ -3,16 +3,18 @@ import s from '../../styles/Shared.module.css'
 import buy from '../../styles/Buy.module.css'
 import notFound from '../../assets/images/preview.jpg'
 import { useReach, fmtClasses as cf } from '../../hooks'
+import { setPfps } from '../../utils'
 import { Arc69 } from '../../ARC69/arc.js'
 
 const arc69 = new Arc69()
 
 const LatestAuction = ({
-	assetID,
+	assetContract,
 	title,
 	description,
 	desiredPrice,
 	fullAuction,
+	assetID = '',
 }) => {
 	const { standardUnit, joinAuction } = useReach()
 	const previewRef = useRef()
@@ -40,8 +42,11 @@ const LatestAuction = ({
 				console.log('No image url found 🥱')
 			}
 		}
-		fetchAssetMetadata(assetID)
-	}, [assetID])
+		// fetchAssetMetadata(assetContract)
+		if (process.env.REACT_APP_REACH_CONNECTOR_MODE !== 'ETH')
+			fetchAssetMetadata(assetContract)
+		else setPfps([previewRef, assetID, assetContract, false])
+	}, [assetContract, assetID])
 
 	return (
 		<div
@@ -75,7 +80,14 @@ const LatestAuction = ({
 	)
 }
 
-const Auction = ({ assetID, title, desiredPrice, url = '', fullAuction }) => {
+const Auction = ({
+	assetContract,
+	title,
+	desiredPrice,
+	url = '',
+	fullAuction,
+	assetID = '',
+}) => {
 	const { standardUnit, joinAuction } = useReach()
 	const auctionNFTRef = useRef()
 
@@ -102,8 +114,11 @@ const Auction = ({ assetID, title, desiredPrice, url = '', fullAuction }) => {
 				console.log('No image url found 🥱')
 			}
 		}
-		fetchAssetMetadata(assetID)
-	}, [assetID])
+		// fetchAssetMetadata(assetContract)
+		if (process.env.REACT_APP_REACH_CONNECTOR_MODE !== 'ETH')
+			fetchAssetMetadata(assetContract)
+		else setPfps([auctionNFTRef, assetID, assetContract, true])
+	}, [assetContract, assetID])
 
 	return (
 		<div
@@ -179,7 +194,8 @@ const Buy = () => {
 								<LatestAuction
 									key={i}
 									fullAuction={el}
-									assetID={el.tokenId}
+									assetID={el.tokenID}
+									assetContract={el.tokenContract}
 									title={el.title}
 									desiredPrice={el.price}
 									description={el.description}
@@ -208,7 +224,8 @@ const Buy = () => {
 						<Auction
 							key={i}
 							fullAuction={el}
-							assetID={el.tokenId}
+							assetID={el.tokenID}
+							assetContract={el.tokenContract}
 							title={el.title}
 							desiredPrice={el.price}
 							description={el.description}

@@ -9,7 +9,7 @@ const state = Bytes(20)
 
 export const main = Reach.App(() => {
 	const Admin = Participant('Admin', {
-		deployed: Fun([Contract],Null)
+		deployed: Fun([Contract], Null),
 	})
 
 	const objectRep = Struct([
@@ -20,7 +20,8 @@ export const main = Reach.App(() => {
 		['title', Bytes(20)],
 		['description', Bytes(80)],
 		['price', UInt],
-		['tokenId', Token],
+		['tokenContract', Token],
+		['tokenID', UInt],
 	])
 
 	const endResponse = Struct([
@@ -37,7 +38,7 @@ export const main = Reach.App(() => {
 
 	const Auction = Events({
 		end: [UInt, UInt, UInt],
-		create: [UInt, Contract, UInt, Address, Bytes(20), Bytes(80), UInt, Token],
+		create: [UInt, Contract, UInt, Address, Bytes(20), Bytes(80), UInt, Token, UInt],
 		passAddress: [Address],
 	})
 
@@ -66,7 +67,8 @@ export const main = Reach.App(() => {
 				auctionObject.title,
 				auctionObject.description,
 				auctionObject.price,
-				auctionObject.tokenId
+				auctionObject.tokenContract,
+				auctionObject.tokenID
 			)
 			return auctionID
 		})

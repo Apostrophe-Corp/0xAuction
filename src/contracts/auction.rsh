@@ -14,7 +14,8 @@ export const main = Reach.App(() => {
 	const Seller = Participant('Seller', {
 		getAuction: Object({
 			id: UInt,
-			tokenId: Token,
+			tokenContract: Token,
+			tokenID: UInt,
 			deadline: UInt,
 			price: UInt,
 			owner: Address,
@@ -43,7 +44,7 @@ export const main = Reach.App(() => {
 
 	const Auction = Events({
 		log: [state, UInt, UInt],
-		created: [UInt, Contract, UInt, Address, Bytes(20), Bytes(80), UInt, Token],
+		created: [UInt, Contract, UInt, Address, Bytes(20), Bytes(80), UInt, Token, UInt],
 		down: [state, UInt, UInt, Address, Contract, UInt],
 		outcome: [state, state, UInt, Address, Address, Token],
 	})
@@ -56,11 +57,11 @@ export const main = Reach.App(() => {
 	init()
 
 	Seller.only(() => {
-		const { tokenId, ...auctionInfo } = declassify(interact.getAuction)
+		const { tokenContract, ...auctionInfo } = declassify(interact.getAuction)
 	})
-	Seller.publish(tokenId, auctionInfo)
+	Seller.publish(tokenContract, auctionInfo)
 	commit()
-	Seller.pay([[amt, tokenId]])
+	Seller.pay([[amt, tokenContract]])
 
 	const createdAt = thisConsensusTime()
 
@@ -72,7 +73,8 @@ export const main = Reach.App(() => {
 		auctionInfo.title,
 		auctionInfo.description,
 		auctionInfo.price,
-		tokenId
+		tokenContract,
+		auctionInfo.tokenID
 	)
 
 	const [timeRemaining, keepGoing] = makeDeadline(auctionInfo.deadline)
@@ -83,7 +85,7 @@ export const main = Reach.App(() => {
 		0,
 		true,
 	])
-		.invariant(balance(tokenId) == amt)
+		.invariant(balance(tokenContract) == amt)
 		.invariant(balance() == (isFirstBid ? 0 : lastPrice))
 		.while(keepGoing() && keepBidding)
 		.define(() => {
@@ -151,7 +153,7 @@ export const main = Reach.App(() => {
 		.define(() => {
 			AuctionView.awaitingConfirmation.set(awaitingDecision)
 		})
-		.invariant(balance(tokenId) == balance(tokenId))
+		.invariant(balance(tokenContract) == balance(tokenContract))
 		.while(awaitingDecision)
 		.api(
 			Auctioneer.acceptSale,
@@ -160,7 +162,7 @@ export const main = Reach.App(() => {
 			},
 			() => 0,
 			(notify) => {
-				transfer(balance(tokenId), tokenId).to(highestBidder)
+				transfer(balance(tokenContract), tokenContract).to(highestBidder)
 				transfer(balance()).to(Seller)
 				notify(true)
 				Auction.outcome(
@@ -169,7 +171,7 @@ export const main = Reach.App(() => {
 					lastPrice,
 					Seller,
 					highestBidder,
-					tokenId
+					tokenContract
 				)
 				return false
 			}
@@ -181,7 +183,7 @@ export const main = Reach.App(() => {
 			},
 			() => 0,
 			(notify) => {
-				transfer(balance(tokenId), tokenId).to(Seller)
+				transfer(balance(tokenContract), tokenContract).to(Seller)
 				transfer(balance()).to(highestBidder)
 				notify(false)
 				Auction.outcome(
@@ -190,14 +192,14 @@ export const main = Reach.App(() => {
 					lastPrice,
 					Seller,
 					highestBidder,
-					tokenId
+					tokenContract
 				)
 				return false
 			}
 		)
 		.timeout(relativeTime(DEADLINE), () => {
 			Seller.publish()
-			transfer(balance(tokenId), tokenId).to(highestBidder)
+			transfer(balance(tokenContract), tokenContract).to(highestBidder)
 			transfer(balance()).to(Seller)
 			Auction.outcome(
 				state.pad('accepted'),
@@ -205,11 +207,11 @@ export const main = Reach.App(() => {
 				lastPrice,
 				Seller,
 				highestBidder,
-				tokenId
+				tokenContract
 			)
 			return false
 		})
-	transfer(balance(tokenId), tokenId).to(highestBidder)
+	transfer(balance(tokenContract), tokenContract).to(highestBidder)
 	transfer(balance()).to(Seller)
 	commit()
 	exit()

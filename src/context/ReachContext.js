@@ -22,9 +22,17 @@ const algoExplorerURI = {
 	MainNet: 'https://algoexplorer.io',
 }['TestNet']
 
+const polyScanURI = 'https://mumbai.polygonscan.com'
+
 const deadline = 10000
 
-const reach = loadStdlib({...process.env, REACH_CONNECTOR_MODE: 'ALGO', REACH_NO_WARN: 'Y'})
+// const reach = loadStdlib({...process.env, REACH_CONNECTOR_MODE: 'ALGO', REACH_NO_WARN: 'Y'})
+
+const reach = loadStdlib({
+	...process.env,
+	REACH_NO_WARN: 'Y',
+	REACH_CONNECTOR_MODE: 'ETH',
+})
 
 export const ReachContext = React.createContext()
 
@@ -146,6 +154,49 @@ const ReachContextProvider = ({ children }) => {
 
 	const sleep = (m) => new Promise((resolve) => setTimeout(resolve, m))
 
+	const connectToWalletETH = async () => {
+		try {
+			reach.setWalletFallback(
+				reach.walletFallback({
+					providerEnv: {
+						ETH_NODE_URI: 'https://matic-mubai.chainstacklabs.com',
+					},
+				})
+			)
+			const account = await reach.getDefaultAccount()
+			// const adminConn = account.contract(
+			// 	adminCtc,
+			// 	JSON.parse(process.env.REACT_APP_ADMIN_CONTRACT_INFO)
+			// )
+			account.setGasLimit(5000000)
+			setUser({
+				account,
+				balance: async (tokenContract = null) => {
+					const balAtomic = tokenContract
+						? await reach.balanceOf(account, tokenContract)
+						: await reach.balanceOf(account)
+					const balance = reach.formatCurrency(balAtomic, 4)
+					return balance
+				},
+				address: reach.formatAddress(account.getAddress()),
+			})
+			// setAdminConnection(adminConn)
+			stopWaiting()
+			alertThis({
+				message: 'Connection to wallet was successful',
+				forConfirmation: false,
+			})
+		} catch (error) {
+			console.error({ error })
+			stopWaiting(false)
+			alertThis({
+				message:
+					'An error occurred, unable to connect to wallet. Please try again',
+				forConfirmation: false,
+			})
+		}
+	}
+
 	const connectToWallet = async (
 		walletPreference,
 		mnemonic = false,
@@ -182,8 +233,8 @@ const ReachContextProvider = ({ children }) => {
 				: await instantReach.getDefaultAccount()
 			setUser({
 				account,
-				balance: async (tokenID = null) => {
-					const balAtomic = await instantReach.balanceOf(account, tokenID)
+				balance: async (tokenContract = null) => {
+					const balAtomic = await instantReach.balanceOf(account, tokenContract)
 					const balance = instantReach.formatCurrency(balAtomic, 4)
 					return balance
 				},
@@ -222,7 +273,8 @@ const ReachContextProvider = ({ children }) => {
 				title: noneNull(what[4]),
 				description: noneNull(what[5]),
 				price: parseInt(what[6]),
-				tokenId: parseInt(what[7]),
+				tokenContract: reach.isBigNumber(what[7]) ? parseInt(what[7]) : what[7],
+				tokenID: parseInt(what[8]),
 				yourBid: 0,
 				optIn: false,
 				liveBid: 0,
@@ -392,7 +444,9 @@ const ReachContextProvider = ({ children }) => {
 			})
 
 			if (viewToken) {
-				window.open(`${algoExplorerURI}/asset/${launchedToken.id}`, '_blank')
+				if (process.env.REACT_APP_REACH_CONNECTOR_MODE === 'ALGO')
+					window.open(`${algoExplorerURI}/asset/${launchedToken.id}`, '_blank')
+				else window.open(`${polyScanURI}/address/${launchedToken.id}`, '_blank')
 			}
 		} catch (error) {
 			console.log({ error })
@@ -414,7 +468,8 @@ const ReachContextProvider = ({ children }) => {
 				title: what[4],
 				description: what[5],
 				price: parseInt(what[6]),
-				tokenId: parseInt(what[7]),
+				tokenContract: reach.isBigNumber(what[7]) ? parseInt(what[7]) : what[7],
+				tokenID: parseInt(what[8])
 			})
 		} catch (error) {
 			console.log({ error })
@@ -586,6 +641,19 @@ const ReachContextProvider = ({ children }) => {
 							'_blank'
 						)
 					}
+
+					if (viewToken) {
+						if (reach.isBigNumber(what[5])) {
+							const id = reach.bigNumberToNumber(what[5])
+							if (process.env.REACT_APP_REACH_CONNECTOR_MODE === 'ALGO')
+								window.open(`${algoExplorerURI}/asset/${id}`, '_blank')
+							else window.open(`${polyScanURI}/token/${id}`, '_blank')
+						} else {
+							if (process.env.REACT_APP_REACH_CONNECTOR_MODE === 'ALGO')
+								window.open(`${algoExplorerURI}/asset/${what[5]}`, '_blank')
+							else window.open(`${polyScanURI}/token/${what[5]}`, '_blank')
+						}
+					}
 				} else {
 					alertThis({
 						message: `'${noneNull(
@@ -630,17 +698,19 @@ const ReachContextProvider = ({ children }) => {
 
 	const createAuction = async (auctionParams) => {
 		startWaiting()
-		const [, nftBal] = await reach.balancesOf(user.account, [
-			null,
-			auctionParams.tokenId,
-		])
-		if (!parseInt(nftBal)) {
-			stopWaiting()
-			alertThis({
-				message: 'You do not own this asset',
-				forConfirmation: false,
-			})
-			return
+		if (process.env.REACT_APP_REACH_CONNECTOR_MODE === 'ALGO') {
+			const [, nftBal] = await reach.balancesOf(user.account, [
+				null,
+				auctionParams.tokenContract,
+			])
+			if (!parseInt(nftBal)) {
+				stopWaiting()
+				alertThis({
+					message: 'You do not own this asset',
+					forConfirmation: false,
+				})
+				return
+			}
 		}
 
 		let id = 0
@@ -657,6 +727,7 @@ const ReachContextProvider = ({ children }) => {
 			return
 		}
 		const auctionInfo = {
+			tokenID: 0,
 			...auctionParams,
 			id: parseInt(id),
 			deadline,
@@ -704,8 +775,7 @@ const ReachContextProvider = ({ children }) => {
 					console.log({ error })
 					stopWaiting(false)
 					alertThis({
-						message:
-							'Unable to inform OxAuction of the close of this auction',
+						message: 'Unable to inform OxAuction of the close of this auction',
 						forConfirmation: false,
 					})
 				}
@@ -734,28 +804,33 @@ const ReachContextProvider = ({ children }) => {
 			prompt: true,
 		})
 		startWaiting()
-		const userBal = reach.formatCurrency(await reach.balanceOf(user.account), 4)
-		const resultingBalance = userBal - bid
-		const minimumBalance = reach.formatCurrency(
-			await reach.minimumBalanceOf(user.account),
-			4
-		)
-		// console.log(resultingBalance, minimumBalance)
-		if (resultingBalance < minimumBalance) {
-			stopWaiting()
-			await alertThis({
-				message: `Your balance: ${userBal} ${standardUnit}, is insufficient for this bid due to the minimum balance allowed on your account after a transfer: ${minimumBalance} ${standardUnit}`,
-				forConfirmation: false,
-			})
-			await alertThis({
-				message:
-					'At this point, would you prefer to exit this auction? *You will still be notified of the outcome at the close of the auction',
-				accept: 'Stay',
-				decline: 'Exit',
-			}).then((decision) => {
-				setShowBuyer(decision)
-			})
-			return
+		if (process.env.REACT_APP_REACH_CONNECTOR_MODE === 'ALGO') {
+			const userBal = reach.formatCurrency(
+				await reach.balanceOf(user.account),
+				4
+			)
+			const resultingBalance = userBal - bid
+			const minimumBalance = reach.formatCurrency(
+				await reach.minimumBalanceOf(user.account),
+				4
+			)
+			// console.log(resultingBalance, minimumBalance)
+			if (resultingBalance < minimumBalance) {
+				stopWaiting()
+				await alertThis({
+					message: `Your balance: ${userBal} ${standardUnit}, is insufficient for this bid due to the minimum balance allowed on your account after a transfer: ${minimumBalance} ${standardUnit}`,
+					forConfirmation: false,
+				})
+				await alertThis({
+					message:
+						'At this point, would you prefer to exit this auction? *You will still be notified of the outcome at the close of the auction',
+					accept: 'Stay',
+					decline: 'Exit',
+				}).then((decision) => {
+					setShowBuyer(decision)
+				})
+				return
+			}
 		}
 		const auctionToBeEdited = auctions.filter(
 			(el) => Number(el.id) === auctionID
@@ -849,7 +924,7 @@ const ReachContextProvider = ({ children }) => {
 			})
 			setCurrentAuction(auctionInfo.id)
 			try {
-				await user.account.tokenAccept(auctionInfo.tokenId)
+				await user.account.tokenAccept(auctionInfo.tokenContract)
 				alertThis({
 					message: 'Opt-In confirmed',
 					forConfirmation: false,
@@ -886,17 +961,22 @@ const ReachContextProvider = ({ children }) => {
 			decline: 'Forfeit',
 		})
 		if (agree) {
-			const userBal = reach.formatCurrency(
-				await reach.balanceOf(user.account),
-				4
-			)
-			const resultingBalance = userBal - 1 // Opt-In fee
-			const minimumBalance = reach.formatCurrency(
-				await reach.minimumBalanceOf(user.account),
-				4
-			)
+			let resultingBalance
+			let minimumBalance
+			let userBal
+			if (process.env.REACT_APP_REACH_CONNECTOR_MODE === 'ALGO') {
+				userBal = reach.formatCurrency(await reach.balanceOf(user.account), 4)
+				resultingBalance = userBal - 1 // Opt-In fee
+				minimumBalance = reach.formatCurrency(
+					await reach.minimumBalanceOf(user.account),
+					4
+				)
+			}
 			// console.log(resultingBalance, minimumBalance)
-			if (userBal && resultingBalance > minimumBalance) {
+			if (
+				process.env.REACT_APP_REACH_CONNECTOR_MODE === 'ETH' ||
+				(userBal && resultingBalance > minimumBalance)
+			) {
 				startWaiting()
 				try {
 					const auctionToBeEdited = auctions.filter(
@@ -942,7 +1022,10 @@ const ReachContextProvider = ({ children }) => {
 	const ReachContextValue = {
 		standardUnit,
 		user,
-		connectToWallet,
+		connectToWallet:
+			process.env.REACT_APP_REACH_CONNECTOR_MODE === 'ETH'
+				? connectToWalletETH
+				: connectToWallet,
 		view,
 		setView,
 		contract,
