@@ -126,23 +126,27 @@ const ReachContextProvider = ({ children }) => {
 			setShowPreloader(display)
 			if (display) setProcessing(display)
 		}
+		let waiter = undefined
 		try {
 			await new Promise((resolve, reject) => {
 				waitingPro['resolve'] = resolve
 				waitingPro['reject'] = reject
 				shouldDisplay(true)
-				setTimeout(() => {
+				waiter = setTimeout(() => {
 					stopWaiting(false)
 					alertThis({
 						message: 'The process took too long, unable to verify progress',
 						forConfirmation: false,
 					})
+					clearTimeout(waiter)
 				}, 120000)
 			})
 			shouldDisplay(false)
 		} catch (error) {
 			shouldDisplay(false)
 		}
+		clearTimeout(waiter)
+		waiter = undefined
 	}
 
 	const stopWaiting = (mode = true) => {
