@@ -1,4 +1,4 @@
-# Copyright 2022 Owolabi Adeyemi and Emmanuel Agbavwe
+# Copyright 2022 Emmanuel Agbavwe
 
 Licensed under the [Apache License, Version 2.0](./LICENSE);
 you may not use this project except in compliance with the License.

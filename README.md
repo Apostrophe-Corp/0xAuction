@@ -92,9 +92,7 @@ We encourage you to play around with the dApp and create NFTs, auction NFTs or b
 ![Buyer No-Opt](project_images/buyer_not_opt_in.png)
 ![Buyer No-Opt](project_images/buyer_opt_in.png)
 
-## Authors
-
-- [Owolabi Adeyemi](https://github.com/goonerlabs)
+## Author
 
 - [Emmanuel Agbavwe](https://github.com/Aro1914)
 
