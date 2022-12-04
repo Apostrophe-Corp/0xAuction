@@ -183,8 +183,23 @@ const ReachContextProvider = ({ children }) => {
 			// 	adminCtc,
 			// 	JSON.parse(process.env.REACT_APP_ADMIN_CONTRACT_INFO)
 			// )
-			account.setGasLimit(7920027)
-			setUser({
+			account.setGasLimit(7920027)			
+
+			if(process.env.REACT_APP_ADMIN_CONTRACT_INFO){
+				try {
+				const ctc = account.contract(mainCtc, JSON.parse(process.env.REACT_APP_ADMIN_CONTRACT_INFO))
+				setContractInstance(ctc)
+				setContract({ ctcInfoStr: process.env.REACT_APP_ADMIN_CONTRACT_INFO })
+				
+				ctc.events.create.monitor(postAuction)
+				ctc.events.end.monitor(dropAuction)
+				ctc.events.passAddress.monitor(setAdmin)
+			} catch (error) {
+				console.log({ error })
+			}
+		}
+
+setUser({
 				account,
 				balance: async (tokenContract = null) => {
 					const balAtomic = tokenContract
@@ -195,6 +210,7 @@ const ReachContextProvider = ({ children }) => {
 				},
 				address: reach.formatAddress(account.getAddress()),
 			})
+
 			// setAdminConnection(adminConn)
 			stopWaiting()
 			alertThis({
@@ -254,18 +270,33 @@ const ReachContextProvider = ({ children }) => {
 			const account = mnemonic
 				? await instantReach.newAccountFromMnemonic(secret)
 				: await instantReach.getDefaultAccount()
-			setUser({
+			if(process.env.REACT_APP_ADMIN_CONTRACT_INFO){
+				try {
+				const ctc = account.contract(mainCtc, JSON.parse(process.env.REACT_APP_ADMIN_CONTRACT_INFO))
+				setContractInstance(ctc)
+				setContract({ ctcInfoStr: process.env.REACT_APP_ADMIN_CONTRACT_INFO })
+				
+				ctc.events.create.monitor(postAuction)
+				ctc.events.end.monitor(dropAuction)
+				ctc.events.passAddress.monitor(setAdmin)
+			} catch (error) {
+				console.log({ error })
+			}
+		}
+
+setUser({
 				account,
-				balance: async (tokenID = null) => {
-					const balAtomic = tokenID
-						? await reach.balanceOf(account, tokenID)
+				balance: async (tokenContract = null) => {
+					const balAtomic = tokenContract
+						? await reach.balanceOf(account, tokenContract)
 						: await reach.balanceOf(account)
 					const balance = reach.formatCurrency(balAtomic, 4)
 					return balance
 				},
-				address: instantReach.formatAddress(account.getAddress()),
+				address: reach.formatAddress(account.getAddress()),
 			})
-			setShowConnectAccount(false)
+
+			// setAdminConnection(adminConn)
 			stopWaiting()
 			alertThis({
 				message: 'Connection to wallet was successful',

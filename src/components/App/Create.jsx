@@ -113,13 +113,13 @@ const Create = () => {
 					<h1 className={cf(s.w480_100, s.w360_100, cr8.callOutMain)}>
 						{process.env.REACT_APP_REACH_CONNECTOR_MODE === 'ALGO'
 							? 'Create the next Bored Ape or Cyberpunks. Become the next Beeple!'
-							: 'Mint your Project tokens, be it Loyalty, Governance, Liquidity'}
+							: 'Mint your Project tokens in few simple steps'}
 					</h1>
 					<h2 className={cf(cr8.callOutSub)}>
 						{process.env.REACT_APP_REACH_CONNECTOR_MODE === 'ALGO'
-							? 'Create the NFT of your dreams'
-							: 'Make your Project complete'}{' '}
-						in a few simple steps by simply filling out the form
+							? 'Create the NFT of your dreams in a few simple steps by simply filling out the form'
+							: "Focus on your project, and we'll handle your token creation for free"}
+						
 					</h2>
 				</div>
 				<div
@@ -143,7 +143,9 @@ const Create = () => {
 							ref={previewRef}
 						></div>
 						<span className={cf(cr8.sideNote)}>
-							Preview only available for image NFTs
+							{process.env.REACT_APP_REACH_CONNECTOR_MODE === 'ALGO'
+								? 'Preview only available for image NFTs'
+								: ''}
 						</span>
 						<label
 							className={cf(cr8.formLabel)}

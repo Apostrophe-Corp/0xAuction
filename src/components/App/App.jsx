@@ -153,7 +153,7 @@ const App = () => {
 					>
 						<div className={cf(app.cardAction)}>Sell</div>
 						<div className={cf(s.flex, s.flex_dColumn, app.cardPurpose)}>
-							<div className={cf(app.cardPurposeText)}>Auction Assets</div>
+							<div className={cf(app.cardPurposeText)}>Auction NFTs</div>
 							<div className={cf(app.cardDescription)}>
 								Start your very own auction to sell your collectibles to the
 								highest bidder.
@@ -191,7 +191,7 @@ const App = () => {
 					>
 						<div className={cf(app.cardAction)}>Buy</div>
 						<div className={cf(s.flex, s.flex_dColumn, app.cardPurpose)}>
-							<div className={cf(app.cardPurposeText)}>Purchase Assets</div>
+							<div className={cf(app.cardPurposeText)}>Purchase NFTs</div>
 							<div className={cf(app.cardDescription)}>
 								Browse through our vast pool of Auctioneers and bid on any
 								collectibles you like.
@@ -244,7 +244,7 @@ const App = () => {
 				>
 					<div className={cf(s.wMax, app.joinComTheme)}>
 						<h1 className={cf(s.wMax, s.p10, s.m0, app.joinComThemeText)}>
-							Trading has never been this easy.
+							Trading collectibles has never been this easy.
 						</h1>
 					</div>
 					<div className={cf(s.wMax, app.joinComDescription)}>
