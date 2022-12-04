@@ -85,12 +85,6 @@ We encourage you to play around with the dApp and create NFTs, auction NFTs or b
 
 ![Landing page](project_images/hero_view.png)  
 ![Features](project_images/feature_view.png)
-![Sell](project_images/auction_view.png)
-![Showcase](project_images/buy_latest_view.png)
-![Auction Pool](project_images/buy_all_view.png)
-![Seller](project_images/seller_view.png)
-![Buyer No-Opt](project_images/buyer_not_opt_in.png)
-![Buyer No-Opt](project_images/buyer_opt_in.png)
 
 ## Author
 
