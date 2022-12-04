@@ -134,7 +134,7 @@ const ReachContextProvider = ({ children }) => {
 						message: 'The process took too long, unable to verify progress',
 						forConfirmation: false,
 					})
-				}, 30000)
+				}, 120000)
 			})
 			shouldDisplay(false)
 		} catch (error) {
