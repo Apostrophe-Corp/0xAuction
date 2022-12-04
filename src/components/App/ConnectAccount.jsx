@@ -16,7 +16,7 @@ const ConnectAccount = () => {
 	}
 
 	const copyToClipboardCtc = async (e) => {
-		navigator.clipboard.writeText(contract)
+		navigator.clipboard.writeText(contract.ctcInfoStr)
 		alertThis({
 			message: 'Copied to clipboard',
 			forConfirmation: false,
@@ -144,12 +144,12 @@ const ConnectAccount = () => {
 						ca.addressContainer
 					)}
 				>
-					{contract && (
+					{contract.ctcInfoStr && (
 						<button
 							onClick={copyToClipboardCtc}
 							className={cf(s.wMax, s.dInlineBlock, ca.connectTitle)}
 						>
-							{contract}
+							{contract.ctcInfoStr}
 						</button>
 					)}
 				</div>
