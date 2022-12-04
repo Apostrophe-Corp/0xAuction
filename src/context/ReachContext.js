@@ -438,7 +438,13 @@ const ReachContextProvider = ({ children }) => {
 			)
 			stopWaiting()
 			const viewToken = await alertThis({
-				message: `NFT successfully minted with ID: ${launchedToken.id}. Would you like to view this asset on AlgoExplorer.io now?`,
+				message: `NFT successfully minted with ID: ${
+					launchedToken.id
+				}. Would you like to view this asset on ${
+					process.env.REACT_APP_REACH_CONNECTOR_MODE === 'ALGO'
+						? 'AlgoExplorer.io'
+						: 'PolygonScan.com'
+				}?`,
 				accept: 'Yes',
 				decline: 'No',
 			})
@@ -446,7 +452,7 @@ const ReachContextProvider = ({ children }) => {
 			if (viewToken) {
 				if (process.env.REACT_APP_REACH_CONNECTOR_MODE === 'ALGO')
 					window.open(`${algoExplorerURI}/asset/${launchedToken.id}`, '_blank')
-				else window.open(`${polyScanURI}/address/${launchedToken.id}`, '_blank')
+				else window.open(`${polyScanURI}/token/${launchedToken.id}`, '_blank')
 			}
 		} catch (error) {
 			console.log({ error })
@@ -631,16 +637,10 @@ const ReachContextProvider = ({ children }) => {
 						)}, at the cost of ${reach.formatCurrency(
 							what[2],
 							4
-						)} ${standardUnit} 🎉. Proceed to view on AlgoExplorer.io?`,
+						)} ${standardUnit} 🎉. Proceed to view on ${process.env.REACT_APP_REACH_CONNECTOR_MODE === 'ALGO'? 'AlgoExplorer.io': 'PolygonScan.com'}?`,
 						accept: 'Yes',
 						decline: 'No',
 					})
-					if (viewToken) {
-						window.open(
-							`${algoExplorerURI}/asset/${parseInt(what[5])}`,
-							'_blank'
-						)
-					}
 
 					if (viewToken) {
 						if (reach.isBigNumber(what[5])) {
