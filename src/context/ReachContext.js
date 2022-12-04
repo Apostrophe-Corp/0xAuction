@@ -128,6 +128,13 @@ const ReachContextProvider = ({ children }) => {
 				waitingPro['resolve'] = resolve
 				waitingPro['reject'] = reject
 				shouldDisplay(true)
+				setTimeout(() => {
+					stopWaiting(false)
+					alertThis({
+						message: 'The process took too long, unable to verify progress',
+						forConfirmation: false
+					})
+				}, 30000)
 			})
 			shouldDisplay(false)
 		} catch (error) {
@@ -169,7 +176,7 @@ const ReachContextProvider = ({ children }) => {
 			// 	adminCtc,
 			// 	JSON.parse(process.env.REACT_APP_ADMIN_CONTRACT_INFO)
 			// )
-			account.setGasLimit(10000000)
+			account.setGasLimit(7920027)
 			setUser({
 				account,
 				balance: async (tokenContract = null) => {
