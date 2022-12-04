@@ -5,10 +5,18 @@ import { useReach } from '../../hooks'
 import { cf } from '../../utils'
 
 const ConnectAccount = () => {
-	const { setShowConnectAccount, connectToWallet, user, alertThis } = useReach()
+	const { setShowConnectAccount, connectToWallet, user, alertThis, contract } = useReach()
 
 	const copyToClipboard = async (e) => {
 		navigator.clipboard.writeText(user.address)
+		alertThis({
+			message: 'Copied to clipboard',
+			forConfirmation: false,
+		})
+	}
+
+	const copyToClipboardCtc = async (e) => {
+		navigator.clipboard.writeText(contract)
 		alertThis({
 			message: 'Copied to clipboard',
 			forConfirmation: false,
@@ -126,6 +134,25 @@ const ConnectAccount = () => {
 						</div>
 					</div>
 				)}
+				<div
+					className={cf(
+						s.wMax,
+						s.flex,
+						s.flexCenter,
+						s.p10,
+						s.m10,
+						ca.addressContainer
+					)}
+				>
+					{contract && (
+						<button
+							onClick={copyToClipboardCtc}
+							className={cf(s.wMax, s.dInlineBlock, ca.connectTitle)}
+						>
+							{contract}
+						</button>
+					)}
+				</div>
 			</div>
 		</div>
 	)
