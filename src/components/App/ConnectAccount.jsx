@@ -1,7 +1,8 @@
 import React from 'react'
 import s from '../../styles/Shared.module.css'
 import ca from '../../styles/ConnectAccount.module.css'
-import { useReach, fmtClasses as cf } from '../../hooks'
+import { useReach } from '../../hooks'
+import { cf } from '../../utils'
 
 const ConnectAccount = () => {
 	const { setShowConnectAccount, connectToWallet, user, alertThis, contract } =
@@ -15,8 +16,8 @@ const ConnectAccount = () => {
 		})
 	}
 
-	const copyCtcToClipboard = async (e) => {
-		navigator.clipboard.writeText(contract?.ctcInfoStr)
+	const copyToClipboardCtc = async (e) => {
+		navigator.clipboard.writeText(contract.ctcInfoStr)
 		alertThis({
 			message: 'Copied to clipboard',
 			forConfirmation: false,
@@ -56,6 +57,7 @@ const ConnectAccount = () => {
 					)}
 				</div>
 				<div className={cf(s.w50, s.w480_100, s.w360_100, ca.wallet)}></div>
+
 				<div
 					className={cf(
 						s.w50,
@@ -76,7 +78,7 @@ const ConnectAccount = () => {
 						<div className={cf(ca.walletIcon, ca.pera)}></div>
 						<div className={cf(s.wMax, ca.walletName)}>
 							<span className={cf(s.wMax, s.dInlineBlock, ca.walletNameText)}>
-								Pera Wallet
+								Pera Algo Wallet
 							</span>
 						</div>
 					</div>
@@ -102,11 +104,25 @@ const ConnectAccount = () => {
 						<div className={cf(ca.walletIcon, ca.other)}></div>
 						<div className={cf(s.wMax, ca.walletName)}>
 							<span className={cf(s.wMax, s.dInlineBlock, ca.walletNameText)}>
-								Other Wallet
+								WalletConnect
+							</span>
+						</div>
+					</div>
+					<div
+						className={cf(s.flex, s.flexCenter, ca.connectOption)}
+						onClick={() => {
+							connectToWallet('Mnemonic')
+						}}
+					>
+						<div className={cf(ca.walletIcon)}></div>
+						<div className={cf(s.wMax, ca.walletName)}>
+							<span className={cf(s.wMax, s.dInlineBlock, ca.walletNameText)}>
+								Connect with Mnemonic
 							</span>
 						</div>
 					</div>
 				</div>
+
 				<div
 					className={cf(
 						s.wMax,
@@ -117,12 +133,12 @@ const ConnectAccount = () => {
 						ca.addressContainer
 					)}
 				>
-					{contract?.ctcInfoStr && (
+					{contract.ctcInfoStr && (
 						<button
-							onClick={copyCtcToClipboard}
+							onClick={copyToClipboardCtc}
 							className={cf(s.wMax, s.dInlineBlock, ca.connectTitle)}
 						>
-							{contract?.ctcInfoStr}
+							{contract.ctcInfoStr}
 						</button>
 					)}
 				</div>
