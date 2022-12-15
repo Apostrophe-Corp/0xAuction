@@ -1,15 +1,13 @@
-import React, { useState, useEffect, useRef } from 'react'
-import s from '../../styles/Shared.module.css'
-import alt from '../../styles/Alert.module.css'
-import { useReach, fmtClasses as cf } from '../../hooks'
+import React, { useEffect, useState } from 'react';
+import { fmtClasses as cf, useReach } from '../../hooks';
+import alt from '../../styles/Alert.module.css';
+import s from '../../styles/Shared.module.css';
 
 const Alert = () => {
 	const {
 		alertInfo,
-		setAlertInfo,
 		showAlert,
 		setShowAlert,
-		sleep,
 		promiseOfConfirmation,
 	} = useReach()
 

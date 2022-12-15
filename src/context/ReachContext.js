@@ -970,6 +970,7 @@ const ReachContextProvider = ({ children }) => {
 		setView,
 		contract,
 		promiseOfConfirmation,
+		contractInstance,
 		setPromiseOfConfirmation,
 		alertInfo,
 		setAlertInfo,
