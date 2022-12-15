@@ -356,7 +356,7 @@ const App = () => {
 						<div
 							className={app.comSocialIcon}
 							onClick={() => {
-								window.open(`https://bit.ly/3BnPyKd`, '_blank')
+								window.open(`https://discord.gg/PPmxQJYg`, '_blank')
 							}}
 						>
 							<svg
