@@ -26,6 +26,8 @@ const algoExplorerURI = {
 
 const deadline = 10000
 
+const providerEnv = 'TestNet'
+
 const reach = loadStdlib({ ...process.env, REACH_NO_WARN: 'Y' })
 
 export const ReachContext = React.createContext()
@@ -156,24 +158,32 @@ const ReachContextProvider = ({ children }) => {
 		delete window.algorand
 		const instantReach = loadStdlib(process.env)
 		switch (walletPreference) {
+			case 'PeraConnect':
+				instantReach.setWalletFallback(
+					instantReach.walletFallback({
+						providerEnv,
+						WalletConnect: MakePeraConnect(PeraWalletConnect),
+					})
+				)
+				break
 			case 'MyAlgoConnect':
 				instantReach.setWalletFallback(
-					instantReach.walletFallback({ providerEnv: 'TestNet', MyAlgoConnect })
+					instantReach.walletFallback({ providerEnv, MyAlgoConnect })
 				)
 				break
 			case 'WalletConnect':
 				instantReach.setWalletFallback(
-					instantReach.walletFallback({ providerEnv: 'TestNet', WalletConnect })
+					instantReach.walletFallback({ providerEnv, WalletConnect })
 				)
 				break
-			case 'PeraConnect':
+			case 'Mnemonic':
 				instantReach.setWalletFallback(
-					instantReach.walletFallback({ providerEnv: 'TestNet', PeraConnect })
+					instantReach.walletFallback({ providerEnv, PeraConnect })
 				)
 				break
 			default:
 				instantReach.setWalletFallback(
-					instantReach.walletFallback({ providerEnv: 'TestNet', WalletConnect })
+					instantReach.walletFallback({ providerEnv, WalletConnect })
 				)
 				break
 		}
@@ -181,16 +191,32 @@ const ReachContextProvider = ({ children }) => {
 			const account = mnemonic
 				? await instantReach.newAccountFromMnemonic(secret)
 				: await instantReach.getDefaultAccount()
-			setUser({
+			if(process.env.REACT_APP_ADMIN_CONTRACT_INFO){
+				try {
+				const ctc = account.contract(mainCtc, JSON.parse(process.env.REACT_APP_ADMIN_CONTRACT_INFO))
+				setContractInstance(ctc)
+				setContract({ ctcInfoStr: process.env.REACT_APP_ADMIN_CONTRACT_INFO })
+				
+				ctc.events.create.monitor(postAuction)
+				ctc.events.end.monitor(dropAuction)
+			} catch (error) {
+				console.log({ error })
+			}
+		}
+
+setUser({
 				account,
-				balance: async (tokenID = null) => {
-					const balAtomic = await instantReach.balanceOf(account, tokenID)
-					const balance = instantReach.formatCurrency(balAtomic, 4)
+				balance: async (tokenContract = null) => {
+					const balAtomic = tokenContract
+						? await reach.balanceOf(account, tokenContract)
+						: await reach.balanceOf(account)
+					const balance = reach.formatCurrency(balAtomic, 4)
 					return balance
 				},
-				address: instantReach.formatAddress(account.getAddress()),
+				address: reach.formatAddress(account.getAddress()),
 			})
-			setShowConnectAccount(false)
+
+			// setAdminConnection(adminConn)
 			stopWaiting()
 			alertThis({
 				message: 'Connection to wallet was successful',
