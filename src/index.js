@@ -1,7 +1,7 @@
-import * as AppViews from './src/components/App'
-import RenderViews, { renderDOM } from './src/layouts/renderViews'
-import ReachContextProvider from './src/context/ReachContext'
-import { fmtClasses } from './src/hooks'
+import * as AppViews from './components/App'
+import RenderViews, { renderDOM } from './layouts/renderViews'
+import ReachContextProvider from './context/ReachContext'
+import { fmtClasses } from './hooks'
 
 const Views = {
 	...AppViews,
