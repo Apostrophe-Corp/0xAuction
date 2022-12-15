@@ -1094,8 +1094,7 @@ const ReachContextProvider = ({ children }) => {
 						0xAuction
 					</div>
 					<div className={cf(s.wMax, app.registered)}>
-						0xAuction is the product of Apostrophe Corp. for the Algorand Green
-						House Bounty Hack.
+						Copyright &copy; Apostrophe Corp 2022.
 					</div>
 				</div>
 			</div>
