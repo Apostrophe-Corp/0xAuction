@@ -68,19 +68,19 @@ const ConnectAccount = () => {
 						ca.connect
 					)}
 				>
-					<div
-						className={cf(s.flex, s.flexCenter, ca.connectOption)}
-						onClick={() => {
-							connectToWallet('PeraConnect')
-						}}
-					>
-						<div className={cf(ca.walletIcon, ca.pera)}></div>
-						<div className={cf(s.wMax, ca.walletName)}>
-							<span className={cf(s.wMax, s.dInlineBlock, ca.walletNameText)}>
-								Pera Algo Wallet
-							</span>
-						</div>
-					</div>
+// 					<div
+// 						className={cf(s.flex, s.flexCenter, ca.connectOption)}
+// 						onClick={() => {
+// 							connectToWallet('PeraConnect')
+// 						}}
+// 					>
+// 						<div className={cf(ca.walletIcon, ca.pera)}></div>
+// 						<div className={cf(s.wMax, ca.walletName)}>
+// 							<span className={cf(s.wMax, s.dInlineBlock, ca.walletNameText)}>
+// 								Pera Algo Wallet
+// 							</span>
+// 						</div>
+// 					</div>
 					<div
 						className={cf(s.flex, s.flexCenter, ca.connectOption)}
 						onClick={() => {
