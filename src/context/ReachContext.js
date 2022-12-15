@@ -4,8 +4,10 @@ import {
 	loadStdlib,
 	ALGO_MyAlgoConnect as MyAlgoConnect,
 	ALGO_WalletConnect as WalletConnect,
+	ALGO_MakePeraConnect as MakePeraConnect,
 	ALGO_PeraConnect as PeraConnect,
 } from '@reach-sh/stdlib'
+import { PeraWalletConnect } from '@perawallet/connect'
 import * as auctionCtc from '../contracts/build/auction.main.mjs'
 import * as mainCtc from '../contracts/build/index.main.mjs'
 import { fmtClasses as cf } from '../hooks/fmtClasses'
