@@ -12,3 +12,4 @@ test_auction.rsh
 .vscode
 error_auction.rsh
 test_token.rsh
+temp/
