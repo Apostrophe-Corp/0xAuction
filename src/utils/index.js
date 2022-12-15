@@ -1,1 +1,1 @@
-export { stringToUint8Array } from './stringToUnit8Array.js'
+export { stringToUint8Array } from './stringToUint8Array'
