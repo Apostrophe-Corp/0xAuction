@@ -56,7 +56,7 @@ export const main = Reach.App(() => {
 		created: [UInt, Address],
 		bidSuccess: [UInt, UInt],
 		endSuccess: [UInt, UInt],
-		down: [UInt, UInt, Address, Contract, UInt],
+		down: [UInt, UInt, Address, Contract, UInt, state],
 		accepted: [state, UInt, Address, Address, Token],
 		rejected: [state, UInt, Address, Address, Token],
 	})
@@ -168,59 +168,71 @@ export const main = Reach.App(() => {
 	externalCalls.Auctions_ended(endRes)
 
 	const balAfter2ndCall = balance()
+	Auction.down(
+		id,
+		lastPrice,
+		Seller,
+		getContract(),
+		createdAt,
+		auctionInfo.title
+	)
 
-	Auction.down(id, lastPrice, Seller, getContract(), createdAt)
+	if (lastPrice > 0) {
+		const end = thisConsensusTime() + DEADLINE
 
-	const end = thisConsensusTime() + DEADLINE
+		const [awaitingDecision, agreed] = parallelReduce([true, true])
+			.invariant(balance(tokenId) == amt)
+			.invariant(balance() == balAfter2ndCall)
+			.while(thisConsensusTime() <= end && awaitingDecision)
+			.api(
+				Auctioneer.acceptSale,
+				() => {
+					check(this == Seller, 'You are not the Seller')
+				},
+				() => 0,
+				(notify) => {
+					notify(true)
+					return [false, true]
+				}
+			)
+			.api(
+				Auctioneer.rejectSale,
+				() => {
+					check(this == Seller, 'You are not the Seller')
+				},
+				() => 0,
+				(notify) => {
+					notify(false)
+					return [false, false]
+				}
+			)
 
-	const [awaitingDecision, agreed] = parallelReduce([true, true])
-		.invariant(balance(tokenId) == amt)
-		.invariant(balance() == balAfter2ndCall)
-		.while(thisConsensusTime() <= end && awaitingDecision)
-		.api(
-			Auctioneer.acceptSale,
-			() => {
-				check(this == Seller, 'You are not the Seller')
-			},
-			() => 0,
-			(notify) => {
-				notify(true)
-				return [false, true]
-			}
-		)
-		.api(
-			Auctioneer.rejectSale,
-			() => {
-				check(this == Seller, 'You are not the Seller')
-			},
-			() => 0,
-			(notify) => {
-				notify(false)
-				return [false, false]
-			}
-		)
-
-	if (agreed) {
-		transfer(balance(tokenId), tokenId).to(highestBidder)
-		transfer(balance()).to(Seller)
-		Auction.accepted(
-			auctionInfo.title,
-			lastPrice,
-			Seller,
-			highestBidder,
-			tokenId
-		)
+		if (agreed) {
+			transfer(balance(tokenId), tokenId).to(highestBidder)
+			transfer(balance()).to(Seller)
+			Auction.accepted(
+				auctionInfo.title,
+				lastPrice,
+				Seller,
+				highestBidder,
+				tokenId
+			)
+		} else {
+			transfer(balance(tokenId), tokenId).to(Seller)
+			transfer(balance()).to(highestBidder)
+			Auction.rejected(
+				auctionInfo.title,
+				lastPrice,
+				Seller,
+				highestBidder,
+				tokenId
+			)
+		}
 	} else {
 		transfer(balance(tokenId), tokenId).to(Seller)
 		transfer(balance()).to(highestBidder)
-		Auction.rejected(
-			auctionInfo.title,
-			lastPrice,
-			Seller,
-			highestBidder,
-			tokenId
-		)
 	}
+
 	commit()
 	exit()
 })

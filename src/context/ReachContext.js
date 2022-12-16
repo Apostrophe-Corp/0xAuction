@@ -554,7 +554,12 @@ const ReachContextProvider = ({ children }) => {
 				const tempAuctionCtc = user.account.contract(auctionCtc, what[3])
 				try {
 					const time = await reach.getNetworkTime()
-					if (time < parseInt(what[4]) + deadline + 50) {
+					if (reach.formatCurrency(what[1], 4) <= 0) {
+						alertThis({
+							message: `Thank you for using 0xAuction, your NFT would transferred back in a short while`,
+							forConfirmation: false,
+						})
+					} else if (time < parseInt(what[4]) + deadline + 50) {
 						const agreeToBid = await alertThis({
 							message: `Do you accept the current bid of ${reach.formatCurrency(
 								what[1],
