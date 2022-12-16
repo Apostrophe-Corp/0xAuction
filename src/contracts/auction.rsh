@@ -61,6 +61,10 @@ export const main = Reach.App(() => {
 		rejected: [state, UInt, Address, Address, Token],
 	})
 
+	const AuctView = View({
+		live: Bool
+	})
+
 	init()
 
 	Seller.only(() => {
@@ -103,6 +107,7 @@ export const main = Reach.App(() => {
 	const balAfter1stCall = balance()
 	const timeRemaining = thisConsensusTime() + auctionInfo.deadline
 
+	AuctView.live.set(true)
 	Auction.created(id, Seller)
 	const [keepBidding, highestBidder, lastPrice, isFirstBid, endRes] =
 		parallelReduce([
@@ -167,6 +172,7 @@ export const main = Reach.App(() => {
 				}
 			)
 
+	AuctView.live.set(false)
 	externalCalls.Auctions_ended(endRes)
 
 	const balAfter2ndCall = balance()

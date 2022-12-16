@@ -236,31 +236,36 @@ const ReachContextProvider = ({ children }) => {
 		}
 	}
 
-	const postAuction = ({ what }) => {
+	const postAuction = async ({ what }) => {
 		const presentAuctions = auctions
-		presentAuctions.push({
-			id: parseInt(what[0]),
-			contractInfo: JSON.stringify(what[1], null),
-			blockCreated: parseInt(what[2]),
-			owner: reach.formatAddress(what[3]),
-			title: noneNull(what[4]),
-			description: noneNull(what[5]),
-			price: parseInt(what[6]),
-			tokenId: parseInt(what[7]),
-			yourBid: 0,
-			optIn: false,
-			liveBid: 0,
-			highestBidder: '',
-			ended: async () =>
-				reach.bigNumberToNumber(await reach.getNetworkTime()) >
-				parseInt(what[2]) + deadline,
-		})
-		setAuctions((previous) => [...presentAuctions])
-		updateLatestAuctions(presentAuctions)
+		const tempCtc = user.contract(auctionCtc, what[1])
+		const response = await tempCtc.v.live()
+		const isLive = response[1]
+		if (isLive) {
+			presentAuctions.push({
+				id: parseInt(what[0]),
+				contractInfo: JSON.stringify(what[1], null),
+				blockCreated: parseInt(what[2]),
+				owner: reach.formatAddress(what[3]),
+				title: noneNull(what[4]),
+				description: noneNull(what[5]),
+				price: parseInt(what[6]),
+				tokenId: parseInt(what[7]),
+				yourBid: 0,
+				optIn: false,
+				liveBid: 0,
+				highestBidder: '',
+				ended: async () =>
+					reach.bigNumberToNumber(await reach.getNetworkTime()) >
+					parseInt(what[2]) + deadline,
+			})
+			setAuctions((previous) => [...presentAuctions])
+			updateLatestAuctions(presentAuctions)
+		}
 	}
 
-	const dropAuction = ({ what }) => {
-		sleep(5000).then(() => {
+	const dropAuction = async ({ what }) => {
+		await sleep(5000).then(() => {
 			if (view === 'Buy' && auctions.length <= 1) setView('App')
 			if ((showBuyer || showSeller) && currentAuction === parseInt(what[0])) {
 				setView('App')
@@ -277,8 +282,8 @@ const ReachContextProvider = ({ children }) => {
 		})
 	}
 
-	const updateHighestBidder = ({ what }) => {
-		sleep(3000).then(() => {
+	const updateHighestBidder = async ({ what }) => {
+		await sleep(3000).then(() => {
 			const highestBidder = reach.formatAddress(what[1])
 			const auctionToBeEdited = auctions.filter(
 				(el) => Number(el.id) === parseInt(what[0])
