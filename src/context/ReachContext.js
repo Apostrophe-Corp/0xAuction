@@ -96,7 +96,7 @@ const ReachContextProvider = ({ children }) => {
 	} = {}) => {
 		await sleep(300)
 		promiseOfConfirmation?.resolve && promiseOfConfirmation.resolve()
-		let result = await new Promise((resolve, reject) => {
+		const result = await new Promise((resolve, reject) => {
 			setPromiseOfConfirmation({ resolve, reject })
 			setAlertInfo((previous) => ({
 				message,
@@ -340,7 +340,7 @@ const ReachContextProvider = ({ children }) => {
 						})
 					}
 				} else {
-					let ctcInfo = await alertThis({
+					const ctcInfo = await alertThis({
 						message: `Enter the 0xAuction contract information`,
 						prompt: true,
 					})
@@ -761,7 +761,7 @@ const ReachContextProvider = ({ children }) => {
 		ctcInfo = null,
 		justJoining = false,
 	} = {}) => {
-		let bid = await alertThis({
+		const bid = await alertThis({
 			message: 'Enter your bidding amount',
 			prompt: true,
 		})
