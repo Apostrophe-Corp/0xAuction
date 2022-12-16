@@ -465,13 +465,6 @@ const ReachContextProvider = ({ children }) => {
 					auction = presentAuctions.filter(
 						(el) => Number(el.id) === parseInt(what[0])
 					)[0]
-					console.log(
-						presentAuctions,
-						auctions,
-						auction,
-						parseInt(what[0]),
-						auction?.id
-					)
 					if (auction) {
 						setCurrentAuction(parseInt(what[0]))
 						stopWaiting()
