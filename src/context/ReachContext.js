@@ -1063,9 +1063,14 @@ const ReachContextProvider = ({ children }) => {
 				</div>
 				<button
 					className={cf(s.w480_100, s.w360_100, app.connectAccount)}
-					onClick={() => {
-						setShowConnectAccount(true)
-					}}
+					onClick={() =>
+						!user.address
+							? setShowConnectAccount(true)
+							: alertThis({
+									message: 'Your wallet is connected',
+									forConfirmation: false,
+							  })
+					}
 				>
 					{user.address ? user.address : `Connect Account`}
 				</button>
