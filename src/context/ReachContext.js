@@ -96,8 +96,8 @@ const ReachContextProvider = ({ children }) => {
 	} = {}) => {
 		await sleep(300)
 		promiseOfConfirmation?.resolve && promiseOfConfirmation.resolve()
-		const result = await new Promise((resolve) => {
-			setPromiseOfConfirmation({ resolve })
+		const result = await new Promise((resolve, reject) => {
+			setPromiseOfConfirmation({ resolve, reject })
 			setAlertInfo((previous) => ({
 				message,
 				accept,
@@ -108,7 +108,7 @@ const ReachContextProvider = ({ children }) => {
 				neutral,
 			}))
 			setShowAlert((lastState) => true)
-		})
+		}).catch((message) => null)
 		return result
 	}
 
@@ -343,6 +343,7 @@ const ReachContextProvider = ({ children }) => {
 						message: `Enter the 0xAuction contract information`,
 						prompt: true,
 					})
+					if (ctcInfo === null) return
 					try {
 						const ctc = user.account.contract(mainCtc, JSON.parse(ctcInfo))
 						setContractInstance(ctc)
@@ -761,6 +762,7 @@ const ReachContextProvider = ({ children }) => {
 			message: 'Enter your bidding amount',
 			prompt: true,
 		})
+		if (bid === null) return
 		startWaiting()
 		const userBal = reach.formatCurrency(await reach.balanceOf(user.account), 4)
 		const resultingBalance = userBal - bid

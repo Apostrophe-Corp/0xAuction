@@ -1,15 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { fmtClasses as cf, useReach } from '../../hooks';
-import alt from '../../styles/Alert.module.css';
-import s from '../../styles/Shared.module.css';
+import React, { useEffect, useState } from 'react'
+import { fmtClasses as cf, useReach } from '../../hooks'
+import alt from '../../styles/Alert.module.css'
+import s from '../../styles/Shared.module.css'
 
 const Alert = () => {
-	const {
-		alertInfo,
-		showAlert,
-		setShowAlert,
-		promiseOfConfirmation,
-	} = useReach()
+	const { alertInfo, showAlert, setShowAlert, promiseOfConfirmation } =
+		useReach()
 
 	const [active, setActive] = useState(showAlert)
 	const [response, setResponse] = useState('')
@@ -26,6 +22,12 @@ const Alert = () => {
 	const submitResponse = (e) => {
 		e.preventDefault()
 		decide(response)
+	}
+
+	const cancel = () => {
+		alertInfo.prompt &&
+			promiseOfConfirmation.reject &&
+			promiseOfConfirmation.reject(null)
 	}
 
 	// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -63,7 +65,10 @@ const Alert = () => {
 		<>
 			{active && (
 				<div className={alertClass}>
-					<div className={cf(s.wMax, alt.alertMask)}></div>
+					<div
+						className={cf(s.wMax, alt.alertMask)}
+						onClick={cancel}
+					></div>
 					<div className={cf(s.flex, s.flexCenter, alt.alertDetails)}>
 						<div className={cf(s.wMax, s.flex, s.flexCenter, alt.alertMessage)}>
 							<span
