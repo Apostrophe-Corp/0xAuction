@@ -499,7 +499,8 @@ const ReachContextProvider = ({ children }) => {
 
 	const handleAuctionLog_bidSuccess = async ({ what }) => {
 		const newBid = reach.formatCurrency(what[1], 4)
-		const auctionToBeEdited = auctions.filter(
+		const currentAuctions = auctions
+		const auctionToBeEdited = currentAuctions.filter(
 			(el) => Number(el.id) === parseInt(what[0])
 		)[0]
 		let yourBid = Number(auctionToBeEdited['yourBid']),
