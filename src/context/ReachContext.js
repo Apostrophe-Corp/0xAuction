@@ -705,7 +705,7 @@ const ReachContextProvider = ({ children }) => {
 				decline: 'No',
 			})
 			if (rejoin) {
-				await rejoinAuction({ ...auctionInfo })
+				rejoinAuction({ ...auctionInfo })
 			}
 		} else {
 			const join = await alertThis({
@@ -748,6 +748,7 @@ const ReachContextProvider = ({ children }) => {
 						ctc,
 						justJoining: true,
 					})
+					if(continue_ === null) break
 				} while (continue_)
 			}
 		}
@@ -764,7 +765,7 @@ const ReachContextProvider = ({ children }) => {
 			message: 'Enter your bidding amount',
 			prompt: true,
 		})
-		if (bid === null) return
+		if (bid === null) return null
 		startWaiting()
 		const userBal = reach.formatCurrency(await reach.balanceOf(user.account), 4)
 		const resultingBalance = userBal - bid
