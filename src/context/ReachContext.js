@@ -341,9 +341,11 @@ const ReachContextProvider = ({ children }) => {
 						})
 					}
 				} else {
-					const ctcInfo = await alertThis({
+					let ctcInfo = await alertThis({
 						message: `Enter the 0xAuction contract information`,
 						prompt: true,
+					}).catch((reason) => {
+						ctcInfo = null
 					})
 					if (ctcInfo === null) return
 					try {
@@ -762,12 +764,16 @@ const ReachContextProvider = ({ children }) => {
 		ctcInfo = null,
 		justJoining = false,
 	} = {}) => {
-		const bid = await alertThis({
+		let bid = await alertThis({
 			message: 'Enter your bidding amount',
 			prompt: true,
+		}).catch((reason) => {
+			bid = null
 		})
-		console.log(bid, typeof bid)
-		if (bid === null) return null
+		if (bid === null) {
+			loopVar = null
+			return loopVar
+		}
 		startWaiting()
 		const userBal = reach.formatCurrency(await reach.balanceOf(user.account), 4)
 		const resultingBalance = userBal - bid
