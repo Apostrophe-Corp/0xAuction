@@ -236,60 +236,63 @@ const ReachContextProvider = ({ children }) => {
 		}
 	}
 
-	const postAuction = async ({ what }) => {
-		const time = reach.bigNumberToNumber(await reach.getNetworkTime())
-		if (time < parseInt(what[2]) + deadline) {
-			const presentAuctions = auctions
-			presentAuctions.push({
-				id: parseInt(what[0]),
-				contractInfo: JSON.stringify(what[1], null),
-				blockCreated: parseInt(what[2]),
-				owner: reach.formatAddress(what[3]),
-				title: noneNull(what[4]),
-				description: noneNull(what[5]),
-				price: parseInt(what[6]),
-				tokenId: parseInt(what[7]),
-				yourBid: 0,
-				optIn: false,
-				liveBid: 0,
-				highestBidder: '',
-				ended: async () =>
-					reach.bigNumberToNumber(await reach.getNetworkTime()) >
-					parseInt(what[2]) + deadline,
-			})
-			setAuctions((previous) => [...presentAuctions])
-			updateLatestAuctions(presentAuctions)
-		}
+	const postAuction = ({ what }) => {
+		const presentAuctions = auctions
+		presentAuctions.push({
+			id: parseInt(what[0]),
+			contractInfo: JSON.stringify(what[1], null),
+			blockCreated: parseInt(what[2]),
+			owner: reach.formatAddress(what[3]),
+			title: noneNull(what[4]),
+			description: noneNull(what[5]),
+			price: parseInt(what[6]),
+			tokenId: parseInt(what[7]),
+			yourBid: 0,
+			optIn: false,
+			liveBid: 0,
+			highestBidder: '',
+			ended: async () =>
+				reach.bigNumberToNumber(await reach.getNetworkTime()) >
+				parseInt(what[2]) + deadline,
+		})
+		setAuctions((previous) => [...presentAuctions])
+		updateLatestAuctions(presentAuctions)
 	}
 
 	const dropAuction = ({ what }) => {
-		if (view === 'Buy' && auctions.length <= 1) setView('App')
-		if ((showBuyer || showSeller) && currentAuction === parseInt(what[0])) {
-			setView('App')
-			setShowBuyer(false)
-			setShowSeller(false)
-		}
-		const auctionsToBeEdited = auctions
-		const remainingAuctions = auctionsToBeEdited.filter(
-			(el) => Number(el.id) !== parseInt(what[0])
-		)
-		if (remainingAuctions.length === 0 && view === 'Buy') setView('App')
-		setAuctions((previous) => remainingAuctions)
-		updateLatestAuctions(remainingAuctions)
+		sleep(5000).then(() => {
+			if (view === 'Buy' && auctions.length <= 1) setView('App')
+			if ((showBuyer || showSeller) && currentAuction === parseInt(what[0])) {
+				setView('App')
+				setShowBuyer(false)
+				setShowSeller(false)
+			}
+			const auctionsToBeEdited = auctions
+			const remainingAuctions = auctionsToBeEdited.filter(
+				(el) => Number(el.id) !== parseInt(what[0])
+			)
+			if (remainingAuctions.length === 0 && view === 'Buy') setView('App')
+			setAuctions((previous) => remainingAuctions)
+			updateLatestAuctions(remainingAuctions)
+		})
 	}
 
 	const updateHighestBidder = ({ what }) => {
-		const highestBidder = reach.formatAddress(what[1])
-		const auctionToBeEdited = auctions.filter(
-			(el) => Number(el.id) === parseInt(what[0])
-		)[0]
-		auctionToBeEdited['highestBidder'] = highestBidder
-		const leftOutAuctions = auctions.filter(
-			(el) => Number(el.id) !== parseInt(what[0])
-		)
-		const updatedAuctions = [auctionToBeEdited, ...leftOutAuctions]
-		setAuctions((previous) => updatedAuctions)
-		updateLatestAuctions(updatedAuctions)
+		sleep(3000).then(() => {
+			const highestBidder = reach.formatAddress(what[1])
+			const auctionToBeEdited = auctions.filter(
+				(el) => Number(el.id) === parseInt(what[0])
+			)[0]
+			if (auctionToBeEdited) {
+				auctionToBeEdited['highestBidder'] = highestBidder
+				const leftOutAuctions = auctions.filter(
+					(el) => Number(el.id) !== parseInt(what[0])
+				)
+				const updatedAuctions = [auctionToBeEdited, ...leftOutAuctions]
+				setAuctions((previous) => updatedAuctions)
+				updateLatestAuctions(updatedAuctions)
+			}
+		})
 	}
 
 	const checkForContract = async (func) => {
@@ -448,7 +451,8 @@ const ReachContextProvider = ({ children }) => {
 						stopWaiting()
 						if (auctions.length) setView('Buy')
 						alertThis({
-							message: 'Your auction is live',
+							message:
+								'Your auction is live. Click on it on the Buy Page to monitor',
 							forConfirmation: false,
 						})
 					}
@@ -485,7 +489,7 @@ const ReachContextProvider = ({ children }) => {
 			String(owner) !== String(user.address)
 		) {
 			const bidAgain = await alertThis({
-				message: `You just got outbid${
+				message: `You just got outbid for the ${noneNull(what[3])} auction${
 					opt ? `, the highest bid is now ${newBid} ${standardUnit}` : ''
 				}. Would you like to bid again?`,
 				accept: 'Yes',

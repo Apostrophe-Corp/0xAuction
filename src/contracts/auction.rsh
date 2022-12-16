@@ -54,7 +54,7 @@ export const main = Reach.App(() => {
 
 	const Auction = Events({
 		created: [UInt, Address],
-		bidSuccess: [UInt, UInt, Address],
+		bidSuccess: [UInt, UInt, Address, state],
 		endSuccess: [UInt, UInt],
 		down: [UInt, UInt, Address, Contract, UInt, state],
 		accepted: [state, UInt, Address, Address, Token],
@@ -130,7 +130,7 @@ export const main = Reach.App(() => {
 						if (!isFirstBid) transfer(lastPrice).to(highestBidder)
 						const who = this
 						externalCalls.Auctions_updateHighestBidder(id, who)
-						Auction.bidSuccess(id, bid, who)
+						Auction.bidSuccess(id, bid, who, auctionInfo.title)
 						notify([who, lastPrice])
 						return [keepBidding, who, bid, false, endRes]
 					},
