@@ -108,7 +108,7 @@ const ReachContextProvider = ({ children }) => {
 				neutral,
 			}))
 			setShowAlert((lastState) => true)
-		})
+		}).catch((message) => setShowAlert((lastState) => false))
 		if (result === undefined) setShowAlert((lastState) => false)
 		return result
 	}
