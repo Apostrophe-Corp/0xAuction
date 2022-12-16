@@ -174,13 +174,13 @@ const Buyer = () => {
 						<button
 							className={cf(s.flex, s.flexCenter, auc.liveBidBtn)}
 							type='button'
-							onClick={() => {
+							onClick={() =>
 								!auction.optIn
 									? optIn(auction.id)
 									: auction.liveBid > auction.yourBid
 									? placeNewBid(auction)
 									: false
-							}}
+							}
 						>
 							{!auction.optIn
 								? 'View Live Bid'
