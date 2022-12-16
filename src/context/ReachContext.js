@@ -489,6 +489,7 @@ const ReachContextProvider = ({ children }) => {
 						ctcInfo,
 						justJoining: false,
 					})
+					if (continue_ === null) break
 				} while (continue_)
 			}
 		}
@@ -748,7 +749,7 @@ const ReachContextProvider = ({ children }) => {
 						ctc,
 						justJoining: true,
 					})
-					if(continue_ === null) break
+					if (continue_ === null) break
 				} while (continue_)
 			}
 		}
@@ -765,6 +766,7 @@ const ReachContextProvider = ({ children }) => {
 			message: 'Enter your bidding amount',
 			prompt: true,
 		})
+		console.log(bid, typeof bid)
 		if (bid === null) return null
 		startWaiting()
 		const userBal = reach.formatCurrency(await reach.balanceOf(user.account), 4)
