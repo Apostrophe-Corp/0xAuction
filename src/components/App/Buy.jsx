@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react'
+import React, { useRef, useEffect, useState } from 'react'
 import s from '../../styles/Shared.module.css'
 import buy from '../../styles/Buy.module.css'
 import notFound from '../../assets/images/preview.jpg'
@@ -125,16 +125,44 @@ const Auction = ({ assetID, title, desiredPrice, url = '', fullAuction }) => {
 
 const Buy = () => {
 	const { auctions, latestAuctions } = useReach()
+	const [[newAuctions, setNewAuctions], [newLatest, setNewLatest]] = [
+		useState([]),
+		useState([]),
+	]
+
+	useEffect(() => {
+		const updateAuctions = async () => {
+			const currentAuctions = auctions
+			const newSet = await Promise.all(
+				currentAuctions.filter(async (el) => (await el.ended()) === false)
+			)
+			console.log(newSet)
+			setNewAuctions((previous) => newSet)
+		}
+		updateAuctions()
+	}, [auctions, setNewAuctions])
+
+	useEffect(() => {
+		const updateAuctions = async () => {
+			const currentAuctions = latestAuctions
+			const newSet = await Promise.all(
+				currentAuctions.filter(async (el) => (await el.ended()) === false)
+			)
+			console.log(newSet)
+			setNewLatest((previous) => newSet)
+		}
+		updateAuctions()
+	}, [latestAuctions, setNewLatest])
 
 	const latestAuctionRef = useRef()
 
 	useEffect(() => {
-		if (latestAuctions.length > 2) {
+		if (newLatest.length > 2) {
 			let progress = 0
 			const slide = setInterval(() => {
 				progress += 100
 				latestAuctionRef.current.style.transform = `translate(-${progress}%,0)`
-				const length = (latestAuctions.length - 1) * 100
+				const length = (newLatest.length - 1) * 100
 				if (progress === length) {
 					const revert = setTimeout(() => {
 						latestAuctionRef.current.style.transition = `none`
@@ -155,7 +183,7 @@ const Buy = () => {
 				clearInterval(slide)
 			}
 		}
-	}, [latestAuctions])
+	}, [newLatest])
 
 	return (
 		<div className={cf(s.wMax, s.window, buy.buyParent)}>
@@ -175,24 +203,16 @@ const Buy = () => {
 							)}
 							ref={latestAuctionRef}
 						>
-							{async () =>
-								await Promise.all(
-									latestAuctions.filter(
-										async (el) => (await el.ended()) === false
-									)
-								).then((latestAuctions) =>
-									latestAuctions.map((el, i) => (
-										<LatestAuction
-											key={i}
-											fullAuction={el}
-											assetID={el.tokenId}
-											title={el.title}
-											desiredPrice={el.price}
-											description={el.description}
-										/>
-									))
-								)
-							}
+							{newLatest.map((el, i) => (
+								<LatestAuction
+									key={i}
+									fullAuction={el}
+									assetID={el.tokenId}
+									title={el.title}
+									desiredPrice={el.price}
+									description={el.description}
+								/>
+							))}
 						</div>
 					)}
 				</div>
@@ -212,22 +232,16 @@ const Buy = () => {
 						buy.aucAuctions
 					)}
 				>
-					{async () =>
-						await Promise.all(
-							auctions.filter(async (el) => (await el.ended()) === false)
-						).then((auctions) =>
-							auctions.map((el, i) => (
-								<Auction
-									key={i}
-									fullAuction={el}
-									assetID={el.tokenId}
-									title={el.title}
-									desiredPrice={el.price}
-									description={el.description}
-								/>
-							))
-						)
-					}
+					{newAuctions.map((el, i) => (
+						<Auction
+							key={i}
+							fullAuction={el}
+							assetID={el.tokenId}
+							title={el.title}
+							desiredPrice={el.price}
+							description={el.description}
+						/>
+					))}
 				</div>
 			)}
 		</div>
