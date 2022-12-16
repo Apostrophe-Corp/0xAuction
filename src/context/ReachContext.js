@@ -24,7 +24,7 @@ const algoExplorerURI = {
 	MainNet: 'https://algoexplorer.io',
 }['TestNet']
 
-const deadline = 10000
+const deadline = 1000000
 
 const providerEnv = 'TestNet'
 
