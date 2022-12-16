@@ -18,7 +18,6 @@ import app from '../styles/App.module.css'
 import { Alert } from '../components/Alert'
 import { Buyer, Seller } from '../components/Auction'
 import { ConnectAccount, LoadingPreview } from '../components/App'
-import { stringToUint8Array } from '../utils'
 
 const algoExplorerURI = {
 	TestNet: 'https://testnet.algoexplorer.io',
@@ -145,8 +144,6 @@ const ReachContextProvider = ({ children }) => {
 		}
 		return string
 	}
-
-	const ifState = (x) => x.padEnd(20, '\u0000')
 
 	const sleep = (m) => new Promise((resolve) => setTimeout(resolve, m))
 
