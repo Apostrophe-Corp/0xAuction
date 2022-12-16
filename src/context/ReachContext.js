@@ -217,7 +217,7 @@ const ReachContextProvider = ({ children }) => {
 				},
 				address: reach.formatAddress(account.getAddress()),
 			})
-
+			setShowConnectAccount(false)
 			// setAdminConnection(adminConn)
 			stopWaiting()
 			alertThis({
@@ -433,9 +433,9 @@ const ReachContextProvider = ({ children }) => {
 						setShowSeller(true)
 					} else {
 						stopWaiting()
+						if (auctions.length) setView('Buy')
 						alertThis({
-							message:
-								'Your auction is live. You can now find it on the Buy Page',
+							message: 'Your auction is live',
 							forConfirmation: false,
 						})
 					}

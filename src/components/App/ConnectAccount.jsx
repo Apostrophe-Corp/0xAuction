@@ -36,7 +36,7 @@ const ConnectAccount = () => {
 				>
 					Close
 				</button>
-				<div
+				{/* <div
 					className={cf(
 						s.wMax,
 						s.flex,
@@ -54,7 +54,7 @@ const ConnectAccount = () => {
 							{user.address}
 						</button>
 					)}
-				</div>
+				</div> */}
 				<div className={cf(s.w50, s.w480_100, s.w360_100, ca.wallet)}></div>
 
 				<div
@@ -68,7 +68,7 @@ const ConnectAccount = () => {
 						ca.connect
 					)}
 				>
- 					{/* <div
+					{/* <div
  						className={cf(s.flex, s.flexCenter, ca.connectOption)}
  						onClick={() => {
  							connectToWallet('PeraConnect')
@@ -122,7 +122,7 @@ const ConnectAccount = () => {
 					</div>
 				</div>
 
-				<div
+				{/* <div
 					className={cf(
 						s.wMax,
 						s.flex,
@@ -140,7 +140,7 @@ const ConnectAccount = () => {
 							{contract.ctcInfoStr}
 						</button>
 					)}
-				</div>
+				</div> */}
 			</div>
 		</div>
 	)
