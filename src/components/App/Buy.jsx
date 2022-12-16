@@ -175,22 +175,24 @@ const Buy = () => {
 							)}
 							ref={latestAuctionRef}
 						>
-							{Promise.all(
-								latestAuctions.filter(
-									async (el) => (await el.ended()) === false
+							{async () =>
+								await Promise.all(
+									latestAuctions.filter(
+										async (el) => (await el.ended()) === false
+									)
+								).then((latestAuctions) =>
+									latestAuctions.map((el, i) => (
+										<LatestAuction
+											key={i}
+											fullAuction={el}
+											assetID={el.tokenId}
+											title={el.title}
+											desiredPrice={el.price}
+											description={el.description}
+										/>
+									))
 								)
-							).then((latestAuctions) =>
-								latestAuctions.map((el, i) => (
-									<LatestAuction
-										key={i}
-										fullAuction={el}
-										assetID={el.tokenId}
-										title={el.title}
-										desiredPrice={el.price}
-										description={el.description}
-									/>
-								))
-							)}
+							}
 						</div>
 					)}
 				</div>
@@ -210,20 +212,22 @@ const Buy = () => {
 						buy.aucAuctions
 					)}
 				>
-					{Promise.all(
-						auctions.filter(async (el) => (await el.ended()) === false)
-					).then((auctions) =>
-						auctions.map((el, i) => (
-							<Auction
-								key={i}
-								fullAuction={el}
-								assetID={el.tokenId}
-								title={el.title}
-								desiredPrice={el.price}
-								description={el.description}
-							/>
-						))
-					)}
+					{async () =>
+						await Promise.all(
+							auctions.filter(async (el) => (await el.ended()) === false)
+						).then((auctions) =>
+							auctions.map((el, i) => (
+								<Auction
+									key={i}
+									fullAuction={el}
+									assetID={el.tokenId}
+									title={el.title}
+									desiredPrice={el.price}
+									description={el.description}
+								/>
+							))
+						)
+					}
 				</div>
 			)}
 		</div>
