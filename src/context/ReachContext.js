@@ -765,7 +765,8 @@ const ReachContextProvider = ({ children }) => {
 		let bid = await alertThis({
 			message: 'Enter your bidding amount',
 			prompt: true,
-		})
+		}).catch((x)=> null)
+		console.log(bid, typeof bid)
 		if (bid === undefined) return null
 		startWaiting()
 		const userBal = reach.formatCurrency(await reach.balanceOf(user.account), 4)
