@@ -175,8 +175,8 @@ const Buy = () => {
 							)}
 							ref={latestAuctionRef}
 						>
-							{latestAuctions
-								.filter(async (el) => (await el.ended()) === false)
+							{Promise.all(latestAuctions
+								.filter(async (el) => (await el.ended()) === false))
 								.map((el, i) => (
 									<LatestAuction
 										key={i}
@@ -206,8 +206,8 @@ const Buy = () => {
 						buy.aucAuctions
 					)}
 				>
-					{auctions
-						.filter(async (el) => (await el.ended()) === false)
+					{Promise.all(auctions
+						.filter((el) => el.ended() === false))
 						.map((el, i) => (
 							<Auction
 								key={i}
