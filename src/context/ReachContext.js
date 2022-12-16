@@ -770,7 +770,8 @@ const ReachContextProvider = ({ children }) => {
 		}).catch((reason) => {
 			bid = null
 		})
-		if (bid === null) {
+		console.log(bid, typeof bid)
+		if (typeof bid !== 'number') {
 			loopVar = null
 			return loopVar
 		}
