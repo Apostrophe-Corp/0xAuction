@@ -384,49 +384,8 @@ const ReachContextProvider = ({ children }) => {
 			if (key === 'name' || key === 'symbol' || key === 'supply') continue
 			if (opts[key]) launchOpts[key] = opts[key]
 		}
-		const raw = launchOpts['url'] ?? ''
-		const gateway = launchOpts['url']
-			? launchOpts['url'].indexOf('ipfs://') === 0
-				? 'https://gateway.ipfs.io/ipfs/' + launchOpts?.['url'].slice(7)
-				: launchOpts['url']
-			: ''
 
-		const metaObj = {
-			title: opts['name'],
-			description: '',
-			assetUri: {
-				raw,
-				gateway,
-			},
-			id: {
-				assetId: 1,
-				assetMetaData: {
-					tokenType: 'ARC69',
-				},
-			},
-			media: [
-				{
-					raw,
-					gateway,
-					format: 'image/*',
-				},
-			],
-			metadata: {
-				name: opts['name'],
-				image: launchOpts['url'],
-				attributes: '',
-			},
-			contractMetadata: {
-				name: opts['name'],
-				symbol: opts['symbol'],
-				totalSupply: 1,
-				tokenType: 'ARC69',
-			},
-		}
-
-		const metaStr = JSON.stringify(metaObj)
-
-		const note = stringToUint8Array(metaStr)
+		const note = new Uint8Array(0)
 
 		// console.log(launchOpts)
 		try {
