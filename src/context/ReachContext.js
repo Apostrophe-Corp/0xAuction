@@ -186,10 +186,38 @@ const ReachContextProvider = ({ children }) => {
 				)
 				break
 		}
+		
 		try {
 			const account = mnemonic
 				? await instantReach.newAccountFromMnemonic(secret)
 				: await instantReach.getDefaultAccount()
+			const postAuction = async ({ what }) => {
+				const presentAuctions = auctions
+				const tempCtc = account.contract(auctionCtc, what[1])
+				const response = await tempCtc.v.live()
+				const isLive = response[1]
+				if (isLive) {
+					presentAuctions.push({
+						id: parseInt(what[0]),
+						contractInfo: JSON.stringify(what[1], null),
+						blockCreated: parseInt(what[2]),
+						owner: reach.formatAddress(what[3]),
+						title: noneNull(what[4]),
+						description: noneNull(what[5]),
+						price: parseInt(what[6]),
+						tokenId: parseInt(what[7]),
+						yourBid: 0,
+						optIn: false,
+						liveBid: 0,
+						highestBidder: '',
+						ended: async () =>
+							reach.bigNumberToNumber(await reach.getNetworkTime()) >
+							parseInt(what[2]) + deadline,
+					})
+					setAuctions((previous) => [...presentAuctions])
+					updateLatestAuctions(presentAuctions)
+				}
+			}
 			if (process.env.REACT_APP_ADMIN_CONTRACT_INFO) {
 				try {
 					const ctc = account.contract(
