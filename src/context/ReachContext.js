@@ -344,10 +344,8 @@ const ReachContextProvider = ({ children }) => {
 					let ctcInfo = await alertThis({
 						message: `Enter the 0xAuction contract information`,
 						prompt: true,
-					}).catch((reason) => {
-						ctcInfo = null
 					})
-					if (ctcInfo === null) return
+					if (ctcInfo === undefined) return
 					try {
 						const ctc = user.account.contract(mainCtc, JSON.parse(ctcInfo))
 						setContractInstance(ctc)
@@ -767,14 +765,8 @@ const ReachContextProvider = ({ children }) => {
 		let bid = await alertThis({
 			message: 'Enter your bidding amount',
 			prompt: true,
-		}).catch((reason) => {
-			bid = null
 		})
-		console.log(bid, typeof bid)
-		if (typeof bid !== 'number') {
-			loopVar = null
-			return loopVar
-		}
+		if (bid === undefined) return null
 		startWaiting()
 		const userBal = reach.formatCurrency(await reach.balanceOf(user.account), 4)
 		const resultingBalance = userBal - bid
