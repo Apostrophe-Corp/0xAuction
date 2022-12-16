@@ -456,206 +456,208 @@ const ReachContextProvider = ({ children }) => {
 		}
 	}
 
-	const handleAuctionLog = async ({ what }) => {
-		switch (what[0]) {
-			case ifState('created'):
-				if (String(user.address) === reach.formatAddress(what[2])) {
-					try {
-						let auction = null
-						do {
-							await sleep(2000)
-							const presentAuctions = auctions
-							auction = presentAuctions.filter(
-								(el) => Number(el.id) === parseInt(what[1])
-							)[0]
-							console.log(
-								presentAuctions,
-								auctions,
-								auction,
-								parseInt(what[1]),
-								auction?.id
-							)
-							if (auction) {
-								setCurrentAuction(parseInt(what[1]))
-								stopWaiting()
-								alertThis({
-									message: 'Your auction is live',
-									forConfirmation: false,
-								})
-								setShowSeller(true)
-							}
-						} while (!auction)
-					} catch (error) {
-						console.log({ error })
-					}
-				}
-				break
-			case ifState('bidSuccess'):
-				const newBid = reach.formatCurrency(what[2], 4)
-				const auctionToBeEdited = auctions.filter(
-					(el) => Number(el.id) === parseInt(what[1])
-				)[0]
-				let yourBid = Number(auctionToBeEdited['yourBid']),
-					owner = auctionToBeEdited['owner'],
-					ctcInfo = auctionToBeEdited['contractInfo'],
-					opt = auctionToBeEdited['optIn']
-				if (String(owner) !== String(user.address)) {
-					auctionToBeEdited['liveBid'] =
-						newBid > Number(auctionToBeEdited['yourBid'])
-							? newBid
-							: Number(auctionToBeEdited['yourBid'])
-				} else auctionToBeEdited['liveBid'] = newBid
-				const leftOutAuctions = auctions.filter(
-					(el) => Number(el.id) !== parseInt(what[1])
-				)
-				const updatedAuctions = [auctionToBeEdited, ...leftOutAuctions]
-				setAuctions((previous) => updatedAuctions)
-				updateLatestAuctions(updatedAuctions)
-				if (
-					auctionToBeEdited['liveBid'] > yourBid &&
-					String(owner) !== String(user.address)
-				) {
-					console.log({ showBuyer, showSeller })
-					const bidAgain = await alertThis({
-						message: `You just got outbid${
-							opt ? `, the highest bid is now ${newBid} ${standardUnit}` : ''
-						}. Would you like to bid again?`,
-						accept: 'Yes',
-						decline: 'No',
-					})
-					if (bidAgain) {
-						let continue_ = false
-						do {
-							continue_ = await handleBid({
-								auctionID: parseInt(what[1]),
-								loopVar: continue_,
-								ctcInfo,
-								justJoining: false,
-							})
-						} while (continue_)
-					}
-				}
-				break
-			case ifState('endSuccess'):
-				if (auctions.length === 1) setView('App')
-				setShowBuyer(false)
-				setShowSeller(false)
-				const presentAuc = auctions
-				const leftoverAuctions = presentAuc.filter(
-					(el) => Number(el.id) !== parseInt(what[1])
-				)
-				setAuctions((previous) => leftoverAuctions)
-				updateLatestAuctions(leftoverAuctions)
-				break
-			case ifState('down'):
-				stopWaiting()
-				try {
-					if (reach.formatAddress(what[3]) === String(user.address)) {
-						const tempAuctionCtc = user.account.contract(auctionCtc, what[4])
-						try {
-							const time = await reach.getNetworkTime()
-							if (time < parseInt(what[5]) + deadline + 50) {
-								const agreeToBid = await alertThis({
-									message: `Do you accept the current bid of ${reach.formatCurrency(
-										what[2],
-										4
-									)} ${standardUnit}?`,
-									accept: 'Yes',
-									decline: 'No',
-								})
-								try {
-									if (agreeToBid) await tempAuctionCtc.a.Auctioneer.acceptSale()
-									else await tempAuctionCtc.a.Auctioneer.rejectSale()
-								} catch (error) {
-									console.log({ error })
-									alertThis({
-										message:
-											'Unable to process your choice, defaulting to an agreement',
-										forConfirmation: false,
-									})
-									setShowSeller(false)
-								}
-							}
-						} catch (error) {
-							console.log({ error })
-						}
-					} else {
+	const handleAuctionLog_created = async ({ what }) => {
+		if (String(user.address) === reach.formatAddress(what[1])) {
+			try {
+				let auction = null
+				sleep(2000).then(() => {
+					const presentAuctions = auctions
+					auction = presentAuctions.filter(
+						(el) => Number(el.id) === parseInt(what[0])
+					)[0]
+					console.log(
+						presentAuctions,
+						auctions,
+						auction,
+						parseInt(what[0]),
+						auction?.id
+					)
+					if (auction) {
+						setCurrentAuction(parseInt(what[0]))
+						stopWaiting()
 						alertThis({
-							message: 'The auction has ended',
+							message: 'Your auction is live',
 							forConfirmation: false,
 						})
-						setShowBuyer(false)
+						setShowSeller(true)
+					} else {
+						stopWaiting()
+						alertThis({
+							message:
+								'Your auction is live. You can now find it on the Buy Page',
+							forConfirmation: false,
+						})
+					}
+				})
+			} catch (error) {
+				console.log({ error })
+			}
+		}
+	}
+
+	const handleAuctionLog_bidSuccess = async ({ what }) => {
+		const newBid = reach.formatCurrency(what[1], 4)
+		const auctionToBeEdited = auctions.filter(
+			(el) => Number(el.id) === parseInt(what[0])
+		)[0]
+		let yourBid = Number(auctionToBeEdited['yourBid']),
+			owner = auctionToBeEdited['owner'],
+			ctcInfo = auctionToBeEdited['contractInfo'],
+			opt = auctionToBeEdited['optIn']
+		if (String(owner) !== String(user.address)) {
+			auctionToBeEdited['liveBid'] =
+				newBid > Number(auctionToBeEdited['yourBid'])
+					? newBid
+					: Number(auctionToBeEdited['yourBid'])
+		} else auctionToBeEdited['liveBid'] = newBid
+		const leftOutAuctions = auctions.filter(
+			(el) => Number(el.id) !== parseInt(what[0])
+		)
+		const updatedAuctions = [auctionToBeEdited, ...leftOutAuctions]
+		setAuctions((previous) => updatedAuctions)
+		updateLatestAuctions(updatedAuctions)
+		if (
+			auctionToBeEdited['liveBid'] > yourBid &&
+			String(owner) !== String(user.address)
+		) {
+			console.log({ showBuyer, showSeller })
+			const bidAgain = await alertThis({
+				message: `You just got outbid${
+					opt ? `, the highest bid is now ${newBid} ${standardUnit}` : ''
+				}. Would you like to bid again?`,
+				accept: 'Yes',
+				decline: 'No',
+			})
+			if (bidAgain) {
+				let continue_ = false
+				do {
+					continue_ = await handleBid({
+						auctionID: parseInt(what[0]),
+						loopVar: continue_,
+						ctcInfo,
+						justJoining: false,
+					})
+				} while (continue_)
+			}
+		}
+	}
+
+	const handleAuctionLog_endSuccess = async ({ what }) => {
+		if (auctions.length === 1) setView('App')
+		setShowBuyer(false)
+		setShowSeller(false)
+		const presentAuc = auctions
+		const leftoverAuctions = presentAuc.filter(
+			(el) => Number(el.id) !== parseInt(what[0])
+		)
+		setAuctions((previous) => leftoverAuctions)
+		updateLatestAuctions(leftoverAuctions)
+	}
+
+	const handleAuctionLog_down = async ({ what }) => {
+		stopWaiting()
+		try {
+			if (reach.formatAddress(what[2]) === String(user.address)) {
+				const tempAuctionCtc = user.account.contract(auctionCtc, what[3])
+				try {
+					const time = await reach.getNetworkTime()
+					if (time < parseInt(what[4]) + deadline + 50) {
+						const agreeToBid = await alertThis({
+							message: `Do you accept the current bid of ${reach.formatCurrency(
+								what[1],
+								4
+							)} ${standardUnit}?`,
+							accept: 'Yes',
+							decline: 'No',
+						})
+						try {
+							if (agreeToBid) await tempAuctionCtc.a.Auctioneer.acceptSale()
+							else await tempAuctionCtc.a.Auctioneer.rejectSale()
+						} catch (error) {
+							console.log({ error })
+							alertThis({
+								message:
+									'Unable to process your choice, defaulting to an agreement',
+								forConfirmation: false,
+							})
+							setShowSeller(false)
+						}
 					}
 				} catch (error) {
 					console.log({ error })
 				}
-				setCurrentAuction(null)
-				break
-			case ifState('accepted'):
-				if (reach.formatAddress(what[3]) === String(user.address)) {
-					alertThis({
-						message: `🥳 Congratulations!!! NFT sold at ${reach.formatCurrency(
-							what[2],
-							4
-						)} ${standardUnit} 🎉`,
-						forConfirmation: false,
-					})
-				} else if (reach.formatAddress(what[4]) === String(user.address)) {
-					const viewToken = await alertThis({
-						message: `🥳 Congratulations!!! You now own this asset: ${parseInt(
-							what[5]
-						)}, at the cost of ${reach.formatCurrency(
-							what[2],
-							4
-						)} ${standardUnit} 🎉. Proceed to view on AlgoExplorer.io?`,
-						accept: 'Yes',
-						decline: 'No',
-					})
-					if (viewToken) {
-						window.open(
-							`${algoExplorerURI}/asset/${parseInt(what[5])}`,
-							'_blank'
-						)
-					}
-				} else {
-					alertThis({
-						message: `'${noneNull(
-							what[1]
-						)}' finally closed at ${reach.formatCurrency(
-							what[2],
-							4
-						)} ${standardUnit}, with the Auctioneer accepting the highest bid`,
-						forConfirmation: false,
-					})
-				}
-				break
-			case ifState('rejected'):
-				if (reach.formatAddress(what[3]) === String(user.address)) {
-					alertThis({
-						message: `Thank you for using 0xAuction, your NFT would transferred back in a short while`,
-						forConfirmation: false,
-					})
-				} else if (reach.formatAddress(what[4]) === String(user.address)) {
-					alertThis({
-						message: `Hey, you were the highest Bidder for '${noneNull(
-							what[1]
-						)}', but the Auctioneer has decided not to sell this time`,
-						forConfirmation: false,
-					})
-				} else {
-					alertThis({
-						message: `'${noneNull(
-							what[1]
-						)}' finally closed at ${reach.formatCurrency(
-							what[2],
-							4
-						)} ${standardUnit}, with the Auctioneer rejecting the highest bid`,
-						forConfirmation: false,
-					})
-				}
-				break
-			default:
-				break
+			} else {
+				alertThis({
+					message: 'The auction has ended',
+					forConfirmation: false,
+				})
+				setShowBuyer(false)
+			}
+		} catch (error) {
+			console.log({ error })
+		}
+		setCurrentAuction(null)
+	}
+
+	const handleAuctionLog_accepted = async ({ what }) => {
+		if (reach.formatAddress(what[2]) === String(user.address)) {
+			alertThis({
+				message: `🥳 Congratulations!!! NFT sold at ${reach.formatCurrency(
+					what[1],
+					4
+				)} ${standardUnit} 🎉`,
+				forConfirmation: false,
+			})
+		} else if (reach.formatAddress(what[3]) === String(user.address)) {
+			const viewToken = await alertThis({
+				message: `🥳 Congratulations!!! You now own this asset: ${parseInt(
+					what[4]
+				)}, at the cost of ${reach.formatCurrency(
+					what[3],
+					4
+				)} ${standardUnit} 🎉. Proceed to view on AlgoExplorer.io?`,
+				accept: 'Yes',
+				decline: 'No',
+			})
+			if (viewToken) {
+				window.open(`${algoExplorerURI}/asset/${parseInt(what[4])}`, '_blank')
+			}
+		} else {
+			alertThis({
+				message: `'${noneNull(
+					what[0]
+				)}' finally closed at ${reach.formatCurrency(
+					what[1],
+					4
+				)} ${standardUnit}, with the Auctioneer accepting the highest bid`,
+				forConfirmation: false,
+			})
+		}
+	}
+
+	const handleAuctionLog_rejected = async ({ what }) => {
+		if (reach.formatAddress(what[2]) === String(user.address)) {
+			alertThis({
+				message: `Thank you for using 0xAuction, your NFT would transferred back in a short while`,
+				forConfirmation: false,
+			})
+		} else if (reach.formatAddress(what[3]) === String(user.address)) {
+			alertThis({
+				message: `Hey, you were the highest Bidder for '${noneNull(
+					what[0]
+				)}', but the Auctioneer has decided not to sell this time`,
+				forConfirmation: false,
+			})
+		} else {
+			alertThis({
+				message: `'${noneNull(
+					what[0]
+				)}' finally closed at ${reach.formatCurrency(
+					what[1],
+					4
+				)} ${standardUnit}, with the Auctioneer rejecting the highest bid`,
+				forConfirmation: false,
+			})
 		}
 	}
 
@@ -683,10 +685,12 @@ const ReachContextProvider = ({ children }) => {
 		try {
 			const ctc = user.account.contract(auctionCtc)
 			ctc.p.Seller({ getAuction: auctionInfo })
-			ctc.events.log.monitor(handleAuctionLog)
-			ctc.events.down.monitor(handleAuctionLog)
-			ctc.events.outcome.monitor(handleAuctionLog)
-			ctc.events.created.monitor(handleAuctionLog)
+			ctc.events.created.monitor(handleAuctionLog_created)
+			ctc.events.bidSuccess.monitor(handleAuctionLog_bidSuccess)
+			ctc.events.endSuccess.monitor(handleAuctionLog_endSuccess)
+			ctc.events.down.monitor(handleAuctionLog_down)
+			ctc.events.accepted.monitor(handleAuctionLog_accepted)
+			ctc.events.rejected.monitor(handleAuctionLog_rejected)
 		} catch (error) {
 			console.log({ error })
 			stopWaiting(false)
@@ -701,10 +705,12 @@ const ReachContextProvider = ({ children }) => {
 		if (contractInfo && id !== null) {
 			const aucCtc = user.account.contract(auctionCtc, JSON.parse(contractInfo))
 			setCurrentAuction(id)
-			aucCtc.events.log.monitor(handleAuctionLog)
-			aucCtc.events.down.monitor(handleAuctionLog)
-			aucCtc.events.outcome.monitor(handleAuctionLog)
-			aucCtc.events.created.monitor(handleAuctionLog)
+			aucCtc.events.created.monitor(handleAuctionLog_created)
+			aucCtc.events.bidSuccess.monitor(handleAuctionLog_bidSuccess)
+			aucCtc.events.endSuccess.monitor(handleAuctionLog_endSuccess)
+			aucCtc.events.down.monitor(handleAuctionLog_down)
+			aucCtc.events.accepted.monitor(handleAuctionLog_accepted)
+			aucCtc.events.rejected.monitor(handleAuctionLog_rejected)
 			setShowSeller(true)
 		}
 	}
@@ -834,8 +840,9 @@ const ReachContextProvider = ({ children }) => {
 				await ctc.a.Bidder.bid(reach.parseCurrency(bid))
 			}
 			if (justJoining) {
-				ctc.events.log.monitor(handleAuctionLog)
-				ctc.events.down.monitor(handleAuctionLog)
+				ctc.events.bidSuccess.monitor(handleAuctionLog_bidSuccess)
+				ctc.events.endSuccess.monitor(handleAuctionLog_endSuccess)
+				ctc.events.down.monitor(handleAuctionLog_down)
 			}
 			auctionToBeEdited['yourBid'] = bid
 			auctionToBeEdited['liveBid'] = bid
@@ -882,10 +889,13 @@ const ReachContextProvider = ({ children }) => {
 				didOptIn = await optIn(auctionID)
 				if (didOptIn && justJoining) {
 					setShowBuyer(true)
-					if (ctc) ctc.events.log.monitor(handleAuctionLog)
-					else {
+					if (ctc) {
+						ctc.events.bidSuccess.monitor(handleAuctionLog_bidSuccess)
+						ctc.events.endSuccess.monitor(handleAuctionLog_endSuccess)
+					} else {
 						ctc = user.account.contract(auctionCtc, JSON.parse(ctcInfo))
-						ctc.events.log.monitor(handleAuctionLog)
+						ctc.events.bidSuccess.monitor(handleAuctionLog_bidSuccess)
+						ctc.events.endSuccess.monitor(handleAuctionLog_endSuccess)
 					}
 					return true
 				} else if (didOptIn) {
@@ -930,7 +940,8 @@ const ReachContextProvider = ({ children }) => {
 						JSON.parse(auctionToBeEdited['contractInfo'])
 					)
 					const didOptIn = await ctc.apis.Bidder.optIn()
-					ctc.events.outcome.monitor(handleAuctionLog)
+					ctc.events.accepted.monitor(handleAuctionLog_accepted)
+					ctc.events.rejected.monitor(handleAuctionLog_rejected)
 					auctionToBeEdited['optIn'] = didOptIn
 					const leftoverAuctions = auctions.filter((el) => Number(el.id) !== id)
 					const updatedAuctions = [auctionToBeEdited, ...leftoverAuctions]

@@ -17,10 +17,11 @@ export const main = Reach.App(() => {
 			deadline: UInt,
 			price: UInt,
 			owner: Address,
-			title: Bytes(20),
+			title: state,
 			description: Bytes(80),
 			adminContract: Contract,
 		}),
+		published: Fun([UInt], Null),
 	})
 
 	const objectRep = Struct([
@@ -51,11 +52,13 @@ export const main = Reach.App(() => {
 		rejectSale: Fun([], Bool),
 	})
 
-	const Auction = Events({	
-		log: [state, UInt, UInt],
-		down: [state, UInt, UInt, Address, Contract, UInt],
-		outcome: [state, state, UInt, Address, Address, Token],
-		created: [state, UInt, Address],
+	const Auction = Events({
+		created: [UInt, Address],
+		bidSuccess: [UInt, UInt],
+		endSuccess: [UInt, UInt],
+		down: [UInt, UInt, Address, Contract, UInt],
+		accepted: [state, UInt, Address, Address, Token],
+		rejected: [state, UInt, Address, Address, Token],
 	})
 
 	init()
@@ -99,7 +102,7 @@ export const main = Reach.App(() => {
 	const balAfter1stCall = balance()
 	const timeRemaining = thisConsensusTime() + auctionInfo.deadline
 
-	Auction.created(state.pad('created'), id, Seller)
+	Auction.created(id, Seller)
 	const [keepBidding, highestBidder, lastPrice, isFirstBid, endRes] =
 		parallelReduce([
 			true,
@@ -126,7 +129,7 @@ export const main = Reach.App(() => {
 						notify([highestBidder, lastPrice])
 						if (!isFirstBid) transfer(lastPrice).to(highestBidder)
 						const who = this
-						Auction.log(state.pad('bidSuccess'), id, bid)
+						Auction.bidSuccess(id, bid)
 						return [keepBidding, who, bid, false, endRes]
 					},
 				]
@@ -156,7 +159,7 @@ export const main = Reach.App(() => {
 						blockEnded: thisConsensusTime(),
 						lastBid: lastPrice,
 					})
-					Auction.log(state.pad('endSuccess'), id, lastPrice)
+					Auction.endSuccess(id, lastPrice)
 					notify(response)
 					return [false, highestBidder, lastPrice, isFirstBid, response]
 				}
@@ -166,14 +169,7 @@ export const main = Reach.App(() => {
 
 	const balAfter2ndCall = balance()
 
-	Auction.down(
-		state.pad('down'),
-		id,
-		lastPrice,
-		Seller,
-		getContract(),
-		createdAt
-	)
+	Auction.down(id, lastPrice, Seller, getContract(), createdAt)
 
 	const end = thisConsensusTime() + DEADLINE
 
@@ -207,8 +203,7 @@ export const main = Reach.App(() => {
 	if (agreed) {
 		transfer(balance(tokenId), tokenId).to(highestBidder)
 		transfer(balance()).to(Seller)
-		Auction.outcome(
-			state.pad('accepted'),
+		Auction.accepted(
 			auctionInfo.title,
 			lastPrice,
 			Seller,
@@ -218,8 +213,7 @@ export const main = Reach.App(() => {
 	} else {
 		transfer(balance(tokenId), tokenId).to(Seller)
 		transfer(balance()).to(highestBidder)
-		Auction.outcome(
-			state.pad('rejected'),
+		Auction.rejected(
 			auctionInfo.title,
 			lastPrice,
 			Seller,
