@@ -96,7 +96,7 @@ const ReachContextProvider = ({ children }) => {
 	} = {}) => {
 		await sleep(300)
 		promiseOfConfirmation?.resolve && promiseOfConfirmation.resolve()
-		const result = await new Promise((resolve, reject) => {
+		let result = await new Promise((resolve, reject) => {
 			setPromiseOfConfirmation({ resolve, reject })
 			setAlertInfo((previous) => ({
 				message,
@@ -108,7 +108,9 @@ const ReachContextProvider = ({ children }) => {
 				neutral,
 			}))
 			setShowAlert((lastState) => true)
-		}).catch((message) => null)
+		}).catch((message) => {
+			result = null
+		})
 		return result
 	}
 
