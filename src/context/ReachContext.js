@@ -394,14 +394,14 @@ const ReachContextProvider = ({ children }) => {
 		const metaObj = {
 			title: opts['name'],
 			description: '',
-			tokenUri: {
+			assetUri: {
 				raw,
 				gateway,
 			},
 			id: {
-				tokenId: 1,
-				tokenMetaData: {
-					tokenType: 'ERC721',
+				assetId: 1,
+				assetMetaData: {
+					tokenType: 'ARC69',
 				},
 			},
 			media: [
@@ -420,7 +420,7 @@ const ReachContextProvider = ({ children }) => {
 				name: opts['name'],
 				symbol: opts['symbol'],
 				totalSupply: 1,
-				tokenType: 'ERC721',
+				tokenType: 'ARC69',
 			},
 		}
 
@@ -913,7 +913,7 @@ const ReachContextProvider = ({ children }) => {
 
 	const optIn = async (id) => {
 		const agree = await alertThis({
-			message: `To view Live Bid, you must pay a small token of 1 ${standardUnit}`,
+			message: `To view Live Bid, you must pay a small asset of 1 ${standardUnit}`,
 			accept: 'Pay',
 			decline: 'Forfeit',
 		})
