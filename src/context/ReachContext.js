@@ -109,8 +109,9 @@ const ReachContextProvider = ({ children }) => {
 			}))
 			setShowAlert((lastState) => true)
 		}).catch((message) => {
-			result = null
+			setShowAlert((lastState) => false)
 		})
+		if (result === undefined) setShowAlert((lastState) => false)
 		return result
 	}
 
@@ -765,8 +766,7 @@ const ReachContextProvider = ({ children }) => {
 		let bid = await alertThis({
 			message: 'Enter your bidding amount',
 			prompt: true,
-		}).catch((x)=> null)
-		console.log(bid, typeof bid)
+		}).catch((x) => null)
 		if (bid === undefined) return null
 		startWaiting()
 		const userBal = reach.formatCurrency(await reach.balanceOf(user.account), 4)
