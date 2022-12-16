@@ -569,7 +569,7 @@ const ReachContextProvider = ({ children }) => {
 	}
 
 	const handleAuctionLog_accepted = async ({ what }) => {
-		if (reach.formatAddress(what[2]) === String(user.address)) {
+		if (String(reach.formatAddress(what[2])) === String(user.address)) {
 			alertThis({
 				message: `🥳 Congratulations!!! NFT sold at ${reach.formatCurrency(
 					what[1],
@@ -577,7 +577,7 @@ const ReachContextProvider = ({ children }) => {
 				)} ${standardUnit} 🎉`,
 				forConfirmation: false,
 			})
-		} else if (reach.formatAddress(what[3]) === String(user.address)) {
+		} else if (String(reach.formatAddress(what[3])) === String(user.address)) {
 			const viewToken = await alertThis({
 				message: `🥳 Congratulations!!! You now own this asset: ${parseInt(
 					what[4]
@@ -605,12 +605,12 @@ const ReachContextProvider = ({ children }) => {
 	}
 
 	const handleAuctionLog_rejected = async ({ what }) => {
-		if (reach.formatAddress(what[2]) === String(user.address)) {
+		if (String(reach.formatAddress(what[2])) === String(user.address)) {
 			alertThis({
 				message: `Thank you for using 0xAuction, your NFT would transferred back in a short while`,
 				forConfirmation: false,
 			})
-		} else if (reach.formatAddress(what[3]) === String(user.address)) {
+		} else if (String(reach.formatAddress(what[3])) === String(user.address)) {
 			alertThis({
 				message: `Hey, you were the highest Bidder for '${noneNull(
 					what[0]
