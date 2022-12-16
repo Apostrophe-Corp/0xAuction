@@ -54,7 +54,7 @@ export const main = Reach.App(() => {
 
 	const Auction = Events({
 		created: [UInt, Address],
-		bidSuccess: [UInt, UInt],
+		bidSuccess: [UInt, UInt, Address],
 		endSuccess: [UInt, UInt],
 		down: [UInt, UInt, Address, Contract, UInt, state],
 		accepted: [state, UInt, Address, Address, Token],
@@ -77,6 +77,7 @@ export const main = Reach.App(() => {
 		Auctions_ended: Fun([endResponse], Null),
 		Auctions_getID: Fun([], UInt),
 		Auctions_getAdminAddress: Fun([], Address),
+		Auctions_updateHighestBidder: Fun([UInt, Address], Null)
 	}
 
 	const externalCalls = remote(adminContract, externalStructure)
@@ -126,10 +127,11 @@ export const main = Reach.App(() => {
 				return [
 					bid,
 					(notify) => {
-						notify([highestBidder, lastPrice])
 						if (!isFirstBid) transfer(lastPrice).to(highestBidder)
 						const who = this
-						Auction.bidSuccess(id, bid)
+						externalCalls.Auctions_updateHighestBidder(id, who)
+						Auction.bidSuccess(id, bid, who)
+						notify([who, lastPrice])
 						return [keepBidding, who, bid, false, endRes]
 					},
 				]

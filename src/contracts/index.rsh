@@ -7,7 +7,7 @@
 
 export const main = Reach.App(() => {
 	const Admin = Participant('Admin', {
-		deployed: Fun([Contract],Null)
+		deployed: Fun([Contract], Null),
 	})
 
 	const objectRep = Struct([
@@ -32,11 +32,13 @@ export const main = Reach.App(() => {
 		ended: Fun([endResponse], Null),
 		getID: Fun([], UInt),
 		getAdminAddress: Fun([], Address),
+		updateHighestBidder: Fun([UInt, Address], Null),
 	})
 
 	const Auction = Events({
 		end: [UInt, UInt, UInt],
 		create: [UInt, Contract, UInt, Address, Bytes(20), Bytes(80), UInt, Token],
+		updateHighestBidder: [UInt, Address],
 	})
 
 	init()
@@ -68,7 +70,6 @@ export const main = Reach.App(() => {
 			return auctionID
 		})
 		.api(Auctions.ended, (obj, ret) => {
-			ret(null)
 			const endResponseStruct = endResponse.fromObject(obj)
 			const endResponseObject = endResponse.toObject(endResponseStruct)
 			Auction.end(
@@ -76,10 +77,16 @@ export const main = Reach.App(() => {
 				endResponseObject.blockEnded,
 				endResponseObject.lastBid
 			)
+			ret(null)
 			return auctionID
 		})
 		.api(Auctions.getAdminAddress, (ret) => {
 			ret(Admin)
+			return auctionID
+		})
+		.api(Auctions.updateHighestBidder, (id, address, ret) => {
+			Auction.updateHighestBidder(id, address)
+			ret(null)
 			return auctionID
 		})
 	commit()

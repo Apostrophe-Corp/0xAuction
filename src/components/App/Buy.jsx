@@ -175,16 +175,18 @@ const Buy = () => {
 							)}
 							ref={latestAuctionRef}
 						>
-							{latestAuctions.map((el, i) => (
-								<LatestAuction
-									key={i}
-									fullAuction={el}
-									assetID={el.tokenId}
-									title={el.title}
-									desiredPrice={el.price}
-									description={el.description}
-								/>
-							))}
+							{latestAuctions
+								.filter(async (el) => (await el.ended()) === false)
+								.map((el, i) => (
+									<LatestAuction
+										key={i}
+										fullAuction={el}
+										assetID={el.tokenId}
+										title={el.title}
+										desiredPrice={el.price}
+										description={el.description}
+									/>
+								))}
 						</div>
 					)}
 				</div>
@@ -204,16 +206,18 @@ const Buy = () => {
 						buy.aucAuctions
 					)}
 				>
-					{auctions.map((el, i) => (
-						<Auction
-							key={i}
-							fullAuction={el}
-							assetID={el.tokenId}
-							title={el.title}
-							desiredPrice={el.price}
-							description={el.description}
-						/>
-					))}
+					{auctions
+						.filter(async (el) => (await el.ended()) === false)
+						.map((el, i) => (
+							<Auction
+								key={i}
+								fullAuction={el}
+								assetID={el.tokenId}
+								title={el.title}
+								desiredPrice={el.price}
+								description={el.description}
+							/>
+						))}
 				</div>
 			)}
 		</div>
