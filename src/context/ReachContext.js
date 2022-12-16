@@ -237,7 +237,7 @@ const ReachContextProvider = ({ children }) => {
 
 	const postAuction = async ({ what }) => {
 		const time = await reach.getNetworkTime()
-		if (time < parseInt(what[2]) + deadline) {
+		if (time < parseInt(what[2]) + 10000) {
 			const presentAuctions = auctions
 			presentAuctions.push({
 				id: parseInt(what[0]),
