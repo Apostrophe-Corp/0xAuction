@@ -520,7 +520,7 @@ const ReachContextProvider = ({ children }) => {
 							message: `Do you accept the current bid of ${reach.formatCurrency(
 								what[1],
 								4
-							)} ${standardUnit}?`,
+							)} ${standardUnit} for the ${noneNull(what[5])} auction?`,
 							accept: 'Yes',
 							decline: 'No',
 						})
