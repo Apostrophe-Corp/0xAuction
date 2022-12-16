@@ -754,6 +754,23 @@ const ReachContextProvider = ({ children }) => {
 		}
 	}
 
+	const placeNewBid = async (auctionInfo) => {
+		const ctc = user.account.contract(
+			auctionCtc,
+			JSON.parse(auctionInfo.contractInfo)
+		)
+		let continue_ = false
+		do {
+			continue_ = await handleBid({
+				auctionID: auctionInfo.id,
+				loopVar: continue_,
+				ctc,
+				justJoining: true,
+			})
+			if (continue_ === null) break
+		} while (continue_)
+	}
+
 	const handleBid = async ({
 		auctionID = 0,
 		loopVar = false,
@@ -963,6 +980,7 @@ const ReachContextProvider = ({ children }) => {
 		endAuction,
 		optIn,
 		joinAuction,
+		placeNewBid,
 	}
 
 	return (

@@ -15,6 +15,7 @@ const Buyer = () => {
 		auctions,
 		setShowBuyer,
 		alertThis,
+		placeNewBid,
 	} = useReach()
 	const [auction, setAuction] = useState(
 		auctions.filter((el) => Number(el.id) === currentAuction)[0]
@@ -169,15 +170,23 @@ const Buyer = () => {
 					</span>
 				</div>
 				<div className={cf(s.wMax, s.flex, s.flexCenter, auc.terminateCon)}>
-					{!auction.optIn && (
+					{(!auction.optIn || auction.liveBid > auction.yourBid) && (
 						<button
 							className={cf(s.flex, s.flexCenter, auc.liveBidBtn)}
 							type='button'
 							onClick={() => {
-								optIn(auction.id)
+								!auction.optIn
+									? optIn(auction.id)
+									: auction.liveBid > auction.yourBid
+									? placeNewBid(auction)
+									: false
 							}}
 						>
-							View Live Bid
+							{!auction.optIn
+								? 'View Live Bid'
+								: auction.liveBid > auction.yourBid
+								? 'Place New Bid'
+								: ''}
 						</button>
 					)}
 					<button
