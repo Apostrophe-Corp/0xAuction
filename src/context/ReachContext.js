@@ -471,7 +471,6 @@ const ReachContextProvider = ({ children }) => {
 			auctionToBeEdited['liveBid'] > yourBid &&
 			String(owner) !== String(user.address)
 		) {
-			console.log({ showBuyer, showSeller })
 			const bidAgain = await alertThis({
 				message: `You just got outbid${
 					opt ? `, the highest bid is now ${newBid} ${standardUnit}` : ''

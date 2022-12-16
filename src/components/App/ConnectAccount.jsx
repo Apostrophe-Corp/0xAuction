@@ -4,24 +4,23 @@ import ca from '../../styles/ConnectAccount.module.css'
 import { useReach, fmtClasses as cf } from '../../hooks'
 
 const ConnectAccount = () => {
-	const { setShowConnectAccount, connectToWallet, user, alertThis, contract } =
-		useReach()
+	const { setShowConnectAccount, connectToWallet, user } = useReach()
 
-	const copyToClipboard = async (e) => {
-		navigator.clipboard.writeText(user.address)
-		alertThis({
-			message: 'Copied to clipboard',
-			forConfirmation: false,
-		})
-	}
+	// const copyToClipboard = async (e) => {
+	// 	navigator.clipboard.writeText(user.address)
+	// 	alertThis({
+	// 		message: 'Copied to clipboard',
+	// 		forConfirmation: false,
+	// 	})
+	// }
 
-	const copyToClipboardCtc = async (e) => {
-		navigator.clipboard.writeText(contract.ctcInfoStr)
-		alertThis({
-			message: 'Copied to clipboard',
-			forConfirmation: false,
-		})
-	}
+	// const copyToClipboardCtc = async (e) => {
+	// 	navigator.clipboard.writeText(contract.ctcInfoStr)
+	// 	alertThis({
+	// 		message: 'Copied to clipboard',
+	// 		forConfirmation: false,
+	// 	})
+	// }
 
 	return (
 		<div className={cf(s.wMax, s.flex, s.flexCenter, ca.conParent)}>
