@@ -179,9 +179,8 @@ const Buy = () => {
 								latestAuctions.filter(
 									async (el) => (await el.ended()) === false
 								)
-							)
-								.then((latestAuctions) => latestAuctions)
-								.map((el, i) => (
+							).then((latestAuctions) =>
+								latestAuctions.map((el, i) => (
 									<LatestAuction
 										key={i}
 										fullAuction={el}
@@ -190,7 +189,8 @@ const Buy = () => {
 										desiredPrice={el.price}
 										description={el.description}
 									/>
-								))}
+								))
+							)}
 						</div>
 					)}
 				</div>
@@ -212,9 +212,8 @@ const Buy = () => {
 				>
 					{Promise.all(
 						auctions.filter(async (el) => (await el.ended()) === false)
-					)
-						.then((auctions) => auctions)
-						.map((el, i) => (
+					).then((auctions) =>
+						auctions.map((el, i) => (
 							<Auction
 								key={i}
 								fullAuction={el}
@@ -223,7 +222,8 @@ const Buy = () => {
 								desiredPrice={el.price}
 								description={el.description}
 							/>
-						))}
+						))
+					)}
 				</div>
 			)}
 		</div>
