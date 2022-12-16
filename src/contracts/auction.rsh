@@ -102,12 +102,12 @@ export const main = Reach.App(() => {
 		tokenId: tokenId,
 	})
 
+	AuctView.live.set(true)
 	externalCalls.Auctions_created(auction)
 
 	const balAfter1stCall = balance()
 	const timeRemaining = thisConsensusTime() + auctionInfo.deadline
 
-	AuctView.live.set(true)
 	Auction.created(id, Seller)
 	const [keepBidding, highestBidder, lastPrice, isFirstBid, endRes] =
 		parallelReduce([

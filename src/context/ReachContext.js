@@ -238,7 +238,7 @@ const ReachContextProvider = ({ children }) => {
 
 	const postAuction = async ({ what }) => {
 		const presentAuctions = auctions
-		const tempCtc = user.contract(auctionCtc, what[1])
+		const tempCtc = user.account.contract(auctionCtc, what[1])
 		const response = await tempCtc.v.live()
 		const isLive = response[1]
 		if (isLive) {
