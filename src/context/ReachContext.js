@@ -455,6 +455,7 @@ const ReachContextProvider = ({ children }) => {
 					} else {
 						stopWaiting()
 						if (auctions.length) setView('Buy')
+						else setView('App')
 						alertThis({
 							message:
 								'Your auction is live. Click on it on the Buy Page to monitor',
