@@ -20,7 +20,7 @@
 	top: 0;
 	left: 0;
 	z-index: -1;
-	background-color: rgba(0, 0, 0, 0.7);
+	background-color: #000000b3;
 }
 
 .alertDetails {
@@ -30,7 +30,7 @@
 			rgb(165, 47, 219),
 			rgba(96, 170, 254, 0.5)
 		),
-		rgb(173, 61, 224);
+		#ad3de0;
 	color: #fff;
 	border: 1px solid transparent;
 	border-radius: 10px;
