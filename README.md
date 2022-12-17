@@ -12,11 +12,9 @@ The end game is for users to be able to create, buy and sell NFTs and other coll
 
 ### Pre-requisites and Local Development
 
-Developers using this dApp should already have Reach, Docker and Node installed on their local machines.
+Developers using this dApp should already have Node installed on their local machines.
 
 ### The guidelines for installation can be found below
-
-[Instructions for installing Reach and Docker](https://docs.reach.sh/quickstart/)  
 
 [Instructions for installing Node](https://nodejs.org/en/download/)
 
@@ -26,14 +24,13 @@ Of course users can also use other means of connecting to our dApp, as well as o
 Currently supported connection methods include:  
 
 - **MyAlgoConnect**
-- **PeraConnect**
+<!-- - **PeraConnect** -->
 - **WalletConnect**
+- **Mnemonic**
 
 [You can get some testnet Algos from the Algo Faucet here](https://bank.testnet.algorand.network/).
 
 ## Running the dApp
-
-We recommend running the dApp using Ubuntu20.04 terminal.
 
 ### Steps
 
@@ -46,11 +43,7 @@ Then run the following commands to start up the dApp:
 ```sh
 >> npm install
 
->> ./reach compile
-
->> ./reach compile auction.rsh
-
->> REACH_CONNECTOR_MODE=ALGO ./reach react
+>> npm start
 
 ```
 
@@ -59,16 +52,16 @@ Then run the following commands to start up the dApp:
 - When using our dApp, interactions that would require a communication to be made with the blockchain through your account would require you sign some transactions. The following interactions are to be taken note of:  
   - Deployment of an 0xAuction contract - usually 3 transactions.
   - Minting of a token - just 1.
-  - Starting an auction - multiple transactions.
+  - Starting an auction - usually 3 transactions.
   - Placing a bid - just 1.
   - Opting in for Live Bid - just 1.
-  - Ending an auction - multiple transactions.
+  - Ending an auction - just 1.
 
 - To experience all the features of our dApp, we advise you open at least 3 browser windows (For instance one Incognito Google Chrome tab, one Guest Google Chrome tab and one Brave browser tab).
 
 - Navigate to the app at the URL `http://localhost:3000`.
 
-- Click on the **Connect Account** button and select the **Other Wallet** option to activate Wallet Connect and scan the QR code.
+- Click on the **Connect Account** button and select the **WalletConnect** option to activate WalletConnect and scan the QR code.
 
 - Click on any of the features of the dApp, Create, Sell, or Buy to start the process to launch or connect to, an 0xAuction contract.
 
@@ -81,7 +74,7 @@ Then run the following commands to start up the dApp:
 #### Important points to note
 
 - Signing of transactions is mandatory for a free flow of the dApp's features.
-- Asset opt-in is mandatory before bidding for an asset. If this fails, good, but if it stalls, or the request never comes up on the user's wallet, refresh the page, connect to the same 0xAuction contract and attempt the bid again; it's completely decentralized so no information of theirs is lost in this process.
+- Asset opt-in is mandatory before bidding for an asset. If this fails, good, but if it stalls, or the request never comes up on the user's wallet, refresh the page, connect to the same 0xAuction contract and attempt the bid again; it's completely decentralized so no information of yours is lost in this process.
 - Only users who opt-in to Live bid get to see the outcome of the auction at its end, else they only get notified that the auction has ended.
 - Failure on the Auctioneer's part to give a reply on the prompt to decide whether to accept the highest bid or not, would be regarded as an approval to sell to the highest bidder.
 - Users are not advised to use a URL shortener as opposed to the demo, this was only stated for testing purposes as real NFTs must have a reliable media link to their NFT media file, preferably from one hosted on IPFS, as URL shortener providers could someday crash and their links rendered useless.
@@ -90,20 +83,6 @@ Then run the following commands to start up the dApp:
 We encourage you to play around with the dApp and create NFTs, auction NFTs or bid on items at 0xAuction's pool of auctions.
 
 ### Troubleshooting
-
-- `docker: Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?`
-
-If you get the above error message:
-
-Please run the following commands:
-
-```sh
->> sudo service docker stop
-
->> sudo service docker start
-
->> REACH_CONNECTOR_MODE=ALGO ./reach react
-```
 
 - `Unable to connect with a different wallet on the same browser even after closing the browser and launching it back again`
 
