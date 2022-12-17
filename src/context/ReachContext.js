@@ -513,6 +513,9 @@ const ReachContextProvider = ({ children }) => {
 					? newBid
 					: Number(auctionToBeEdited['yourBid'])
 		} else auctionToBeEdited['liveBid'] = newBid
+		if(String(auctionToBeEdited['highestBidder']) === String(user.address)){
+			auctionToBeEdited['yourBid'] = newBid
+		}
 		const leftOutAuctions = auctions.filter(
 			(el) => Number(el.id) !== parseInt(what[0])
 		)
