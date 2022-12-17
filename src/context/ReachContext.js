@@ -186,7 +186,7 @@ const ReachContextProvider = ({ children }) => {
 				)
 				break
 		}
-		
+
 		try {
 			const account = mnemonic
 				? await instantReach.newAccountFromMnemonic(secret)
@@ -1146,14 +1146,24 @@ const ReachContextProvider = ({ children }) => {
 				</div>
 				<button
 					className={cf(s.w480_100, s.w360_100, app.connectAccount)}
-					onClick={() =>
-						!user.address
+					onClick={() => {
+						const copyToClipboardCtc = async () => {
+							navigator.clipboard.writeText(contract.ctcInfoStr)
+						}
+						return !user.address
 							? setShowConnectAccount(true)
-							: alertThis({
+							: process.env.REACT_APP_ADMIN_CONTRACT_INFO
+							? alertThis({
 									message: 'Your wallet is connected',
 									forConfirmation: false,
 							  })
-					}
+							: (copyToClipboardCtc(),
+							  alertThis({
+									message:
+										'Your wallet is connected. By the way the 0xAuction contract information just got copied to the clipboard',
+									forConfirmation: false,
+							  }))
+					}}
 				>
 					{user.address ? user.address : `Connect Account`}
 				</button>
