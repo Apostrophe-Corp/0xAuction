@@ -685,15 +685,14 @@ const ReachContextProvider = ({ children }) => {
 		}
 	}
 
-	const handleAuctionLog_optInSuccess = async ({ what }) => {
-		await sleep(2000).then(() => {
+	const handleAuctionLog_optInSuccess = ({ what }) => {
 			const user = reach.formatAddress(what[1])
 			const currentAuctions = auctions
 			const auctionToBeEdited = currentAuctions.filter(
 				(el) => Number(el.id) === parseInt(what[0])
 			)[0]
 			if (
-				auctionToBeEdited &&
+				auctionToBeEdited !== undefined &&
 				String(user) === String(user.address)
 			) {
 				auctionToBeEdited['optIn'] = true
@@ -704,7 +703,6 @@ const ReachContextProvider = ({ children }) => {
 				setAuctions((previous) => updatedAuctions)
 				updateLatestAuctions(updatedAuctions)
 			}
-		})
 	}
 
 	const createAuction = async (auctionParams) => {
