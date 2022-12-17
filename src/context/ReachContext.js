@@ -118,16 +118,26 @@ const ReachContextProvider = ({ children }) => {
 			setShowPreloader(display)
 			if (display) setProcessing(display)
 		}
+		let waiter = undefined
 		try {
 			await new Promise((resolve, reject) => {
 				waitingPro['resolve'] = resolve
 				waitingPro['reject'] = reject
 				shouldDisplay(true)
+				waiter = setTimeout(() => {
+					alertThis({
+						message: `This process is taking longer than expected. Please clear the cookies used by this site, refresh, reconnect your wallet, and try this again if need be`,
+						forConfirmation: false,
+					})
+					clearTimeout(waiter)
+				}, 120000)
 			})
 			shouldDisplay(false)
 		} catch (error) {
 			shouldDisplay(false)
 		}
+		clearTimeout(waiter)
+		waiter = undefined
 	}
 
 	const stopWaiting = (mode = true) => {
@@ -308,6 +318,7 @@ const ReachContextProvider = ({ children }) => {
 			setAuctions((previous) => remainingAuctions)
 			updateLatestAuctions(remainingAuctions)
 		})
+		stopWaiting()
 	}
 
 	const updateHighestBidder = async ({ what }) => {
@@ -513,7 +524,7 @@ const ReachContextProvider = ({ children }) => {
 					? newBid
 					: Number(auctionToBeEdited['yourBid'])
 		} else auctionToBeEdited['liveBid'] = newBid
-		if(String(auctionToBeEdited['highestBidder']) === String(user.address)){
+		if (String(auctionToBeEdited['highestBidder']) === String(user.address)) {
 			auctionToBeEdited['yourBid'] = newBid
 		}
 		const leftOutAuctions = auctions.filter(
@@ -673,6 +684,27 @@ const ReachContextProvider = ({ children }) => {
 		}
 	}
 
+	const handleAuctionLog_optInSuccess = async ({ what }) => {
+		await sleep(2000).then(() => {
+			const user = reach.formatAddress(what[1])
+			const auctionToBeEdited = auctions.filter(
+				(el) => Number(el.id) === parseInt(what[0])
+			)[0]
+			if (
+				auctionToBeEdited &&
+				String(reach.formatAddress(user)) === String(user.address)
+			) {
+				auctionToBeEdited['optIn'] = true
+				const leftOutAuctions = auctions.filter(
+					(el) => Number(el.id) !== parseInt(what[0])
+				)
+				const updatedAuctions = [auctionToBeEdited, ...leftOutAuctions]
+				setAuctions((previous) => updatedAuctions)
+				updateLatestAuctions(updatedAuctions)
+			}
+		})
+	}
+
 	const createAuction = async (auctionParams) => {
 		startWaiting()
 		const [, nftBal] = await reach.balancesOf(user.account, [
@@ -703,6 +735,7 @@ const ReachContextProvider = ({ children }) => {
 			ctc.events.down.monitor(handleAuctionLog_down)
 			ctc.events.accepted.monitor(handleAuctionLog_accepted)
 			ctc.events.rejected.monitor(handleAuctionLog_rejected)
+			ctc.events.optInSuccess.monitor(handleAuctionLog_optInSuccess)
 		} catch (error) {
 			console.log({ error })
 			stopWaiting(false)
@@ -723,6 +756,7 @@ const ReachContextProvider = ({ children }) => {
 			aucCtc.events.down.monitor(handleAuctionLog_down)
 			aucCtc.events.accepted.monitor(handleAuctionLog_accepted)
 			aucCtc.events.rejected.monitor(handleAuctionLog_rejected)
+			aucCtc.events.optInSuccess.monitor(handleAuctionLog_optInSuccess)
 			setShowSeller(true)
 		}
 	}
@@ -738,6 +772,7 @@ const ReachContextProvider = ({ children }) => {
 			aucCtc.events.bidSuccess.monitor(handleAuctionLog_bidSuccess)
 			aucCtc.events.endSuccess.monitor(handleAuctionLog_endSuccess)
 			aucCtc.events.down.monitor(handleAuctionLog_down)
+			aucCtc.events.optInSuccess.monitor(handleAuctionLog_optInSuccess)
 			if (optIn) {
 				aucCtc.events.accepted.monitor(handleAuctionLog_accepted)
 				aucCtc.events.rejected.monitor(handleAuctionLog_rejected)
@@ -757,7 +792,6 @@ const ReachContextProvider = ({ children }) => {
 			try {
 				const ctc = user.account.contract(auctionCtc, JSON.parse(ctcInfo))
 				await ctc.a.Auctioneer.stopAuction()
-				stopWaiting()
 				setShowSeller(false)
 			} catch (error) {
 				console.log({ error })
@@ -906,6 +940,7 @@ const ReachContextProvider = ({ children }) => {
 				ctc.events.bidSuccess.monitor(handleAuctionLog_bidSuccess)
 				ctc.events.endSuccess.monitor(handleAuctionLog_endSuccess)
 				ctc.events.down.monitor(handleAuctionLog_down)
+				ctc.events.optInSuccess.monitor(handleAuctionLog_optInSuccess)
 			}
 			auctionToBeEdited['yourBid'] = bid
 			auctionToBeEdited['liveBid'] = bid

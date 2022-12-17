@@ -59,6 +59,7 @@ export const main = Reach.App(() => {
 		down: [UInt, UInt, Address, Contract, UInt, state],
 		accepted: [state, UInt, Address, Address, Token],
 		rejected: [state, UInt, Address, Address, Token],
+		optInSuccess: [UInt, Address],
 	})
 
 	const AuctView = View({
@@ -149,6 +150,7 @@ export const main = Reach.App(() => {
 						const sellerDue = (optToken / 100) * 10
 						if (balance() >= adminDue) transfer(adminDue).to(AdminAddress)
 						if (balance() >= sellerDue) transfer(sellerDue).to(Seller)
+						Auction.optInSuccess(id, this)
 						notify(true)
 						return [keepBidding, highestBidder, lastPrice, isFirstBid, endRes]
 					},
