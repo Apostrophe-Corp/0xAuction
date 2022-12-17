@@ -136,7 +136,6 @@ const Buy = () => {
 			const newSet = await Promise.all(
 				currentAuctions.filter(async (el) => (await el.ended()) === false)
 			)
-			console.log(newSet)
 			setNewAuctions((previous) => newSet)
 		}
 		updateAuctions()
@@ -148,7 +147,6 @@ const Buy = () => {
 			const newSet = await Promise.all(
 				currentAuctions.filter(async (el) => (await el.ended()) === false)
 			)
-			console.log(newSet)
 			setNewLatest((previous) => newSet)
 		}
 		updateAuctions()
