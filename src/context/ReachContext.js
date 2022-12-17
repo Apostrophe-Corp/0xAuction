@@ -521,7 +521,8 @@ const ReachContextProvider = ({ children }) => {
 		updateLatestAuctions(updatedAuctions)
 		if (
 			auctionToBeEdited['liveBid'] > yourBid &&
-			String(owner) !== String(user.address)
+			String(owner) !== String(user.address) &&
+			String(auctionToBeEdited['highestBidder']) !== String(user.address)
 		) {
 			const bidAgain = await alertThis({
 				message: `You just got outbid for the '${noneNull(what[3])}' auction${
