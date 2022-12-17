@@ -874,7 +874,7 @@ const ReachContextProvider = ({ children }) => {
 						clearTimeout(waiter)
 						waiter = undefined
 						resolve()
-					}, 2000)
+					}, 5000)
 				})
 				let continue_ = false
 				do {
