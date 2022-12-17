@@ -510,55 +510,57 @@ const ReachContextProvider = ({ children }) => {
 	}
 
 	const handleAuctionLog_bidSuccess = async ({ what }) => {
-		const newBid = reach.formatCurrency(what[1], 4)
-		const currentAuctions = auctions
-		const auctionToBeEdited = currentAuctions.filter(
-			(el) => Number(el.id) === parseInt(what[0])
-		)[0]
-		let yourBid = Number(auctionToBeEdited['yourBid']),
-			owner = auctionToBeEdited['owner'],
-			ctcInfo = auctionToBeEdited['contractInfo'],
-			opt = auctionToBeEdited['optIn']
-		if (String(owner) !== String(user.address)) {
-			auctionToBeEdited['liveBid'] =
-				newBid > Number(auctionToBeEdited['yourBid'])
-					? newBid
-					: Number(auctionToBeEdited['yourBid'])
-		} else auctionToBeEdited['liveBid'] = newBid
-		if (String(reach.formatAddress(what[2])) === String(user.address)) {
-			auctionToBeEdited['yourBid'] = newBid
-		}
-		const leftOutAuctions = auctions.filter(
-			(el) => Number(el.id) !== parseInt(what[0])
-		)
-		const updatedAuctions = [auctionToBeEdited, ...leftOutAuctions]
-		setAuctions((previous) => updatedAuctions)
-		updateLatestAuctions(updatedAuctions)
-		if (
-			auctionToBeEdited['liveBid'] > yourBid &&
-			String(owner) !== String(user.address) &&
-			String(auctionToBeEdited['highestBidder']) !== String(user.address)
-		) {
-			const bidAgain = await alertThis({
-				message: `You just got outbid for the '${noneNull(what[3])}' auction${
-					opt ? `, the highest bid is now ${newBid} ${standardUnit}` : ''
-				}. Would you like to bid again?`,
-				accept: 'Yes',
-				decline: 'No',
-			})
-			if (bidAgain) {
-				let continue_ = false
-				do {
-					continue_ = await handleBid({
-						auctionID: parseInt(what[0]),
-						loopVar: continue_,
-						ctcInfo,
-						justJoining: false,
-					})
-					if (continue_ === null) break
-				} while (continue_)
+		sleep(3000).then(async () => {
+			const newBid = reach.formatCurrency(what[1], 4)
+			const currentAuctions = auctions
+			const auctionToBeEdited = currentAuctions.filter(
+				(el) => Number(el.id) === parseInt(what[0])
+			)[0]
+			let yourBid = Number(auctionToBeEdited['yourBid']),
+				owner = auctionToBeEdited['owner'],
+				ctcInfo = auctionToBeEdited['contractInfo'],
+				opt = auctionToBeEdited['optIn']
+			if (String(owner) !== String(user.address)) {
+				auctionToBeEdited['liveBid'] =
+					newBid > Number(auctionToBeEdited['yourBid'])
+						? newBid
+						: Number(auctionToBeEdited['yourBid'])
+			} else auctionToBeEdited['liveBid'] = newBid
+			if (String(reach.formatAddress(what[2])) === String(user.address)) {
+				auctionToBeEdited['yourBid'] = newBid
 			}
-		}
+			const leftOutAuctions = auctions.filter(
+				(el) => Number(el.id) !== parseInt(what[0])
+			)
+			const updatedAuctions = [auctionToBeEdited, ...leftOutAuctions]
+			setAuctions((previous) => updatedAuctions)
+			updateLatestAuctions(updatedAuctions)
+			if (
+				auctionToBeEdited['liveBid'] > yourBid &&
+				String(owner) !== String(user.address) &&
+				String(auctionToBeEdited['highestBidder']) !== String(user.address)
+			) {
+				const bidAgain = await alertThis({
+					message: `You just got outbid for the '${noneNull(what[3])}' auction${
+						opt ? `, the highest bid is now ${newBid} ${standardUnit}` : ''
+					}. Would you like to bid again?`,
+					accept: 'Yes',
+					decline: 'No',
+				})
+				if (bidAgain) {
+					let continue_ = false
+					do {
+						continue_ = await handleBid({
+							auctionID: parseInt(what[0]),
+							loopVar: continue_,
+							ctcInfo,
+							justJoining: false,
+						})
+						if (continue_ === null) break
+					} while (continue_)
+				}
+			}
+		})
 	}
 
 	const handleAuctionLog_endSuccess = async ({ what }) => {
