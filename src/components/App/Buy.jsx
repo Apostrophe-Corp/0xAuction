@@ -34,7 +34,9 @@ const LatestAuction = ({
 					// console.log('Media URL:', expectedData.url)
 					setPreviewBgs({ x: expectedData.url, found: true })
 				}
-			} catch (error) {}
+			} catch (error) {
+				setPreviewBgs({ x: '', found: false })
+			}
 		}
 		fetchAssetMetadata(assetID)
 	}, [assetID])
@@ -92,7 +94,9 @@ const Auction = ({ assetID, title, desiredPrice, url = '', fullAuction }) => {
 					// console.log('Media URL:', expectedData.url)
 					setPreviewBgs({ x: expectedData.url, found: true })
 				}
-			} catch (error) {}
+			} catch (error) {
+				setPreviewBgs({ x: '', found: false })
+			}
 		}
 		fetchAssetMetadata(assetID)
 	}, [assetID])
@@ -177,11 +181,10 @@ const Buy = () => {
 
 	useEffect(() => {
 		alertThis({
-			message:
-				"Please be informed! In the event you carry out an action warranting you sign a transaction but you're not notified on your connected wallet, please refresh the page, and perform the action again",
+			message: `Please be informed! In the event you carry out an action warranting you sign a transaction but you're not notified on your connected wallet, please refresh the page, and perform the action again`,
 			forConfirmation: false,
 		})
-	// eslint-disable-next-line react-hooks/exhaustive-deps
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 
 	return (
