@@ -90,14 +90,15 @@ On most browsers, simply clear the cookies used by `http://localhost:3000`, on F
 
 ## The DApp
 
-![Landing page](project_images/hero_view.png)  
-![Features](project_images/feature_view.png)
-![Sell](project_images/auction_view.png)
-![Showcase](project_images/buy_latest_view.png)
-![Auction Pool](project_images/buy_all_view.png)
-![Seller](project_images/seller_view.png)
-![Buyer No-Opt](project_images/buyer_not_opt_in.png)
-![Buyer No-Opt](project_images/buyer_opt_in.png)
+![Hero](https://user-images.githubusercontent.com/68448315/208217963-e7ea11af-fa26-47cb-b8bb-b37cc9aea7fb.png)  
+![About](https://user-images.githubusercontent.com/68448315/208217977-d92bbc60-5dbb-4a38-a79a-cf459f5696d8.png)  
+![Sell](https://user-images.githubusercontent.com/68448315/208217989-3cb38c59-8ba1-4379-b21e-9fdf32f506db.png)  
+![Latest_Auctions](https://user-images.githubusercontent.com/68448315/208217995-5db5bf70-7d94-4955-9a1f-d12625fcd973.png)  
+![Latest_Auctions](https://user-images.githubusercontent.com/68448315/208218000-39feeaff-c8e6-4202-9765-c3174ebd0df1.png)  
+![All_Auctions](https://user-images.githubusercontent.com/68448315/208218014-23402c80-da49-4510-a0d8-eb0fb8589166.png)  
+![Seller](https://user-images.githubusercontent.com/68448315/208218036-88d63704-c849-4a9d-bab2-4074a8b61056.png)  
+![Buyer_1](https://user-images.githubusercontent.com/68448315/208218041-6e8f59a9-de4e-4dee-81bb-d0bbf94d25fd.png)  
+![Buyer_2](https://user-images.githubusercontent.com/68448315/208218049-4077ea3f-fb27-4215-8898-d7a41969fe69.png)  
 
 ## Authors
 
