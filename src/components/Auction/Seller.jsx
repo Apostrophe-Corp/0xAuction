@@ -24,7 +24,7 @@ const Seller = () => {
 		)[0]
 		if (!updatedAuction) setShowSeller(false)
 		setAuction(updatedAuction)
-	}, [auctions])
+	}, [auctions, currentAuction, setShowSeller])
 
 	const aucAsset = useRef()
 	const [auction, setAuction] = useState(
