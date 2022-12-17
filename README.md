@@ -21,8 +21,8 @@ In addition, they should have an Algorand wallet (preferably Pera Algo Wallet) i
 Of course users can also use other means of connecting to our dApp, as well as other wallets.  
 Currently supported connection methods include:  
 
-- **MyAlgoConnect**
 <!-- - **PeraConnect** -->
+- **MyAlgoConnect**
 - **WalletConnect**
 - **Mnemonic**
 
