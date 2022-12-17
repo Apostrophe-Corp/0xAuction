@@ -1157,12 +1157,17 @@ const ReachContextProvider = ({ children }) => {
 									message: 'Your wallet is connected',
 									forConfirmation: false,
 							  })
-							: (copyToClipboardCtc(),
+							: contract.ctcInfoStr
+							? (copyToClipboardCtc(),
 							  alertThis({
 									message:
 										'Your wallet is connected. By the way the 0xAuction contract information just got copied to the clipboard',
 									forConfirmation: false,
 							  }))
+							: alertThis({
+									message: 'Your wallet is connected',
+									forConfirmation: false,
+							  })
 					}}
 				>
 					{user.address ? user.address : `Connect Account`}
