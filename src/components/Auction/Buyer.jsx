@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useLayoutEffect } from 'react'
 import s from '../../styles/Shared.module.css'
 import auc from '../../styles/Auction.module.css'
 import notFound from '../../assets/images/no_image.jpg'
@@ -17,10 +17,9 @@ const Buyer = () => {
 		alertThis,
 		placeNewBid,
 	} = useReach()
-	const [auction, setAuction] = useState(
-		auctions.filter((el) => Number(el.id) === currentAuction)[0]
-	)
+
 	const aucAsset = useRef()
+	const [newAuction, setNewAuction] = useState({})
 
 	const setPreviewBgs = ({ x = '', y = '', found = false } = {}) => {
 		aucAsset.current.style.background = `url(${x}), url(${y}), url(${
@@ -31,9 +30,41 @@ const Buyer = () => {
 		aucAsset.current.style.backgroundSize = 'contain'
 	}
 
+	useLayoutEffect(() => {
+		const updateAuctions = async () => {
+			const currentAuctions = auctions
+			const newSet = await Promise.all(
+				currentAuctions.filter(async (el) => (await el.ended()) === false)
+			)
+			if (newSet.length === 0) setShowBuyer(false)
+			const updatedAuction = newSet.filter(
+				(el) => Number(el?.id) === currentAuction
+			)[0]
+			if (!updatedAuction) setShowBuyer(false)
+			setNewAuction(updatedAuction)
+		}
+		updateAuctions()
+	}, [auctions, currentAuction, setShowBuyer])
+
 	useEffect(() => {
-		setPreviewBgs({ y: auction?.url })
-	}, [auction?.url])
+		setPreviewBgs({ y: newAuction?.url })
+	}, [newAuction?.url])
+
+	useEffect(() => {
+		const updateAuctions = async () => {
+			const currentAuctions = auctions
+			const newSet = await Promise.all(
+				currentAuctions.filter(async (el) => (await el.ended()) === false)
+			)
+			if (newSet.length === 0) setShowBuyer(false)
+			const updatedAuction = newSet.filter(
+				(el) => Number(el?.id) === currentAuction
+			)[0]
+			if (!updatedAuction) setShowBuyer(false)
+			setNewAuction(updatedAuction)
+		}
+		updateAuctions()
+	}, [auctions, currentAuction, setShowBuyer])
 
 	useEffect(() => {
 		const fetchAssetMetadata = (x) => {
@@ -42,28 +73,19 @@ const Buyer = () => {
 				.then((data) => {
 					if (data.success && data.url) {
 						// console.log('Media URL:', data.url)
-						setPreviewBgs({ x: data.url, y: auction?.url, found: true })
+						setPreviewBgs({ x: data.url, y: newAuction?.url, found: true })
 					} else {
-						setPreviewBgs({ y: auction?.url })
+						setPreviewBgs({ y: newAuction?.url })
 						console.log('No image url found 🥱')
 					}
 				})
 				.catch((x) => {
-					setPreviewBgs({ y: auction?.url })
+					setPreviewBgs({ y: newAuction?.url })
 					console.log('No image url found 🥱')
 				})
 		}
-		fetchAssetMetadata(auction.tokenId)
-	}, [auction.tokenId, auction?.url])
-
-	useEffect(() => {
-		if (auctions.length === 0) setShowBuyer(false)
-		const updatedAuction = auctions.filter(
-			(el) => Number(el?.id) === currentAuction
-		)[0]
-		if (!updatedAuction) setShowBuyer(false)
-		setAuction(updatedAuction)
-	}, [auctions, currentAuction, setShowBuyer])
+		fetchAssetMetadata(newAuction.tokenId)
+	}, [newAuction.tokenId, newAuction?.url])
 
 	return (
 		<div className={cf(s.wMax, s.flex, s.flexCenter, auc.auctionParent)}>
@@ -80,7 +102,7 @@ const Buyer = () => {
 							auc.aucTitleText
 						)}
 					>
-						{auction.title}
+						{newAuction.title}
 					</h2>
 				</div>
 				<div
@@ -112,7 +134,7 @@ const Buyer = () => {
 					<span
 						className={cf(s.wMax, s.flex, s.flexCenter, auc.currentBidValue)}
 					>
-						{auction.yourBid} {standardUnit}
+						{newAuction.yourBid} {standardUnit}
 					</span>
 				</div>
 				<div
@@ -140,7 +162,7 @@ const Buyer = () => {
 					<span
 						className={cf(s.wMax, s.flex, s.flexCenter, auc.desiredBidValue)}
 					>
-						{auction.price} {standardUnit}
+						{newAuction.price} {standardUnit}
 					</span>
 				</div>
 				<div
@@ -166,24 +188,24 @@ const Buyer = () => {
 						Live Bid
 					</h2>
 					<span className={cf(s.wMax, s.flex, s.flexCenter, auc.liveBidValue)}>
-						{auction.optIn ? auction.liveBid : '####'} {standardUnit}
+						{newAuction.optIn ? newAuction.liveBid : '####'} {standardUnit}
 					</span>
 				</div>
 				<div className={cf(s.wMax, s.flex, s.flexCenter, auc.terminateCon)}>
-					{!auction.optIn && (
+					{!newAuction.optIn && (
 						<button
 							className={cf(s.flex, s.flexCenter, auc.liveBidBtn)}
 							type='button'
-							onClick={() => optIn(auction.id)}
+							onClick={() => optIn(newAuction.id)}
 						>
 							View Live Bid
 						</button>
 					)}
-					{auction.liveBid > auction.yourBid && (
+					{newAuction.liveBid > newAuction.yourBid && (
 						<button
 							className={cf(s.flex, s.flexCenter, auc.liveBidBtn)}
 							type='button'
-							onClick={() => placeNewBid(auction)}
+							onClick={() => placeNewBid(newAuction)}
 						>
 							Place New Bid
 						</button>

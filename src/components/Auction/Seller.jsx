@@ -17,19 +17,9 @@ const Seller = () => {
 		alertThis,
 	} = useReach()
 
-	useLayoutEffect(() => {
-		if (auctions.length === 0) setShowSeller(false)
-		const updatedAuction = auctions.filter(
-			(el) => Number(el?.id) === currentAuction
-		)[0]
-		if (!updatedAuction) setShowSeller(false)
-		setAuction(updatedAuction)
-	}, [auctions, currentAuction, setShowSeller])
-
 	const aucAsset = useRef()
-	const [auction, setAuction] = useState(
-		auctions.filter((el) => Number(el.id) === currentAuction)[0]
-	)
+	const [newAuction, setNewAuction] = useState({})
+
 	const setPreviewBgs = ({ x = '', y = '', found = false } = {}) => {
 		aucAsset.current.style.background = `url(${x}), url(${y}), url(${
 			found ? '' : notFound
@@ -39,9 +29,41 @@ const Seller = () => {
 		aucAsset.current.style.backgroundSize = 'contain'
 	}
 
+	useLayoutEffect(() => {
+		const updateAuctions = async () => {
+			const currentAuctions = auctions
+			const newSet = await Promise.all(
+				currentAuctions.filter(async (el) => (await el.ended()) === false)
+			)
+			if (newSet.length === 0) setShowSeller(false)
+			const updatedAuction = newSet.filter(
+				(el) => Number(el?.id) === currentAuction
+			)[0]
+			if (!updatedAuction) setShowSeller(false)
+			setNewAuction(updatedAuction)
+		}
+		updateAuctions()
+	}, [auctions, currentAuction, setShowSeller])
+
 	useEffect(() => {
-		setPreviewBgs({ y: auction?.url })
-	}, [auction?.url])
+		setPreviewBgs({ y: newAuction?.url })
+	}, [newAuction?.url])
+
+	useEffect(() => {
+		const updateAuctions = async () => {
+			const currentAuctions = auctions
+			const newSet = await Promise.all(
+				currentAuctions.filter(async (el) => (await el.ended()) === false)
+			)
+			if (newSet.length === 0) setShowSeller(false)
+			const updatedAuction = newSet.filter(
+				(el) => Number(el?.id) === currentAuction
+			)[0]
+			if (!updatedAuction) setShowSeller(false)
+			setNewAuction(updatedAuction)
+		}
+		updateAuctions()
+	}, [auctions, currentAuction, setShowSeller])
 
 	useEffect(() => {
 		const fetchAssetMetadata = (x) => {
@@ -50,28 +72,19 @@ const Seller = () => {
 				.then((data) => {
 					if (data.success && data.url) {
 						// console.log('Media URL:', data.url)
-						setPreviewBgs({ x: data.url, y: auction?.url, found: true })
+						setPreviewBgs({ x: data.url, y: newAuction?.url, found: true })
 					} else {
-						setPreviewBgs({ y: auction?.url })
+						setPreviewBgs({ y: newAuction?.url })
 						console.log('No image url found 🥱')
 					}
 				})
 				.catch((x) => {
-					setPreviewBgs({ y: auction?.url })
+					setPreviewBgs({ y: newAuction?.url })
 					console.log('No image url found 🥱')
 				})
 		}
-		fetchAssetMetadata(auction.tokenId)
-	}, [auction.tokenId, auction?.url])
-
-	useEffect(() => {
-		if (auctions.length === 0) setShowSeller(false)
-		const updatedAuction = auctions.filter(
-			(el) => Number(el?.id) === currentAuction
-		)[0]
-		if (!updatedAuction) setShowSeller(false)
-		setAuction(updatedAuction)
-	}, [auctions, currentAuction, setShowSeller])
+		fetchAssetMetadata(newAuction.tokenId)
+	}, [newAuction.tokenId, newAuction?.url])
 
 	return (
 		<div className={cf(s.wMax, s.flex, s.flexCenter, auc.auctionParent)}>
@@ -88,7 +101,7 @@ const Seller = () => {
 							auc.aucTitleText
 						)}
 					>
-						{auction.title}
+						{newAuction.title}
 					</h2>
 				</div>
 				<div
@@ -120,7 +133,7 @@ const Seller = () => {
 					<span
 						className={cf(s.wMax, s.flex, s.flexCenter, auc.currentBidValue)}
 					>
-						{auction.liveBid} {standardUnit}
+						{newAuction.liveBid} {standardUnit}
 					</span>
 				</div>
 				<div
@@ -148,7 +161,7 @@ const Seller = () => {
 					<span
 						className={cf(s.wMax, s.flex, s.flexCenter, auc.desiredBidValue)}
 					>
-						{auction.price} {standardUnit}
+						{newAuction.price} {standardUnit}
 					</span>
 				</div>
 				<div className={cf(s.wMax, s.flex, s.flexCenter, auc.terminateCon)}>
@@ -156,7 +169,7 @@ const Seller = () => {
 						className={cf(s.flex, s.flexCenter, auc.terminateBtn)}
 						type='button'
 						onClick={() => {
-							endAuction(auction.contractInfo)
+							endAuction(newAuction.contractInfo)
 						}}
 					>
 						End Auction
