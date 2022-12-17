@@ -4,7 +4,8 @@ import ca from '../../styles/ConnectAccount.module.css'
 import { useReach, fmtClasses as cf } from '../../hooks'
 
 const ConnectAccount = () => {
-	const { setShowConnectAccount, connectToWallet, user } = useReach()
+	const { setShowConnectAccount, connectToWallet, contract, alertThis } =
+		useReach()
 
 	// const copyToClipboard = async (e) => {
 	// 	navigator.clipboard.writeText(user.address)
@@ -14,13 +15,13 @@ const ConnectAccount = () => {
 	// 	})
 	// }
 
-	// const copyToClipboardCtc = async (e) => {
-	// 	navigator.clipboard.writeText(contract.ctcInfoStr)
-	// 	alertThis({
-	// 		message: 'Copied to clipboard',
-	// 		forConfirmation: false,
-	// 	})
-	// }
+	const copyToClipboardCtc = async (e) => {
+		navigator.clipboard.writeText(contract.ctcInfoStr)
+		alertThis({
+			message: 'Copied to clipboard',
+			forConfirmation: false,
+		})
+	}
 
 	return (
 		<div className={cf(s.wMax, s.flex, s.flexCenter, ca.conParent)}>
@@ -121,25 +122,27 @@ const ConnectAccount = () => {
 					</div>
 				</div>
 
-				{/* <div
-					className={cf(
-						s.wMax,
-						s.flex,
-						s.flexCenter,
-						s.p10,
-						s.m10,
-						ca.addressContainer
-					)}
-				>
-					{contract.ctcInfoStr && (
-						<button
-							onClick={copyToClipboardCtc}
-							className={cf(s.wMax, s.dInlineBlock, ca.connectTitle)}
-						>
-							{contract.ctcInfoStr}
-						</button>
-					)}
-				</div> */}
+				{!process.env.REACT_APP_ADMIN_CONTRACT_INFO && (
+					<div
+						className={cf(
+							s.wMax,
+							s.flex,
+							s.flexCenter,
+							s.p10,
+							s.m10,
+							ca.addressContainer
+						)}
+					>
+						{contract.ctcInfoStr && (
+							<button
+								onClick={copyToClipboardCtc}
+								className={cf(s.wMax, s.dInlineBlock, ca.connectTitle)}
+							>
+								{contract.ctcInfoStr}
+							</button>
+						)}
+					</div>
+				)}
 			</div>
 		</div>
 	)
