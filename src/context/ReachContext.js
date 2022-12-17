@@ -478,12 +478,12 @@ const ReachContextProvider = ({ children }) => {
 					)[0]
 					if (auction) {
 						setCurrentAuction(parseInt(what[0]))
+						setView('App')
 						stopWaiting()
 						setShowSeller(true)
 					} else {
 						stopWaiting()
-						if (auctions.length) setView('Buy')
-						else setView('App')
+						setView('App')
 						alertThis({
 							message:
 								'Your auction is live. Click on it on the Buy Page to monitor',
@@ -1161,7 +1161,7 @@ const ReachContextProvider = ({ children }) => {
 							? (copyToClipboardCtc(),
 							  alertThis({
 									message:
-										'Your wallet is connected. By the way the 0xAuction contract information just got copied to the clipboard',
+										'Your wallet is connected. Copied the 0xAuction contract information to the clipboard',
 									forConfirmation: false,
 							  }))
 							: alertThis({
