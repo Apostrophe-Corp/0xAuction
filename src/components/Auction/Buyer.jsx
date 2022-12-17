@@ -47,10 +47,6 @@ const Buyer = () => {
 	}, [auctions, currentAuction, setShowBuyer])
 
 	useEffect(() => {
-		setPreviewBgs({ y: newAuction?.url })
-	}, [newAuction?.url])
-
-	useEffect(() => {
 		const updateAuctions = async () => {
 			const currentAuctions = auctions
 			const newSet = await Promise.all(
@@ -67,25 +63,23 @@ const Buyer = () => {
 	}, [auctions, currentAuction, setShowBuyer])
 
 	useEffect(() => {
-		const fetchAssetMetadata = (x) => {
+		const fetchAssetMetadata = ({ url = '', tokenId = 0 }) => {
 			arc69
-				.fetch(x)
+				.fetch(tokenId)
 				.then((data) => {
 					if (data.success && data.url) {
 						// console.log('Media URL:', data.url)
-						setPreviewBgs({ x: data.url, y: newAuction?.url, found: true })
+						setPreviewBgs({ x: data.url, y: url, found: true })
 					} else {
-						setPreviewBgs({ y: newAuction?.url })
-						console.log('No image url found 🥱')
+						setPreviewBgs({ y: url })
 					}
 				})
 				.catch((x) => {
-					setPreviewBgs({ y: newAuction?.url })
-					console.log('No image url found 🥱')
+					setPreviewBgs({ y: url })
 				})
 		}
-		fetchAssetMetadata(newAuction.tokenId)
-	}, [newAuction.tokenId, newAuction?.url])
+		fetchAssetMetadata(newAuction)
+	}, [newAuction])
 
 	return (
 		<div className={cf(s.wMax, s.flex, s.flexCenter, auc.auctionParent)}>

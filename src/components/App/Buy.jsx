@@ -33,12 +33,8 @@ const LatestAuction = ({
 				if (expectedData.success && expectedData.url) {
 					// console.log('Media URL:', expectedData.url)
 					setPreviewBgs({ x: expectedData.url, found: true })
-				} else {
-					console.log('No image url found 🥱')
 				}
-			} catch (error) {
-				console.log('No image url found 🥱')
-			}
+			} catch (error) {}
 		}
 		fetchAssetMetadata(assetID)
 	}, [assetID])
@@ -95,12 +91,8 @@ const Auction = ({ assetID, title, desiredPrice, url = '', fullAuction }) => {
 				if (expectedData.success && expectedData.url) {
 					// console.log('Media URL:', expectedData.url)
 					setPreviewBgs({ x: expectedData.url, found: true })
-				} else {
-					console.log('No image url found 🥱')
 				}
-			} catch (error) {
-				console.log('No image url found 🥱')
-			}
+			} catch (error) {}
 		}
 		fetchAssetMetadata(assetID)
 	}, [assetID])
@@ -124,7 +116,7 @@ const Auction = ({ assetID, title, desiredPrice, url = '', fullAuction }) => {
 }
 
 const Buy = () => {
-	const { auctions, latestAuctions } = useReach()
+	const { auctions, latestAuctions, alertThis } = useReach()
 	const [[newAuctions, setNewAuctions], [newLatest, setNewLatest]] = [
 		useState([]),
 		useState([]),
@@ -182,6 +174,14 @@ const Buy = () => {
 			}
 		}
 	}, [newLatest])
+
+	useEffect(() => {
+		alertThis({
+			message:
+				"Please be informed! In the event you carry out an action warranting you sign a transaction but don't the pop-up on your connected wallet, please refresh the page, and perform the action again",
+			forConfirmation: false,
+		})
+	}, [alertThis])
 
 	return (
 		<div className={cf(s.wMax, s.window, buy.buyParent)}>
