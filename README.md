@@ -94,7 +94,6 @@ On most browsers, simply clear the cookies used by `http://localhost:3000`, on F
 ![About](https://user-images.githubusercontent.com/68448315/208217977-d92bbc60-5dbb-4a38-a79a-cf459f5696d8.png)  
 ![Sell](https://user-images.githubusercontent.com/68448315/208217989-3cb38c59-8ba1-4379-b21e-9fdf32f506db.png)  
 ![Latest_Auctions](https://user-images.githubusercontent.com/68448315/208217995-5db5bf70-7d94-4955-9a1f-d12625fcd973.png)  
-![Latest_Auctions](https://user-images.githubusercontent.com/68448315/208218000-39feeaff-c8e6-4202-9765-c3174ebd0df1.png)  
 ![All_Auctions](https://user-images.githubusercontent.com/68448315/208218014-23402c80-da49-4510-a0d8-eb0fb8589166.png)  
 ![Seller](https://user-images.githubusercontent.com/68448315/208218036-88d63704-c849-4a9d-bab2-4074a8b61056.png)  
 ![Buyer_1](https://user-images.githubusercontent.com/68448315/208218041-6e8f59a9-de4e-4dee-81bb-d0bbf94d25fd.png)  
