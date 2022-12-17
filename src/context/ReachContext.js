@@ -525,7 +525,7 @@ const ReachContextProvider = ({ children }) => {
 					? newBid
 					: Number(auctionToBeEdited['yourBid'])
 		} else auctionToBeEdited['liveBid'] = newBid
-		if (String(auctionToBeEdited['highestBidder']) === String(user.address)) {
+		if (String(reach.formatAddress(what[2])) === String(user.address)) {
 			auctionToBeEdited['yourBid'] = newBid
 		}
 		const leftOutAuctions = auctions.filter(
@@ -537,7 +537,7 @@ const ReachContextProvider = ({ children }) => {
 		if (
 			auctionToBeEdited['liveBid'] > yourBid &&
 			String(owner) !== String(user.address) &&
-			String(auctionToBeEdited['highestBidder']) !== String(user.address)
+			String(reach.formatAddress(what[2])) !== String(user.address)
 		) {
 			const tell = showBuyer
 			if (tell) {
