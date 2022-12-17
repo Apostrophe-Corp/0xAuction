@@ -178,7 +178,7 @@ const Buy = () => {
 	useEffect(() => {
 		alertThis({
 			message:
-				"Please be informed! In the event you carry out an action warranting you sign a transaction but don't the pop-up on your connected wallet, please refresh the page, and perform the action again",
+				"Please be informed! In the event you carry out an action warranting you sign a transaction but you're not notified on your connected wallet, please refresh the page, and perform the action again",
 			forConfirmation: false,
 		})
 	// eslint-disable-next-line react-hooks/exhaustive-deps
