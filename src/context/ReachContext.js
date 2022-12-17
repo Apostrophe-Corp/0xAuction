@@ -539,8 +539,8 @@ const ReachContextProvider = ({ children }) => {
 			String(owner) !== String(user.address) &&
 			String(reach.formatAddress(what[2])) !== String(user.address)
 		) {
-			const tell = showBuyer
-			if (tell) {
+			console.log(showBuyer)
+			if (showBuyer) {
 				const bidAgain = await alertThis({
 					message: `You just got outbid for the '${noneNull(what[3])}' auction${
 						opt ? `, the highest bid is now ${newBid} ${standardUnit}` : ''
