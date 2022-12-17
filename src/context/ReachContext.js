@@ -458,6 +458,7 @@ const ReachContextProvider = ({ children }) => {
 				opts['symbol'],
 				{ ...launchOpts, note }
 			)
+			setView('App')
 			stopWaiting()
 			const viewToken = await alertThis({
 				message: `NFT successfully minted with ID: ${launchedToken.id}. Would you like to view this asset on AlgoExplorer.io now?`,
