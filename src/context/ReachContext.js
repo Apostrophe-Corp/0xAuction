@@ -126,7 +126,7 @@ const ReachContextProvider = ({ children }) => {
 				shouldDisplay(true)
 				waiter = setTimeout(() => {
 					alertThis({
-						message: `This process is taking longer than expected. Please clear the cookies used by this site, refresh, reconnect your wallet, and try this again if need be`,
+						message: `This process is taking longer than expected. Please consider clearing the cookies used by this site, refresh and reconnect your wallet, then try this again if need be`,
 						forConfirmation: false,
 					})
 					clearTimeout(waiter)
