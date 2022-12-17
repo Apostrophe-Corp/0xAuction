@@ -539,24 +539,27 @@ const ReachContextProvider = ({ children }) => {
 			String(owner) !== String(user.address) &&
 			String(auctionToBeEdited['highestBidder']) !== String(user.address)
 		) {
-			const bidAgain = await alertThis({
-				message: `You just got outbid for the '${noneNull(what[3])}' auction${
-					opt ? `, the highest bid is now ${newBid} ${standardUnit}` : ''
-				}. Would you like to bid again?`,
-				accept: 'Yes',
-				decline: 'No',
-			})
-			if (bidAgain) {
-				let continue_ = false
-				do {
-					continue_ = await handleBid({
-						auctionID: parseInt(what[0]),
-						loopVar: continue_,
-						ctcInfo,
-						justJoining: false,
-					})
-					if (continue_ === null) break
-				} while (continue_)
+			const tell = showBuyer
+			if (tell) {
+				const bidAgain = await alertThis({
+					message: `You just got outbid for the '${noneNull(what[3])}' auction${
+						opt ? `, the highest bid is now ${newBid} ${standardUnit}` : ''
+					}. Would you like to bid again?`,
+					accept: 'Yes',
+					decline: 'No',
+				})
+				if (bidAgain) {
+					let continue_ = false
+					do {
+						continue_ = await handleBid({
+							auctionID: parseInt(what[0]),
+							loopVar: continue_,
+							ctcInfo,
+							justJoining: false,
+						})
+						if (continue_ === null) break
+					} while (continue_)
+				}
 			}
 		}
 	}
@@ -809,6 +812,7 @@ const ReachContextProvider = ({ children }) => {
 			JSON.parse(auctionInfo.contractInfo)
 		)
 		ctc.events.optInSuccess.monitor(handleAuctionLog_optInSuccess)
+		ctc.events.bidSuccess.monitor(handleAuctionLog_bidSuccess)
 		if (String(auctionInfo.owner) === String(user.address)) {
 			const rejoin = await alertThis({
 				message:
