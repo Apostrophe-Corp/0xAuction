@@ -524,7 +524,7 @@ const ReachContextProvider = ({ children }) => {
 			String(owner) !== String(user.address)
 		) {
 			const bidAgain = await alertThis({
-				message: `You just got outbid for the ${noneNull(what[3])} auction${
+				message: `You just got outbid for the '${noneNull(what[3])}' auction${
 					opt ? `, the highest bid is now ${newBid} ${standardUnit}` : ''
 				}. Would you like to bid again?`,
 				accept: 'Yes',
@@ -621,7 +621,7 @@ const ReachContextProvider = ({ children }) => {
 				message: `🥳 Congratulations!!! You now own this asset: ${parseInt(
 					what[4]
 				)}, at the cost of ${reach.formatCurrency(
-					what[3],
+					what[1],
 					4
 				)} ${standardUnit} 🎉. Proceed to view on AlgoExplorer.io?`,
 				accept: 'Yes',
@@ -651,16 +651,16 @@ const ReachContextProvider = ({ children }) => {
 			})
 		} else if (String(reach.formatAddress(what[3])) === String(user.address)) {
 			alertThis({
-				message: `Hey, you were the highest Bidder for '${noneNull(
+				message: `Hey, you were the highest Bidder for the '${noneNull(
 					what[0]
-				)}', but the Auctioneer has decided not to sell this time`,
+				)}' auction, but the Auctioneer has decided not to sell this time`,
 				forConfirmation: false,
 			})
 		} else {
 			alertThis({
-				message: `'${noneNull(
+				message: `The '${noneNull(
 					what[0]
-				)}' finally closed at ${reach.formatCurrency(
+				)}' auction finally closed at ${reach.formatCurrency(
 					what[1],
 					4
 				)} ${standardUnit}, with the Auctioneer rejecting the highest bid`,
