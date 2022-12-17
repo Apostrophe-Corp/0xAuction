@@ -537,29 +537,26 @@ const ReachContextProvider = ({ children }) => {
 		if (
 			auctionToBeEdited['liveBid'] > yourBid &&
 			String(owner) !== String(user.address) &&
-			String(reach.formatAddress(what[2])) !== String(user.address)
+			String(auctionToBeEdited['highestBidder']) !== String(user.address)
 		) {
-			console.log(showBuyer)
-			if (showBuyer) {
-				const bidAgain = await alertThis({
-					message: `You just got outbid for the '${noneNull(what[3])}' auction${
-						opt ? `, the highest bid is now ${newBid} ${standardUnit}` : ''
-					}. Would you like to bid again?`,
-					accept: 'Yes',
-					decline: 'No',
-				})
-				if (bidAgain) {
-					let continue_ = false
-					do {
-						continue_ = await handleBid({
-							auctionID: parseInt(what[0]),
-							loopVar: continue_,
-							ctcInfo,
-							justJoining: false,
-						})
-						if (continue_ === null) break
-					} while (continue_)
-				}
+			const bidAgain = await alertThis({
+				message: `You just got outbid for the '${noneNull(what[3])}' auction${
+					opt ? `, the highest bid is now ${newBid} ${standardUnit}` : ''
+				}. Would you like to bid again?`,
+				accept: 'Yes',
+				decline: 'No',
+			})
+			if (bidAgain) {
+				let continue_ = false
+				do {
+					continue_ = await handleBid({
+						auctionID: parseInt(what[0]),
+						loopVar: continue_,
+						ctcInfo,
+						justJoining: false,
+					})
+					if (continue_ === null) break
+				} while (continue_)
 			}
 		}
 	}
