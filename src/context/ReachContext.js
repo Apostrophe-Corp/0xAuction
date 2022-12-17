@@ -804,6 +804,11 @@ const ReachContextProvider = ({ children }) => {
 	}
 
 	const joinAuction = async (auctionInfo) => {
+		const ctc = user.account.contract(
+					auctionCtc,
+					JSON.parse(auctionInfo.contractInfo)
+				)
+			ctc.events.optInSuccess.monitor(handleAuctionLog_optInSuccess)
 		if (String(auctionInfo.owner) === String(user.address)) {
 			const rejoin = await alertThis({
 				message:
@@ -852,10 +857,6 @@ const ReachContextProvider = ({ children }) => {
 					})
 					return
 				}
-				const ctc = user.account.contract(
-					auctionCtc,
-					JSON.parse(auctionInfo.contractInfo)
-				)
 				let continue_ = false
 				do {
 					continue_ = await handleBid({
