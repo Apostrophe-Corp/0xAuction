@@ -181,7 +181,7 @@ const Buy = () => {
 
 	useEffect(() => {
 		alertThis({
-			message: `Please be informed! In the event you carry out an action warranting you sign a transaction but you're not notified on your connected wallet, please refresh the page, and perform the action again`,
+			message: `Please note! If you notice you don't seem to get notified of transactions to sign on your wallet—for MyAlgo Wallet, confirm pop-ups are enabled on this site; for WalletConnect supported wallets, consider disconnecting the session—refresh the page to make a new wallet connection`,
 			forConfirmation: false,
 		})
 		// eslint-disable-next-line react-hooks/exhaustive-deps

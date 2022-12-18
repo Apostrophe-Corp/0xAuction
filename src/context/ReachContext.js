@@ -541,7 +541,7 @@ const ReachContextProvider = ({ children }) => {
 				String(auctionToBeEdited['highestBidder']) !== String(user.address)
 			) {
 				const bidAgain = await alertThis({
-					message: `You just got outbid for the '${noneNull(what[3])}' auction${
+					message: `You got outbid for the '${noneNull(what[3])}' auction${
 						opt ? `, the highest bid is now ${newBid} ${standardUnit}` : ''
 					}. Would you like to bid again?`,
 					accept: 'Yes',
