@@ -752,12 +752,12 @@ const ReachContextProvider = ({ children }) => {
 			const aucCtc = user.account.contract(auctionCtc, JSON.parse(contractInfo))
 			setCurrentAuction(id)
 			aucCtc.events.created.monitor(handleAuctionLog_created)
-			// aucCtc.events.bidSuccess.monitor(handleAuctionLog_bidSuccess)
+			aucCtc.events.bidSuccess.monitor(handleAuctionLog_bidSuccess)
 			aucCtc.events.endSuccess.monitor(handleAuctionLog_endSuccess)
 			aucCtc.events.down.monitor(handleAuctionLog_down)
 			aucCtc.events.accepted.monitor(handleAuctionLog_accepted)
 			aucCtc.events.rejected.monitor(handleAuctionLog_rejected)
-			// aucCtc.events.optInSuccess.monitor(handleAuctionLog_optInSuccess)
+			aucCtc.events.optInSuccess.monitor(handleAuctionLog_optInSuccess)
 			setShowSeller(true)
 		}
 	}
@@ -770,10 +770,10 @@ const ReachContextProvider = ({ children }) => {
 		if (contractInfo && id !== null) {
 			const aucCtc = user.account.contract(auctionCtc, JSON.parse(contractInfo))
 			setCurrentAuction(id)
-			// aucCtc.events.bidSuccess.monitor(handleAuctionLog_bidSuccess)
+			aucCtc.events.bidSuccess.monitor(handleAuctionLog_bidSuccess)
 			aucCtc.events.endSuccess.monitor(handleAuctionLog_endSuccess)
 			aucCtc.events.down.monitor(handleAuctionLog_down)
-			// aucCtc.events.optInSuccess.monitor(handleAuctionLog_optInSuccess)
+			aucCtc.events.optInSuccess.monitor(handleAuctionLog_optInSuccess)
 			if (optIn) {
 				aucCtc.events.accepted.monitor(handleAuctionLog_accepted)
 				aucCtc.events.rejected.monitor(handleAuctionLog_rejected)
@@ -854,6 +854,7 @@ const ReachContextProvider = ({ children }) => {
 					})
 					return
 				}
+
 				alertThis({
 					message: 'Please wait',
 					forConfirmation: false,
