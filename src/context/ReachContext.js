@@ -779,6 +779,7 @@ const ReachContextProvider = ({ children }) => {
 				aucCtc.events.rejected.monitor(handleAuctionLog_rejected)
 			}
 			setShowBuyer(true)
+			setView('App')
 		}
 	}
 
@@ -879,9 +880,10 @@ const ReachContextProvider = ({ children }) => {
 								await new Promise((resolve) => {
 									let newWaiter = setTimeout(() => {
 										setShowBuyer(true)
+										setView('App')
+										resolve()
 										clearTimeout(newWaiter)
 										newWaiter = undefined
-										resolve()
 									}, 2500)
 								})
 							} else {
