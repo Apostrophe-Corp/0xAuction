@@ -592,7 +592,7 @@ const ReachContextProvider = ({ children }) => {
 							message: `Do you accept the current bid of ${reach.formatCurrency(
 								what[1],
 								4
-							)} ${standardUnit} for the ${noneNull(what[5])} auction?`,
+							)} ${standardUnit} for the '${noneNull(what[5])}' auction?`,
 							accept: 'Yes',
 							decline: 'No',
 						})
@@ -614,7 +614,7 @@ const ReachContextProvider = ({ children }) => {
 				}
 			} else {
 				alertThis({
-					message: 'The auction has ended',
+					message: `The '${noneNull(what[5])}' auction has ended`,
 					forConfirmation: false,
 				})
 				setShowBuyer(false)
@@ -650,9 +650,9 @@ const ReachContextProvider = ({ children }) => {
 			}
 		} else {
 			alertThis({
-				message: `'${noneNull(
+				message: `The '${noneNull(
 					what[0]
-				)}' finally closed at ${reach.formatCurrency(
+				)}' auction finally closed at ${reach.formatCurrency(
 					what[1],
 					4
 				)} ${standardUnit}, with the Auctioneer accepting the highest bid`,
