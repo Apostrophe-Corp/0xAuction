@@ -879,7 +879,6 @@ const ReachContextProvider = ({ children }) => {
 								await new Promise((resolve) => {
 									let newWaiter = setTimeout(() => {
 										setShowBuyer(true)
-										setView('App')
 										clearTimeout(newWaiter)
 										newWaiter = undefined
 										resolve()
