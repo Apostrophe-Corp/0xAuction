@@ -806,12 +806,6 @@ const ReachContextProvider = ({ children }) => {
 	}
 
 	const joinAuction = async (auctionInfo) => {
-		const ctc = user.account.contract(
-			auctionCtc,
-			JSON.parse(auctionInfo.contractInfo)
-		)
-		ctc.events.optInSuccess.monitor(handleAuctionLog_optInSuccess)
-		ctc.events.bidSuccess.monitor(handleAuctionLog_bidSuccess)
 		if (String(auctionInfo.owner) === String(user.address)) {
 			const rejoin = await alertThis({
 				message:
@@ -865,30 +859,48 @@ const ReachContextProvider = ({ children }) => {
 					forConfirmation: false,
 					persist: true,
 				})
+				const ctc = user.account.contract(
+					auctionCtc,
+					JSON.parse(auctionInfo.contractInfo)
+				)
+				ctc.events.optInSuccess.monitor(handleAuctionLog_optInSuccess)
 				await new Promise((resolve) => {
-					let waiter = setTimeout(() => {
+					let waiter = setTimeout(async () => {
 						const currentAuctions = auctions
 						const newAuction = currentAuctions.filter(
 							(el) => Number(el.id) === Number(auctionInfo.id)
 						)[0]
 						if (newAuction) {
 							auctionInfo = newAuction
+							if (newAuction['optIn']) {
+								setCurrentAuction(newAuction['id'])
+								ctc.events.bidSuccess.monitor(handleAuctionLog_bidSuccess)
+								await new Promise((resolve) => {
+									let newWaiter = setTimeout(() => {
+										setShowBuyer(true)
+										clearTimeout(newWaiter)
+										newWaiter = undefined
+										resolve()
+									}, 2500)
+								})
+							} else {
+								let continue_ = false
+								do {
+									continue_ = await handleBid({
+										auctionID: auctionInfo.id,
+										loopVar: continue_,
+										ctc,
+										justJoining: true,
+									})
+									if (continue_ === null) break
+								} while (continue_)
+							}
 						}
 						clearTimeout(waiter)
 						waiter = undefined
 						resolve()
-					}, 5000)
+					}, 3000)
 				})
-				let continue_ = false
-				do {
-					continue_ = await handleBid({
-						auctionID: auctionInfo.id,
-						loopVar: continue_,
-						ctc,
-						justJoining: true,
-					})
-					if (continue_ === null) break
-				} while (continue_)
 			}
 		}
 	}
