@@ -1035,11 +1035,11 @@ const ReachContextProvider = ({ children }) => {
 				if (didOptIn && justJoining) {
 					setShowBuyer(true)
 					if (ctc) {
-						// ctc.events.bidSuccess.monitor(handleAuctionLog_bidSuccess)
+						ctc.events.bidSuccess.monitor(handleAuctionLog_bidSuccess)
 						ctc.events.endSuccess.monitor(handleAuctionLog_endSuccess)
 					} else {
 						ctc = user.account.contract(auctionCtc, JSON.parse(ctcInfo))
-						// ctc.events.bidSuccess.monitor(handleAuctionLog_bidSuccess)
+						ctc.events.bidSuccess.monitor(handleAuctionLog_bidSuccess)
 						ctc.events.endSuccess.monitor(handleAuctionLog_endSuccess)
 					}
 					return true
