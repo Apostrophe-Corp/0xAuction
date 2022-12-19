@@ -881,10 +881,10 @@ const ReachContextProvider = ({ children }) => {
 							(el) => Number(el.id) === Number(auctionInfo.id)
 						)[0]
 						if (newAuction) {
-							setCurrentAuction(newAuction['id'])
-							ctc.events.bidSuccess.monitor(handleAuctionLog_bidSuccess)
 							auctionInfo = newAuction
+							setCurrentAuction(newAuction['id'])
 							if (newAuction['optIn']) {
+								ctc.events.bidSuccess.monitor(handleAuctionLog_bidSuccess)
 								await new Promise((resolve) => {
 									let newWaiter = setTimeout(() => {
 										setShowBuyer(true)
@@ -983,7 +983,7 @@ const ReachContextProvider = ({ children }) => {
 				await ctc.a.Bidder.bid(reach.parseCurrency(bid))
 			}
 			if (justJoining) {
-				// ctc.events.bidSuccess.monitor(handleAuctionLog_bidSuccess)
+				ctc.events.bidSuccess.monitor(handleAuctionLog_bidSuccess)
 				ctc.events.endSuccess.monitor(handleAuctionLog_endSuccess)
 				ctc.events.down.monitor(handleAuctionLog_down)
 				// ctc.events.optInSuccess.monitor(handleAuctionLog_optInSuccess)
