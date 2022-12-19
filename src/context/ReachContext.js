@@ -93,7 +93,7 @@ const ReachContextProvider = ({ children }) => {
 		prompt = false,
 		persist = false,
 		neutral = false,
-		callback = null
+		callback = null,
 	} = {}) => {
 		await sleep(300)
 		promiseOfConfirmation?.resolve && promiseOfConfirmation.resolve()
@@ -998,6 +998,7 @@ const ReachContextProvider = ({ children }) => {
 			setAuctions((previous) => updatedAuctions)
 			updateLatestAuctions(updatedAuctions)
 			loopVar = false
+			setView('App')
 			setShowBuyer(true)
 			stopWaiting()
 			alertThis({
