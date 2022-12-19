@@ -8,7 +8,7 @@ const Alert = () => {
 		useReach()
 
 	const [active, setActive] = useState(showAlert)
-	const [response, setResponse] = useState('')
+	const [response, setResponse] = useState(undefined)
 	const [alertClass, setAlertClass] = useState(
 		cf(s.wMax, s.flex, s.flexCenter, alt.alertContainer)
 	)
@@ -118,7 +118,10 @@ const Alert = () => {
 												decide(response)
 											}}
 											disabled={
-												!(response && alertInfo.callback ? alertInfo.callback(response) : true)
+												!response &&
+												!(alertInfo.callback
+													? alertInfo.callback(response)
+													: true)
 											}
 											className={cf(s.flex, s.flexCenter, alt.button, alt.ok)}
 										>
