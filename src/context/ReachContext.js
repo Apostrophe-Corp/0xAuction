@@ -950,7 +950,7 @@ const ReachContextProvider = ({ children }) => {
 					: ''
 			}`,
 			prompt: true,
-			callback: (x) => !isNaN(x),
+			callback: (x) => isNaN(x),
 		})
 		if (bid === undefined) return null
 		startWaiting()

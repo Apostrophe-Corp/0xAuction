@@ -118,9 +118,10 @@ const Alert = () => {
 												decide(response)
 											}}
 											disabled={
-												!(response && alertInfo.callback
+												!response &&
+												(alertInfo.callback
 													? alertInfo.callback(response)
-													: true)
+													: false)
 											}
 											className={cf(s.flex, s.flexCenter, alt.button, alt.ok)}
 										>
