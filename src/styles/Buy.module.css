@@ -165,6 +165,8 @@
 		height: 60px;
 		width: 60px;
 		font-size: 35px;
+		bottom: 90px;
+		right: 45px;
 	}
 }
 
@@ -190,6 +192,8 @@
 		height: 50px;
 		width: 50px;
 		font-size: 30px;
+		bottom: 80px;
+		right: 40px;
 	}
 }
 
@@ -222,6 +226,8 @@
 		height: 40px;
 		width: 40px;
 		font-size: 25px;
+		bottom: 70px;
+		right: 35px;
 	}
 }
 
@@ -254,5 +260,7 @@
 		height: 30px;
 		width: 30px;
 		font-size: 20px;
+		bottom: 60px;
+		right: 30px;
 	}
 }
