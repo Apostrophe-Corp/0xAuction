@@ -943,7 +943,7 @@ const ReachContextProvider = ({ children }) => {
 		const auctionToBeEdited = auctions.filter(
 			(el) => Number(el.id) === auctionID
 		)[0]
-		const bid = await alertThis({
+		const bidIn = await alertThis({
 			message: `Enter your bidding amount${
 				auctionToBeEdited['optIn']
 					? `. Current bid is at ${auctionToBeEdited['liveBid']} ${standardUnit}`
@@ -952,7 +952,8 @@ const ReachContextProvider = ({ children }) => {
 			prompt: true,
 			callback: (x) => !isNaN(x),
 		})
-		if (bid === undefined) return null
+		if (bidIn === undefined) return null
+		const bid = Number(bidIn)
 		startWaiting()
 		const userBal = reach.formatCurrency(await reach.balanceOf(user.account), 4)
 		const resultingBalance = userBal - bid
