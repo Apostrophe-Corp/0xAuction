@@ -74,10 +74,9 @@ const Sell = () => {
 				description: value,
 			})
 		} else if (name === 'price') {
-			value = value > 0 ? Number(value) : 0
 			setAuctionParams({
 				...auctionParams,
-				price: value,
+				price: Number(value),
 			})
 		}
 		e.currentTarget.value = value
