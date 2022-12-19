@@ -130,6 +130,8 @@
 	cursor: pointer;
 	box-shadow: 0 5px 15px 5px rgb(54, 0, 131);
 	color: #fff;
+	font-size: 40px !important;
+	text-align: center ;
 }
 
 .exBox:hover {
@@ -143,8 +145,7 @@
 }
 
 .ex {
-	font-size: 40px;
-	text-align: center;
+	font-size: inherit !important;
 }
 
 @media only screen and (max-width: 900px) and (min-width: 761px) {
@@ -164,7 +165,7 @@
 	.exBox {
 		height: 60px;
 		width: 60px;
-		font-size: 35px;
+		font-size: 35px !important;
 		bottom: 90px;
 		right: 45px;
 	}
@@ -191,7 +192,7 @@
 	.exBox {
 		height: 50px;
 		width: 50px;
-		font-size: 30px;
+		font-size: 30px !important;
 		bottom: 80px;
 		right: 40px;
 	}
@@ -225,7 +226,7 @@
 	.exBox {
 		height: 40px;
 		width: 40px;
-		font-size: 25px;
+		font-size: 25px !important;
 		bottom: 70px;
 		right: 35px;
 	}
@@ -259,7 +260,7 @@
 	.exBox {
 		height: 30px;
 		width: 30px;
-		font-size: 20px;
+		font-size: 20px !important;
 		bottom: 60px;
 		right: 30px;
 	}
