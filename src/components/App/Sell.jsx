@@ -74,9 +74,10 @@ const Sell = () => {
 				description: value,
 			})
 		} else if (name === 'price') {
+			value = value > 0 ? Number(value) : 0
 			setAuctionParams({
 				...auctionParams,
-				price: Number(value),
+				price: value,
 			})
 		}
 		e.currentTarget.value = value
@@ -108,11 +109,7 @@ const Sell = () => {
 						Start an Auction for your NFT or Collectible!
 					</h1>
 					<h2 className={cf(sell.callOutSub)}>
-						Be your own Sotheby's or Christie's and take full control of your
-						own Auction. No hidden fees, charges or middlemen.
-						<br />
-						Get full value for your art by selling directly to a peer like
-						yourself.
+						Be your own Sotheby's or Christie's and take full control of your own Auction. No hidden fees, charges or middlemen.<br/>Get full value for your art by selling directly to a peer like yourself. 
 					</h2>
 				</div>
 				<div
@@ -209,11 +206,12 @@ const Sell = () => {
 								type='submit'
 								disabled={
 									!(
-										auctionParams.tokenId &&
-										auctionParams.title &&
-										auctionParams.description &&
-										auctionParams.price &&
-										!isNaN(auctionParams.price)
+										(
+											auctionParams.tokenId &&
+											auctionParams.title &&
+											auctionParams.description &&
+											auctionParams.price
+										)
 									)
 								}
 							>
