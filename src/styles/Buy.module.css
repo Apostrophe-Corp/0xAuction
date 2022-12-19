@@ -119,25 +119,31 @@
 			rgba(96, 170, 254, 0.5)
 		),
 		#ad3de0;
-	border: 0 solid #fff;
-	height: 80px;
-	width: 80px;
+	border: .5px solid #ad3de0;
+	height: 70px;
+	width: 70px;
 	border-radius: 50%;
 	padding: 5px;
 	position: fixed;
-	bottom: 150px;
+	bottom: 100px;
 	right: 50px;
 	cursor: pointer;
 	box-shadow: 0 5px 15px 5px rgb(54, 0, 131);
+	color: #fff;
 }
 
 .exBox:hover {
 	box-shadow: 0 5px 15px 5px rgb(106, 31, 177);
 }
 
+.notified {
+	background: transparent !important;
+	box-shadow: none !important;
+	color: rgb(213, 3, 255) !important;
+}
+
 .ex {
-	font-size: 30px;
-	color: #fff;
+	font-size: 40px;
 	text-align: center;
 }
 

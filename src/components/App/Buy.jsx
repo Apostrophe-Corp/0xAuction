@@ -126,6 +126,7 @@ const Buy = () => {
 		useState([]),
 		useState([]),
 	]
+	const [notified, setNotified] = useState(true)
 
 	useEffect(() => {
 		const updateAuctions = async () => {
@@ -183,12 +184,18 @@ const Buy = () => {
 	return (
 		<div className={cf(s.wMax, s.window, buy.buyParent)}>
 			<div
-				className={cf(buy.exBox)}
+				className={cf(
+					s.flex,
+					s.flexCenter,
+					buy.exBox,
+					!notified ? buy.notified : ''
+				)}
 				onClick={() => {
 					alertThis({
 						message: `If you notice you don't seem to get notified of transactions to sign on your wallet—for MyAlgo Wallet, confirm pop-ups are enabled on this site; for WalletConnect supported wallets, consider clearing this site's cookies, disconnecting the session—refresh the page to make a new wallet connection`,
 						forConfirmation: false,
 					})
+					setNotified(false)
 				}}
 			>
 				<FaExclamation className={cf(buy.ex)} />
