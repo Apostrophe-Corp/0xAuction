@@ -1,4 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react'
+import { FaExclamation } from 'react-icons/fa'
 import s from '../../styles/Shared.module.css'
 import buy from '../../styles/Buy.module.css'
 import notFound from '../../assets/images/preview.jpg'
@@ -179,16 +180,19 @@ const Buy = () => {
 		}
 	}, [newLatest])
 
-	useEffect(() => {
-		alertThis({
-			message: `Please note! If you notice you don't seem to get notified of transactions to sign on your wallet—for MyAlgo Wallet, confirm pop-ups are enabled on this site; for WalletConnect supported wallets, consider clearing this site's cookies, disconnecting the session—refresh the page to make a new wallet connection`,
-			forConfirmation: false,
-		})
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [])
-
 	return (
 		<div className={cf(s.wMax, s.window, buy.buyParent)}>
+			<div
+				className={cf(buy.exBox)}
+				onClick={() => {
+					alertThis({
+						message: `If you notice you don't seem to get notified of transactions to sign on your wallet—for MyAlgo Wallet, confirm pop-ups are enabled on this site; for WalletConnect supported wallets, consider clearing this site's cookies, disconnecting the session—refresh the page to make a new wallet connection`,
+						forConfirmation: false,
+					})
+				}}
+			>
+				<FaExclamation className={cf(buy.ex)} />
+			</div>
 			<div className={cf(s.wMax, s.flex, s.flexRight, buy.topDiv)}>
 				<h1 className={cf(s.wMax, s.p0, s.m0, buy.topText)}>Latest Auctions</h1>
 			</div>

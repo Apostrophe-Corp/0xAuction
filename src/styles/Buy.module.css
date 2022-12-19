@@ -1,6 +1,7 @@
 .buyParent {
 	background-color: #000;
 	color: #fff;
+	position: relative;
 }
 
 .topDiv {
@@ -109,6 +110,35 @@
 	color: #fff;
 	justify-content: flex-end;
 	align-items: flex-start;
+}
+
+.exBox {
+	background: linear-gradient(
+			to bottom right,
+			rgb(165, 47, 219),
+			rgba(96, 170, 254, 0.5)
+		),
+		#ad3de0;
+	border: 0 solid #fff;
+	height: 80px;
+	width: 80px;
+	border-radius: 50%;
+	padding: 5px;
+	position: fixed;
+	bottom: 150px;
+	right: 50px;
+	cursor: pointer;
+	box-shadow: 0 5px 15px 5px rgb(54, 0, 131);
+}
+
+.exBox:hover {
+	box-shadow: 0 5px 15px 5px rgb(106, 31, 177);
+}
+
+.ex {
+	font-size: 30px;
+	color: #fff;
+	text-align: center;
 }
 
 @media only screen and (max-width: 900px) and (min-width: 761px) {
