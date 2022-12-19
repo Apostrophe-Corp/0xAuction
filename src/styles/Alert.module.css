@@ -110,6 +110,7 @@
 	border: 0.5px solid transparent;
 	outline: none !important;
 	border-radius: 5px;
+	text-align: center;
 }
 
 /* -----------------Media-Queries---------------------- */

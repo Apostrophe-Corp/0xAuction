@@ -93,6 +93,7 @@ const ReachContextProvider = ({ children }) => {
 		prompt = false,
 		persist = false,
 		neutral = false,
+		callback = null
 	} = {}) => {
 		await sleep(300)
 		promiseOfConfirmation?.resolve && promiseOfConfirmation.resolve()
@@ -106,6 +107,7 @@ const ReachContextProvider = ({ children }) => {
 				prompt,
 				persist,
 				neutral,
+				callback,
 			}))
 			setShowAlert((lastState) => true)
 		}).catch((message) => setShowAlert((lastState) => false))
@@ -948,6 +950,7 @@ const ReachContextProvider = ({ children }) => {
 					: ''
 			}`,
 			prompt: true,
+			callback: (x) => !isNaN(x),
 		})
 		if (bid === undefined) return null
 		startWaiting()

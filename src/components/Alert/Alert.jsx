@@ -117,7 +117,11 @@ const Alert = () => {
 											onClick={() => {
 												decide(response)
 											}}
-											disabled={!response}
+											disabled={
+												!(response && alertInfo.callback
+													? alertInfo.callback(response)
+													: true)
+											}
 											className={cf(s.flex, s.flexCenter, alt.button, alt.ok)}
 										>
 											Submit
