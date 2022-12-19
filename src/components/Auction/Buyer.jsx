@@ -206,7 +206,7 @@ const Buyer = () => {
 						type='button'
 						onClick={async () => {
 							const decision = await alertThis({
-								message: 'Are you sure you want to pull out of this auction?',
+								message: 'Are you sure you want to stop monitoring this auction?',
 								accept: 'No',
 								decline: 'Yes',
 							})
