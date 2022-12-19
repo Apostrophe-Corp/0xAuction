@@ -879,10 +879,10 @@ const ReachContextProvider = ({ children }) => {
 							(el) => Number(el.id) === Number(auctionInfo.id)
 						)[0]
 						if (newAuction) {
+							setCurrentAuction(newAuction['id'])
+							ctc.events.bidSuccess.monitor(handleAuctionLog_bidSuccess)
 							auctionInfo = newAuction
 							if (newAuction['optIn']) {
-								setCurrentAuction(newAuction['id'])
-								ctc.events.bidSuccess.monitor(handleAuctionLog_bidSuccess)
 								await new Promise((resolve) => {
 									let newWaiter = setTimeout(() => {
 										setShowBuyer(true)
