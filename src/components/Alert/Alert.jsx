@@ -119,7 +119,9 @@ const Alert = () => {
 											}}
 											disabled={
 												!(alertInfo.callback
-													? response !== '' && alertInfo.callback(response)
+													? response !== '' &&
+													  Number(response) !== 0 &&
+													  alertInfo.callback(response)
 													: response !== '')
 											}
 											className={cf(s.flex, s.flexCenter, alt.button, alt.ok)}
