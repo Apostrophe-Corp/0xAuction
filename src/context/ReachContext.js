@@ -222,9 +222,15 @@ const ReachContextProvider = ({ children }) => {
 						optIn: false,
 						liveBid: 0,
 						highestBidder: '',
-						ended: async () =>
-							reach.bigNumberToNumber(await reach.getNetworkTime()) >
-							parseInt(what[2]) + deadline,
+						ended: async () => {
+							const response = await tempCtc.v.live()
+							const isLive = response[1]
+							return (
+								isLive &&
+								reach.bigNumberToNumber(await reach.getNetworkTime()) >
+									parseInt(what[2]) + deadline
+							)
+						},
 					})
 					setAuctions((previous) => [...presentAuctions])
 					updateLatestAuctions(presentAuctions)
