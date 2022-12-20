@@ -569,6 +569,7 @@ const ReachContextProvider = ({ children }) => {
 							loopVar: continue_,
 							ctcInfo,
 							justJoining: false,
+							callback: (x) => !isNaN(x),
 						})
 						if (continue_ === null) break
 					} while (continue_)
@@ -933,7 +934,7 @@ const ReachContextProvider = ({ children }) => {
 				auctionID: auctionInfo.id,
 				loopVar: continue_,
 				ctc,
-				justJoining: true,
+				justJoining: false,
 			})
 			if (continue_ === null) break
 		} while (continue_)
