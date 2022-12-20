@@ -192,7 +192,7 @@ const Buy = () => {
 				)}
 				onClick={() => {
 					alertThis({
-						message: `If you notice you don't seem to get notified of transactions to sign on your wallet—for MyAlgo Wallet, confirm pop-ups are enabled on this site; for WalletConnect supported wallets, consider clearing this site's cookies, disconnecting the session—refresh the page to make a new wallet connection`,
+						message: `If you notice you don't seem to get notified of transactions to sign on your wallet—for MyAlgo Wallet, confirm pop-ups are enabled on this site; for WalletConnect supported wallets, consider clearing this site's cookies, disconnecting the session, then refresh the page to make a new wallet connection`,
 						forConfirmation: false,
 					})
 					setNotified(false)
