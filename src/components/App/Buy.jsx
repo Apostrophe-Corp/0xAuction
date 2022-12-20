@@ -205,7 +205,7 @@ const Buy = () => {
 			</div>
 			<div className={cf(s.wMax, s.flex, s.flexCenter)}>
 				<div className={cf(s.flex, s.flexCenter, buy.latest)}>
-					{latestAuctions && (
+					{newLatest && (
 						<div
 							className={cf(
 								s.flex,
@@ -235,7 +235,7 @@ const Buy = () => {
 					Available Auctions
 				</h1>
 			</div>
-			{auctions && (
+			{newAuctions && (
 				<div
 					className={cf(
 						s.wMax,
