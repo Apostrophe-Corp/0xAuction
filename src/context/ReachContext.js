@@ -225,11 +225,11 @@ const ReachContextProvider = ({ children }) => {
 						ended: async () => {
 							const response = await tempCtc.v.live()
 							const isLive = response[1]
-							return isLive &&
-								reach.bigNumberToNumber(await reach.getNetworkTime()) >
+							return !(
+								isLive &&
+								reach.bigNumberToNumber(await reach.getNetworkTime()) <
 									parseInt(what[2]) + deadline
-								? false
-								: true
+							)
 						},
 					})
 					setAuctions((previous) => [...presentAuctions])
@@ -304,11 +304,11 @@ const ReachContextProvider = ({ children }) => {
 				ended: async () => {
 					const response = await tempCtc.v.live()
 					const isLive = response[1]
-					return isLive &&
-						reach.bigNumberToNumber(await reach.getNetworkTime()) >
+					return !(
+						isLive &&
+						reach.bigNumberToNumber(await reach.getNetworkTime()) <
 							parseInt(what[2]) + deadline
-						? false
-						: true
+					)
 				},
 			})
 			setAuctions((previous) => [...presentAuctions])
