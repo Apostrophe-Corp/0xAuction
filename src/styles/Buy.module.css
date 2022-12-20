@@ -142,6 +142,7 @@
 	background: transparent !important;
 	box-shadow: none !important;
 	color: rgb(213, 3, 255) !important;
+	display: none !important;
 }
 
 .ex {
