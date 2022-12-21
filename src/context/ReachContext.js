@@ -90,40 +90,34 @@ const ReachContextProvider = ({ children }) => {
 	}
 
 	const updateNewAuctions = async () => {
-		const updateAuctions = async () => {
-			const currentAuctions = auctions
-			const len = currentAuctions.length
-			const newSet = []
-			let i = 0
-			for (i; i < len; i++) {
-				const el = currentAuctions[i]
-				const ended = await el.ended()
-				if (ended === false) newSet.push(el)
-			}
-			setNewAuctions((previous) => [...newSet])
+		const currentAuctions = auctions
+		const len = currentAuctions.length
+		const newSet = []
+		let i = 0
+		for (i; i < len; i++) {
+			const el = currentAuctions[i]
+			const ended = await el.ended()
+			if (ended === false) newSet.push(el)
 		}
-		await updateAuctions()
+		setNewAuctions((previous) => [...newSet])
 	}
 
 	const updateNewLatest = async () => {
-		const updateAuctions = async () => {
-			const currentAuctions = latestAuctions
-			const len = currentAuctions.length
-			const newSet = []
-			let i = 0
-			for (i; i < len; i++) {
-				const el = currentAuctions[i]
-				const ended = await el.ended()
-				if (ended === false) newSet.push(el)
-			}
-			setNewLatest((previous) => [...newSet])
+		const currentAuctions = latestAuctions
+		const len = currentAuctions.length
+		const newSet = []
+		let i = 0
+		for (i; i < len; i++) {
+			const el = currentAuctions[i]
+			const ended = await el.ended()
+			if (ended === false) newSet.push(el)
 		}
-		updateAuctions()
+		setNewLatest((previous) => [...newSet])
 	}
 
 	const updateAuctions = async () => {
-		await updateNewAuctions()
-		await updateNewLatest()
+		updateNewAuctions()
+		updateNewLatest()
 	}
 
 	const alertThis = async ({
@@ -280,6 +274,7 @@ const ReachContextProvider = ({ children }) => {
 					})
 					setAuctions((previous) => [...presentAuctions])
 					updateLatestAuctions(presentAuctions)
+					updateAuctions()
 				}
 			}
 			if (process.env.REACT_APP_ADMIN_CONTRACT_INFO) {
