@@ -130,7 +130,7 @@ const Buy = () => {
 	const [notified, setNotified] = useState(true)
 
 	useEffect(() => {
-		if (!newAuctions.length || !newLatest.length) startWaiting(false)
+		if (newAuctions.length <= 0 || newLatest.length <= 0) startWaiting(false)
 		else stopWaiting()
 	}, [newAuctions, newLatest])
 
@@ -143,10 +143,7 @@ const Buy = () => {
 			for (i; i < len; i++) {
 				const el = currentAuctions[i]
 				const ended = await el.ended()
-				const cView = await el.tempCtc.v.live()
-				const view = cView[1]
-				if (view === true && ended === false && el.hide === false)
-					newSet.push(el)
+				if (ended === false) newSet.push(el)
 			}
 			setNewAuctions((previous) => [...newSet])
 		}
@@ -160,12 +157,8 @@ const Buy = () => {
 			const newSet = []
 			let i = 0
 			for (i; i < len; i++) {
-				const el = currentAuctions[i]
 				const ended = await el.ended()
-				const cView = await el.tempCtc.v.live()
-				const view = cView[1]
-				if (view === true && ended === false && el.hide === false)
-					newSet.push(el)
+				if (ended === false) newSet.push(el)
 			}
 			setNewLatest((previous) => [...newSet])
 		}

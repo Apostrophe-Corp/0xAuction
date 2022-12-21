@@ -235,8 +235,7 @@ const ReachContextProvider = ({ children }) => {
 									parseInt(what[2]) + deadline
 							)
 						},
-						hide: false,
-						tempCtc,
+						ctc: tempCtc,
 					})
 					setAuctions((previous) => [...presentAuctions])
 					updateLatestAuctions(presentAuctions)
@@ -316,8 +315,7 @@ const ReachContextProvider = ({ children }) => {
 							parseInt(what[2]) + deadline
 					)
 				},
-				hide: false,
-				tempCtc,
+				ctc: tempCtc,
 			})
 			setAuctions((previous) => [...presentAuctions])
 			updateLatestAuctions(presentAuctions)
@@ -333,10 +331,9 @@ const ReachContextProvider = ({ children }) => {
 				setShowSeller(false)
 			}
 			const auctionsToBeEdited = auctions
-			const remainingAuctions = auctionsToBeEdited.filter((el) => {
-				if (Number(el.id) === parseInt(what[0])) el.hide = true
-				return Number(el.id) !== parseInt(what[0])
-			})
+			const remainingAuctions = auctionsToBeEdited.filter(
+				(el) => Number(el.id) !== parseInt(what[0])
+			)
 			if (remainingAuctions.length === 0 && view === 'Buy') setView('App')
 			setAuctions((previous) => remainingAuctions)
 			updateLatestAuctions(remainingAuctions)
