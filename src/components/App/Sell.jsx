@@ -8,7 +8,9 @@ import { Arc69 } from '../../ARC69/arc.js'
 const arc69 = new Arc69()
 
 const Sell = () => {
-	const [auctionParams, setAuctionParams] = useState({})
+	const [auctionParams, setAuctionParams] = useState({
+		title: '0xAuction'
+	})
 	const [assetTimeout, setAssetTimeout] = useState(null)
 
 	const { standardUnit, createAuction } = useReach()
@@ -156,7 +158,7 @@ const Sell = () => {
 								className={cf(sell.formInput)}
 							/>
 						</label>
-						<label
+						{/* <label
 							className={cf(sell.formLabel)}
 							htmlFor='title'
 						>
@@ -169,7 +171,7 @@ const Sell = () => {
 								placeholder=''
 								className={cf(sell.formInput)}
 							/>
-						</label>
+						</label> */}
 						<label
 							className={cf(sell.formLabel)}
 							htmlFor='description'
