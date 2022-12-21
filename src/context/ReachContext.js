@@ -116,8 +116,8 @@ const ReachContextProvider = ({ children }) => {
 	}
 
 	const updateAuctions = async () => {
-		updateNewAuctions()
-		updateNewLatest()
+		await updateNewAuctions()
+		await updateNewLatest()
 	}
 
 	const alertThis = async ({
@@ -274,7 +274,7 @@ const ReachContextProvider = ({ children }) => {
 					})
 					setAuctions((previous) => [...presentAuctions])
 					updateLatestAuctions(presentAuctions)
-					updateAuctions()
+					await updateAuctions()
 				}
 			}
 			if (process.env.REACT_APP_ADMIN_CONTRACT_INFO) {
@@ -355,7 +355,7 @@ const ReachContextProvider = ({ children }) => {
 			})
 			setAuctions((previous) => [...presentAuctions])
 			updateLatestAuctions(presentAuctions)
-			updateAuctions()
+			await updateAuctions()
 		}
 	}
 
