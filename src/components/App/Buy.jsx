@@ -122,45 +122,16 @@ const Auction = ({ assetID, title, desiredPrice, url = '', fullAuction }) => {
 
 const Buy = () => {
 	const latestAuctionRef = useRef()
-	const {
-		// auctions,
-		// latestAuctions,
-		alertThis,
-		newAuctions,
-		// setNewAuctions,
-		newLatest,
-		// setNewLatest,
-		dAuctions,
-		setDAuctions,
-		dLatest,
-		setDLatest,
-		// updateAuctions,
-	} = useReach()
+	const { alertThis, newAuctions, newLatest } = useReach()
 	const [notified, setNotified] = useState(true)
 
 	useEffect(() => {
-		setDAuctions(newLatest)
-		setDLatest(newAuctions)
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [])
-
-	// useEffect(() => {
-	// 	const runUpdateAuctions = async () => {
-	// 		await updateAuctions()
-	// 		setDLatest((previous) => [...newLatest])
-	// 		setDAuctions((previous) => [...newAuctions])
-	// 	}
-	// 	runUpdateAuctions()
-	// 	// eslint-disable-next-line react-hooks/exhaustive-deps
-	// }, [auctions, latestAuctions])
-
-	useEffect(() => {
-		if (dLatest.length > 2) {
+		if (newLatest.length > 2) {
 			let progress = 0
 			const slide = setInterval(() => {
 				progress += 100
 				latestAuctionRef.current.style.transform = `translate(-${progress}%,0)`
-				const length = (dLatest.length - 1) * 100
+				const length = (newLatest.length - 1) * 100
 				if (progress === length) {
 					const revert = setTimeout(() => {
 						latestAuctionRef.current.style.transition = `none`
@@ -181,7 +152,7 @@ const Buy = () => {
 				clearInterval(slide)
 			}
 		}
-	}, [dLatest])
+	}, [newLatest])
 
 	return (
 		<div className={cf(s.wMax, s.window, buy.buyParent)}>
@@ -207,7 +178,7 @@ const Buy = () => {
 			</div>
 			<div className={cf(s.wMax, s.flex, s.flexCenter)}>
 				<div className={cf(s.flex, s.flexCenter, buy.latest)}>
-					{dLatest && (
+					{newLatest && (
 						<div
 							className={cf(
 								s.flex,
@@ -218,7 +189,7 @@ const Buy = () => {
 							)}
 							ref={latestAuctionRef}
 						>
-							{dLatest.map((el, i) => (
+							{newLatest.map((el, i) => (
 								<LatestAuction
 									key={i}
 									fullAuction={el}
@@ -237,7 +208,7 @@ const Buy = () => {
 					Available Auctions
 				</h1>
 			</div>
-			{dAuctions && (
+			{newAuctions && (
 				<div
 					className={cf(
 						s.wMax,
@@ -247,7 +218,7 @@ const Buy = () => {
 						buy.aucAuctions
 					)}
 				>
-					{dAuctions.map((el, i) => (
+					{newAuctions.map((el, i) => (
 						<Auction
 							key={i}
 							fullAuction={el}
