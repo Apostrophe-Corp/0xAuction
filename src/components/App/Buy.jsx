@@ -157,6 +157,7 @@ const Buy = () => {
 			const newSet = []
 			let i = 0
 			for (i; i < len; i++) {
+				const el = currentAuctions[i]
 				const ended = await el.ended()
 				if (ended === false) newSet.push(el)
 			}
