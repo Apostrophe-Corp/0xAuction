@@ -69,6 +69,10 @@ const ReachContextProvider = ({ children }) => {
 		useState([]),
 		useState([]),
 	]
+	const [[dAuctions, setDAuctions], [dLatest, setDLatest]] = [
+		useState([]),
+		useState([]),
+	]
 
 	const [showBuyer, setShowBuyer] = useState(false)
 	const [showSeller, setShowSeller] = useState(false)
@@ -360,7 +364,7 @@ const ReachContextProvider = ({ children }) => {
 	}
 
 	const dropAuction = async ({ what }) => {
-		await sleep(5000).then(() => {
+		await sleep(5000).then(async () => {
 			if (view === 'Buy' && auctions.length <= 1) setView('App')
 			if ((showBuyer || showSeller) && currentAuction === parseInt(what[0])) {
 				setView('App')
@@ -374,13 +378,13 @@ const ReachContextProvider = ({ children }) => {
 			if (remainingAuctions.length === 0 && view === 'Buy') setView('App')
 			setAuctions((previous) => remainingAuctions)
 			updateLatestAuctions(remainingAuctions)
+			await updateAuctions()
 		})
-		await updateAuctions()
 		stopWaiting()
 	}
 
 	const updateHighestBidder = async ({ what }) => {
-		await sleep(3000).then(() => {
+		await sleep(3000).then(async () => {
 			const highestBidder = reach.formatAddress(what[1])
 			const auctionToBeEdited = auctions.filter(
 				(el) => Number(el.id) === parseInt(what[0])
@@ -393,6 +397,7 @@ const ReachContextProvider = ({ children }) => {
 				const updatedAuctions = [auctionToBeEdited, ...leftOutAuctions]
 				setAuctions((previous) => updatedAuctions)
 				updateLatestAuctions(updatedAuctions)
+				await updateAuctions()
 			}
 		})
 	}
@@ -593,6 +598,7 @@ const ReachContextProvider = ({ children }) => {
 			const updatedAuctions = [auctionToBeEdited, ...leftOutAuctions]
 			setAuctions((previous) => updatedAuctions)
 			updateLatestAuctions(updatedAuctions)
+			await updateAuctions()
 			if (
 				auctionToBeEdited['liveBid'] > yourBid &&
 				String(owner) !== String(user.address) &&
@@ -632,6 +638,7 @@ const ReachContextProvider = ({ children }) => {
 		)
 		setAuctions((previous) => leftoverAuctions)
 		updateLatestAuctions(leftoverAuctions)
+		await updateAuctions()
 	}
 
 	const handleAuctionLog_down = async ({ what }) => {
@@ -746,7 +753,7 @@ const ReachContextProvider = ({ children }) => {
 		}
 	}
 
-	const handleAuctionLog_optInSuccess = ({ what }) => {
+	const handleAuctionLog_optInSuccess = async ({ what }) => {
 		const currentAuctions = auctions
 		const auctionToBeEdited = currentAuctions.filter(
 			(el) => Number(el.id) === parseInt(what[0])
@@ -762,6 +769,7 @@ const ReachContextProvider = ({ children }) => {
 			const updatedAuctions = [auctionToBeEdited, ...leftOutAuctions]
 			setAuctions((previous) => updatedAuctions)
 			updateLatestAuctions(updatedAuctions)
+			await updateAuctions()
 		}
 	}
 
@@ -1217,6 +1225,10 @@ const ReachContextProvider = ({ children }) => {
 		joinAuction,
 		placeNewBid,
 		updateAuctions,
+		dAuctions,
+		setDAuctions,
+		dLatest,
+		setDLatest,
 	}
 
 	return (
@@ -1283,7 +1295,7 @@ const ReachContextProvider = ({ children }) => {
 							className={cf(s.flex, s.flexCenter, s.p10, s.m0, app.navItem)}
 							onClick={() => {
 								checkForContract(async () => {
-									if (newLatest.length) setView('Buy')
+									if (auctions.length) setView('Buy')
 									else
 										alertThis({
 											message:

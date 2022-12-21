@@ -121,6 +121,7 @@ const Auction = ({ assetID, title, desiredPrice, url = '', fullAuction }) => {
 }
 
 const Buy = () => {
+	const latestAuctionRef = useRef()
 	const {
 		auctions,
 		latestAuctions,
@@ -129,42 +130,30 @@ const Buy = () => {
 		setNewAuctions,
 		newLatest,
 		setNewLatest,
+		dAuctions,
+		setDAuctions,
+		dLatest,
+		setDLatest,
+		updateAuctions,
 	} = useReach()
 	const [notified, setNotified] = useState(true)
 
 	useEffect(() => {
-		const updateAuctions = async () => {
-			const currentAuctions = auctions
-			const len = currentAuctions.length
-			const newSet = []
-			let i = 0
-			for (i; i < len; i++) {
-				const el = currentAuctions[i]
-				const ended = await el.ended()
-				if (ended === false) newSet.push(el)
-			}
-			setNewAuctions((previous) => [...newSet])
-		}
-		updateAuctions()
-	}, [auctions, setNewAuctions])
+		if (!dAuctions) setDAuctions(auctions)
+		if (!dLatest) setDLatest(latestAuctions)
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [])
 
 	useEffect(() => {
-		const updateAuctions = async () => {
-			const currentAuctions = latestAuctions
-			const len = currentAuctions.length
-			const newSet = []
-			let i = 0
-			for (i; i < len; i++) {
-				const el = currentAuctions[i]
-				const ended = await el.ended()
-				if (ended === false) newSet.push(el)
-			}
-			setNewLatest((previous) => [...newSet])
+		const runUpdateAuctions = async () => {
+			await updateAuctions()
+			setDLatest((previous) => [...newLatest])
+			setDAuctions((previous) => [...newAuctions])
 		}
-		updateAuctions()
-	}, [latestAuctions, setNewLatest])
+		runUpdateAuctions()
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [auctions, latestAuctions])
 
-	const latestAuctionRef = useRef()
 
 	useEffect(() => {
 		if (newLatest.length > 2) {
@@ -219,7 +208,7 @@ const Buy = () => {
 			</div>
 			<div className={cf(s.wMax, s.flex, s.flexCenter)}>
 				<div className={cf(s.flex, s.flexCenter, buy.latest)}>
-					{newLatest && (
+					{dLatest && (
 						<div
 							className={cf(
 								s.flex,
@@ -249,7 +238,7 @@ const Buy = () => {
 					Available Auctions
 				</h1>
 			</div>
-			{newAuctions && (
+			{dAuctions && (
 				<div
 					className={cf(
 						s.wMax,
