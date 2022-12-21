@@ -300,7 +300,7 @@ const ReachContextProvider = ({ children }) => {
 				price: parseInt(what[6]),
 				tokenId: parseInt(what[7]),
 				yourBid: 0,
-				optIn: false,				
+				optIn: false,
 				liveBid: 0,
 				highestBidder: '',
 				ended: async () => {
@@ -1157,6 +1157,8 @@ const ReachContextProvider = ({ children }) => {
 		setShowConnectAccount,
 		checkForContract,
 		mintNFT,
+		startWaiting,
+		stopWaiting,
 		alertThis,
 		createAuction,
 		endAuction,
