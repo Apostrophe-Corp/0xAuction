@@ -89,6 +89,43 @@ const ReachContextProvider = ({ children }) => {
 		setLatestAuctions((previous) => newAuctions)
 	}
 
+	const updateNewAuctions = async () => {
+		const updateAuctions = async () => {
+			const currentAuctions = auctions
+			const len = currentAuctions.length
+			const newSet = []
+			let i = 0
+			for (i; i < len; i++) {
+				const el = currentAuctions[i]
+				const ended = await el.ended()
+				if (ended === false) newSet.push(el)
+			}
+			setNewAuctions((previous) => [...newSet])
+		}
+		await updateAuctions()
+	}
+
+	const updateNewLatest = async () => {
+		const updateAuctions = async () => {
+			const currentAuctions = latestAuctions
+			const len = currentAuctions.length
+			const newSet = []
+			let i = 0
+			for (i; i < len; i++) {
+				const el = currentAuctions[i]
+				const ended = await el.ended()
+				if (ended === false) newSet.push(el)
+			}
+			setNewLatest((previous) => [...newSet])
+		}
+		updateAuctions()
+	}
+
+	const updateAuctions = async () => {
+		await updateNewAuctions()
+		await updateNewLatest()
+	}
+
 	const alertThis = async ({
 		message = 'Confirm Action',
 		accept = 'Yes',
@@ -323,6 +360,7 @@ const ReachContextProvider = ({ children }) => {
 			})
 			setAuctions((previous) => [...presentAuctions])
 			updateLatestAuctions(presentAuctions)
+			updateAuctions()
 		}
 	}
 
@@ -1182,6 +1220,7 @@ const ReachContextProvider = ({ children }) => {
 		optIn,
 		joinAuction,
 		placeNewBid,
+		updateAuctions,
 	}
 
 	return (
@@ -1248,7 +1287,7 @@ const ReachContextProvider = ({ children }) => {
 							className={cf(s.flex, s.flexCenter, s.p10, s.m0, app.navItem)}
 							onClick={() => {
 								checkForContract(async () => {
-									if (auctions.length) setView('Buy')
+									if (newAuctions.length) setView('Buy')
 									else
 										alertThis({
 											message:
