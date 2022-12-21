@@ -300,7 +300,7 @@ const ReachContextProvider = ({ children }) => {
 				price: parseInt(what[6]),
 				tokenId: parseInt(what[7]),
 				yourBid: 0,
-				optIn: false,				
+				optIn: false,
 				liveBid: 0,
 				highestBidder: '',
 				ended: async () => {
@@ -852,28 +852,35 @@ const ReachContextProvider = ({ children }) => {
 				accept: 'Yes',
 				decline: 'No',
 			})
-
+			alertThis({
+				message: 'Please wait',
+				forConfirmation: false,
+				persist: true,
+			})
 			if (join) {
-				alertThis({
-					message: 'Please confirm asset opt-in on your wallet',
-					forConfirmation: false,
-					persist: true,
-				})
-				setCurrentAuction(auctionInfo.id)
-				try {
-					await user.account.tokenAccept(auctionInfo.tokenId)
+				if (!(await user.account.tokenAccepted(auctionInfo.tokenId))) {
 					alertThis({
-						message: 'Opt-In confirmed',
+						message: 'Please confirm asset opt-in on your wallet',
 						forConfirmation: false,
+						persist: true,
 					})
-				} catch (error) {
-					console.log({ error })
-					alertThis({
-						message:
-							'Opt-In failed and as such you cannot bid for this NFT at this point. But you can try again',
-						forConfirmation: false,
-					})
-					return
+					setCurrentAuction(auctionInfo.id)
+					try {
+						await user.account.tokenAccept(auctionInfo.tokenId)
+						alertThis({
+							message: 'Opt-In confirmed',
+							forConfirmation: false,
+						})
+						await new Promise((resolve) => setTimeout(resolve, 2000))
+					} catch (error) {
+						console.log({ error })
+						alertThis({
+							message:
+								'Opt-In failed and as such you cannot bid for this NFT at this point. But you can try again',
+							forConfirmation: false,
+						})
+						return
+					}
 				}
 
 				alertThis({
