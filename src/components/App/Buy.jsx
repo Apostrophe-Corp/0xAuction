@@ -130,20 +130,19 @@ const Buy = () => {
 
 	useEffect(() => {
 		const updateAuctions = async () => {
-			const currentAuctions = auctions
-			const newSet = await Promise.all(
-				currentAuctions.filter(async (el) => {
-					const ended = await el.ended()
-					const cView = await el.tempCtc.v.live()
-					const view = cView[1]
-					console.log(
-						el.title,
-						view === true && ended === false && el.hide === false
-					)
-					return view === true && ended === false && el.hide === false
-				})
-			)
-			setNewAuctions((previous) => newSet)
+			const currentAuctions = latestAuctions
+			const len = currentAuctions.length
+			const newSet = []
+			let i = 0
+			for (i; i < len; i++) {
+				const el = currentAuctions[i]
+				const ended = await el.ended()
+				const cView = await el.tempCtc.v.live()
+				const view = cView[1]
+				if (view === true && ended === false && el.hide === false)
+					newSet.push(el)
+			}
+			setNewLatest((previous) => [...newSet])
 		}
 		updateAuctions()
 	}, [auctions, setNewAuctions])
@@ -151,19 +150,18 @@ const Buy = () => {
 	useEffect(() => {
 		const updateAuctions = async () => {
 			const currentAuctions = latestAuctions
-			const newSet = await Promise.all(
-				currentAuctions.filter(async (el) => {
-					const ended = await el.ended()
-					const cView = await el.tempCtc.v.live()
-					const view = cView[1]
-					console.log(
-						el.title,
-						view === true && ended === false && el.hide === false
-					)
-					return view === true && ended === false && el.hide === false
-				})
-			)
-			setNewLatest((previous) => newSet)
+			const len = currentAuctions.length
+			const newSet = []
+			let i = 0
+			for (i; i < len; i++) {
+				const el = currentAuctions[i]
+				const ended = await el.ended()
+				const cView = await el.tempCtc.v.live()
+				const view = cView[1]
+				if (view === true && ended === false && el.hide === false)
+					newSet.push(el)
+			}
+			setNewLatest((previous) => [...newSet])
 		}
 		updateAuctions()
 	}, [latestAuctions, setNewLatest])
