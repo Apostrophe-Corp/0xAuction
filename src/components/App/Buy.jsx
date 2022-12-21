@@ -142,7 +142,7 @@ const Buy = () => {
 				if (view === true && ended === false && el.hide === false)
 					newSet.push(el)
 			}
-			setNewLatest((previous) => [...newSet])
+			setNewAuctions((previous) => [...newSet])
 		}
 		updateAuctions()
 	}, [auctions, setNewAuctions])
