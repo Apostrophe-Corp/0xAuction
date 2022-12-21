@@ -130,7 +130,7 @@ const Buy = () => {
 
 	useEffect(() => {
 		const updateAuctions = async () => {
-			const currentAuctions = latestAuctions
+			const currentAuctions = auctions
 			const len = currentAuctions.length
 			const newSet = []
 			let i = 0
