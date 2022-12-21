@@ -120,8 +120,8 @@ const ReachContextProvider = ({ children }) => {
 	}
 
 	const updateAuctions = async () => {
-		await updateNewAuctions()
-		await updateNewLatest()
+		updateNewAuctions()
+		updateNewLatest()
 	}
 
 	const alertThis = async ({
@@ -278,7 +278,7 @@ const ReachContextProvider = ({ children }) => {
 					})
 					setAuctions((previous) => [...presentAuctions])
 					updateLatestAuctions(presentAuctions)
-					await updateAuctions()
+					updateAuctions()
 				}
 			}
 			if (process.env.REACT_APP_ADMIN_CONTRACT_INFO) {
@@ -359,7 +359,7 @@ const ReachContextProvider = ({ children }) => {
 			})
 			setAuctions((previous) => [...presentAuctions])
 			updateLatestAuctions(presentAuctions)
-			await updateAuctions()
+			updateAuctions()
 		}
 	}
 
@@ -378,7 +378,7 @@ const ReachContextProvider = ({ children }) => {
 			if (remainingAuctions.length === 0 && view === 'Buy') setView('App')
 			setAuctions((previous) => remainingAuctions)
 			updateLatestAuctions(remainingAuctions)
-			await updateAuctions()
+			updateAuctions()
 		})
 		stopWaiting()
 	}
@@ -397,7 +397,7 @@ const ReachContextProvider = ({ children }) => {
 				const updatedAuctions = [auctionToBeEdited, ...leftOutAuctions]
 				setAuctions((previous) => updatedAuctions)
 				updateLatestAuctions(updatedAuctions)
-				await updateAuctions()
+				updateAuctions()
 			}
 		})
 	}
@@ -598,7 +598,7 @@ const ReachContextProvider = ({ children }) => {
 			const updatedAuctions = [auctionToBeEdited, ...leftOutAuctions]
 			setAuctions((previous) => updatedAuctions)
 			updateLatestAuctions(updatedAuctions)
-			await updateAuctions()
+			updateAuctions()
 			if (
 				auctionToBeEdited['liveBid'] > yourBid &&
 				String(owner) !== String(user.address) &&
@@ -638,7 +638,7 @@ const ReachContextProvider = ({ children }) => {
 		)
 		setAuctions((previous) => leftoverAuctions)
 		updateLatestAuctions(leftoverAuctions)
-		await updateAuctions()
+		updateAuctions()
 	}
 
 	const handleAuctionLog_down = async ({ what }) => {
@@ -769,7 +769,7 @@ const ReachContextProvider = ({ children }) => {
 			const updatedAuctions = [auctionToBeEdited, ...leftOutAuctions]
 			setAuctions((previous) => updatedAuctions)
 			updateLatestAuctions(updatedAuctions)
-			await updateAuctions()
+			updateAuctions()
 		}
 	}
 

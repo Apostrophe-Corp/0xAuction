@@ -137,10 +137,10 @@ const Buy = () => {
 		updateAuctions,
 	} = useReach()
 	const [notified, setNotified] = useState(true)
-
+	
 	useEffect(() => {
-		if (!dAuctions) setDAuctions(auctions)
-		if (!dLatest) setDLatest(latestAuctions)
+		setDAuctions(auctions)
+		setDLatest(latestAuctions)
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 
@@ -153,6 +153,7 @@ const Buy = () => {
 		runUpdateAuctions()
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [auctions, latestAuctions])
+
 
 
 	useEffect(() => {
