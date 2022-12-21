@@ -123,36 +123,36 @@ const Auction = ({ assetID, title, desiredPrice, url = '', fullAuction }) => {
 const Buy = () => {
 	const latestAuctionRef = useRef()
 	const {
-		auctions,
-		latestAuctions,
+		// auctions,
+		// latestAuctions,
 		alertThis,
 		newAuctions,
-		setNewAuctions,
+		// setNewAuctions,
 		newLatest,
-		setNewLatest,
+		// setNewLatest,
 		dAuctions,
 		setDAuctions,
 		dLatest,
 		setDLatest,
-		updateAuctions,
+		// updateAuctions,
 	} = useReach()
 	const [notified, setNotified] = useState(true)
 
 	useEffect(() => {
-		setDAuctions(auctions)
-		setDLatest(latestAuctions)
+		setDAuctions(newLatest)
+		setDLatest(newAuctions)
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 
-	useEffect(() => {
-		const runUpdateAuctions = async () => {
-			await updateAuctions()
-			setDLatest((previous) => [...newLatest])
-			setDAuctions((previous) => [...newAuctions])
-		}
-		runUpdateAuctions()
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [auctions, latestAuctions])
+	// useEffect(() => {
+	// 	const runUpdateAuctions = async () => {
+	// 		await updateAuctions()
+	// 		setDLatest((previous) => [...newLatest])
+	// 		setDAuctions((previous) => [...newAuctions])
+	// 	}
+	// 	runUpdateAuctions()
+	// 	// eslint-disable-next-line react-hooks/exhaustive-deps
+	// }, [auctions, latestAuctions])
 
 	useEffect(() => {
 		if (dLatest.length > 2) {
