@@ -867,10 +867,10 @@ const ReachContextProvider = ({ children }) => {
 			const join = Boolean(joinIn)
 			if (join) {
 				alertThis({
-				message: 'Please wait',
-				forConfirmation: false,
-				persist: true,
-			})
+					message: 'Please wait',
+					forConfirmation: false,
+					persist: true,
+				})
 				if (!(await user.account.tokenAccepted(auctionInfo.tokenId))) {
 					alertThis({
 						message: 'Please confirm asset opt-in on your wallet',
