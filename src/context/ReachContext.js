@@ -115,7 +115,7 @@ const ReachContextProvider = ({ children }) => {
 		return result
 	}
 
-	const startWaiting = async () => {
+	const startWaiting = async (monitor = true) => {
 		const shouldDisplay = (display) => {
 			setShowPreloader(display)
 			if (display) setProcessing(display)
@@ -126,20 +126,24 @@ const ReachContextProvider = ({ children }) => {
 				waitingPro['resolve'] = resolve
 				waitingPro['reject'] = reject
 				shouldDisplay(true)
-				waiter = setTimeout(() => {
-					alertThis({
-						message: `This process is taking longer than expected. Please consider clearing the cookies used by this site, refresh and reconnect your wallet, then try this again if need be`,
-						forConfirmation: false,
-					})
-					clearTimeout(waiter)
-				}, 120000)
+				if (monitor) {
+					waiter = setTimeout(() => {
+						alertThis({
+							message: `This process is taking longer than expected. Please consider clearing the cookies used by this site, refresh and reconnect your wallet, then try this again if need be`,
+							forConfirmation: false,
+						})
+						clearTimeout(waiter)
+					}, 120000)
+				}
 			})
 			shouldDisplay(false)
 		} catch (error) {
 			shouldDisplay(false)
 		}
-		clearTimeout(waiter)
-		waiter = undefined
+		if (monitor) {
+			clearTimeout(waiter)
+			waiter = undefined
+		}
 	}
 
 	const stopWaiting = (mode = true) => {
