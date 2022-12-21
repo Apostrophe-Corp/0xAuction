@@ -130,7 +130,7 @@ const Buy = () => {
 	const [notified, setNotified] = useState(true)
 
 	useEffect(() => {
-		if (!newAuctions || !newLatest) startWaiting()
+		if (!newAuctions.length || !newLatest.length) startWaiting()
 		else stopWaiting()
 	}, [newAuctions, newLatest])
 
