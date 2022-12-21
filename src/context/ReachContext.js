@@ -375,6 +375,7 @@ const ReachContextProvider = ({ children }) => {
 			setAuctions((previous) => remainingAuctions)
 			updateLatestAuctions(remainingAuctions)
 		})
+		await updateAuctions()
 		stopWaiting()
 	}
 

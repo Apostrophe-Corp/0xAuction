@@ -125,18 +125,12 @@ const Buy = () => {
 		auctions,
 		latestAuctions,
 		alertThis,
-		startWaiting,
-		stopWaiting,
 		newAuctions,
 		setNewAuctions,
 		newLatest,
 		setNewLatest,
 	} = useReach()
 	const [notified, setNotified] = useState(true)
-
-	useEffect(() => {
-		newAuctions.length && newLatest.length ? stopWaiting() : startWaiting(false)
-	}, [newAuctions, newLatest, startWaiting, stopWaiting])
 
 	useEffect(() => {
 		const updateAuctions = async () => {
