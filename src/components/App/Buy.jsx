@@ -17,7 +17,8 @@ const LatestAuction = ({
 }) => {
 	const { standardUnit, joinAuction } = useReach()
 	const previewRef = useRef()
-	const [newTitle, setNewTitle] = useState(title)
+	const [uName, setUName] = useState('NFT')
+	const [name, setName] = useState(title)
 
 	const setPreviewBgs = ({ x = '', y = '', found = false } = {}) => {
 		previewRef.current.style.background = `url(${x}), url(${y}), url(${
@@ -33,8 +34,10 @@ const LatestAuction = ({
 			try {
 				const expectedData = await arc69.fetch(x)
 				if (expectedData.success && expectedData.url) {
-					const _title = expectedData?.['unit-name'] ?? title
-					setNewTitle(_title)
+					const unit_name = expectedData?.['unit-name'] ?? title
+					setUName(unit_name)
+					const _name = expectedData?.['name'] ?? 'NFT'
+					setName(_name)
 					// console.log('Media URL:', expectedData.url)
 					setPreviewBgs({ x: expectedData.url, found: true })
 				}
@@ -59,7 +62,7 @@ const LatestAuction = ({
 			<div className={cf(s.w50, s.w480_100, s.w360_100, buy.auctionDetails)}>
 				<div className={cf(s.wMax, s.flex, s.flexCenter, buy.auctionTitle)}>
 					<h2 className={cf(s.wMax, s.m0, s.p0, buy.auctionTitleText)}>
-						{newTitle}
+						{name} ({uName})
 					</h2>
 				</div>
 				<div className={cf(s.wMax, s.flex, s.flexCenter, buy.auctionDes)}>
@@ -80,7 +83,8 @@ const LatestAuction = ({
 const Auction = ({ assetID, title, desiredPrice, url = '', fullAuction }) => {
 	const { standardUnit, joinAuction } = useReach()
 	const auctionNFTRef = useRef()
-	const [newTitle, setNewTitle] = useState(title)
+	const [uName, setUName] = useState('NFT')
+	const [name, setName] = useState(title)
 
 	const setPreviewBgs = ({ x = '', y = '', found = false } = {}) => {
 		auctionNFTRef.current.style.background = `linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.7)), url(${x}), url(${y}), url(${
@@ -96,8 +100,10 @@ const Auction = ({ assetID, title, desiredPrice, url = '', fullAuction }) => {
 			try {
 				const expectedData = await arc69.fetch(x)
 				if (expectedData.success && expectedData.url) {
-					const _title = expectedData?.['unit-name'] ?? title
-					setNewTitle(_title)
+					const unit_name = expectedData?.['unit-name'] ?? title
+					setUName(unit_name)
+					const _name = expectedData?.['name'] ?? 'NFT'
+					setName(_name)
 					// console.log('Media URL:', expectedData.url)
 					setPreviewBgs({ x: expectedData.url, found: true })
 				}
@@ -117,9 +123,10 @@ const Auction = ({ assetID, title, desiredPrice, url = '', fullAuction }) => {
 			}}
 		>
 			<div className={cf(s.flex, s.flex_dColumn, buy.aucAucDetails)}>
-				<h3 className={cf(s.m0, s.p0, s.wMax, buy.aucAucTitleText)}>
-					{newTitle}
-				</h3>
+				<h3 className={cf(s.m0, s.p0, s.wMax, buy.aucAucTitleText)}>{name}</h3>
+				<span className={cf(s.wMax, s.dInlineBlock, buy.aucAucDesiredPrice)}>
+					{uName}
+				</span>
 				<span className={cf(s.wMax, s.dInlineBlock, buy.aucAucDesiredPrice)}>
 					{desiredPrice} {standardUnit}
 				</span>

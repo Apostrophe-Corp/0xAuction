@@ -25,7 +25,7 @@ const Alert = () => {
 	}
 
 	const cancel = () => {
-		if (alertInfo.prompt && promiseOfConfirmation.reject)
+		if ((alertInfo.canClear || alertInfo.prompt) && promiseOfConfirmation.reject)
 			promiseOfConfirmation.reject(null)
 	}
 

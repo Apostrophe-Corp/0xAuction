@@ -98,6 +98,7 @@ const ReachContextProvider = ({ children }) => {
 		persist = false,
 		neutral = false,
 		callback = null,
+		canClear = false,
 	} = {}) => {
 		await sleep(300)
 		promiseOfConfirmation?.resolve && promiseOfConfirmation.resolve()
@@ -112,6 +113,7 @@ const ReachContextProvider = ({ children }) => {
 				persist,
 				neutral,
 				callback,
+				canClear,
 			}))
 			setShowAlert((lastState) => true)
 		}).catch((message) => setShowAlert((lastState) => false))
@@ -838,6 +840,7 @@ const ReachContextProvider = ({ children }) => {
 					'This is your auction, and as such you are not allowed to place a bid. Would you like to return to monitoring it?',
 				accept: 'Yes',
 				decline: 'No',
+				neutral: true,
 			})
 			if (rejoin) {
 				rejoinAuction({ ...auctionInfo })
@@ -847,22 +850,27 @@ const ReachContextProvider = ({ children }) => {
 				message: `You're still the highest bidder for this auction. Would you like to return to it?`,
 				accept: 'Yes',
 				decline: 'No',
+				neutral: true,
 			})
 			if (rejoin) {
 				continueAuction({ ...auctionInfo })
 			}
 		} else {
-			const join = await alertThis({
-				message: 'Are you interested in bidding for this NFT?',
-				accept: 'Yes',
-				decline: 'No',
+			const joinIn = await alertThis({
+				message: 'Would you like to place a bid? Or require extra information?',
+				accept: 'Place Bid',
+				decline: 'More Info',
+				neutral: true,
+				canClear: true,
 			})
-			alertThis({
+			if (joinIn === undefined) return null
+			const join = Boolean(joinIn)
+			if (join) {
+				alertThis({
 				message: 'Please wait',
 				forConfirmation: false,
 				persist: true,
 			})
-			if (join) {
 				if (!(await user.account.tokenAccepted(auctionInfo.tokenId))) {
 					alertThis({
 						message: 'Please confirm asset opt-in on your wallet',
@@ -937,6 +945,8 @@ const ReachContextProvider = ({ children }) => {
 						resolve()
 					}, 3000)
 				})
+			} else {
+				window.open(`${algoExplorerURI}/asset/${auctionInfo.tokenId}`, '_blank')
 			}
 		}
 	}
@@ -976,6 +986,7 @@ const ReachContextProvider = ({ children }) => {
 			}`,
 			prompt: true,
 			callback: (x) => !isNaN(x),
+			canClear: true,
 		})
 		if (bidIn === undefined) return null
 		const bid = Number(bidIn)
