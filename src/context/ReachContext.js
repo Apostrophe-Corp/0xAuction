@@ -1185,7 +1185,7 @@ const ReachContextProvider = ({ children }) => {
 	}
 
 	useEffect(() => {
-		const updateNewAuctions = async () => {
+		const updateAuctions = async () => {
 			const currentAuctions = auctions
 			const len = currentAuctions.length
 			const newSet = []
@@ -1196,22 +1196,18 @@ const ReachContextProvider = ({ children }) => {
 				if (ended === false) newSet.push(el)
 			}
 			setNewAuctions((previous) => [...newSet])
-		}
-
-		const updateNewLatest = async () => {
-			const currentAuctions = latestAuctions
-			const len = currentAuctions.length
-			const newSet = []
-			let i = 0
-			for (i; i < len; i++) {
-				const el = currentAuctions[i]
-				const ended = await el.ended()
-				if (ended === false) newSet.push(el)
+			const _currentAuctions = latestAuctions
+			const _len = _currentAuctions.length
+			const _newSet = []
+			let _i = 0
+			for (_i; _i < _len; _i++) {
+				const el = _currentAuctions[_i]
+				const _ended = await el.ended()
+				if (_ended === false) _newSet.push(el)
 			}
-			setNewLatest((previous) => [...newSet])
+			setNewLatest((previous) => [..._newSet])
 		}
-		updateNewAuctions()
-		updateNewLatest()
+		updateAuctions()
 	}, [auctions, latestAuctions, setNewAuctions, setNewLatest])
 
 	return (
