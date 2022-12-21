@@ -151,15 +151,8 @@ const Buy = () => {
 			setDAuctions((previous) => [...newAuctions])
 		}
 		runUpdateAuctions()
-	}, [
-		auctions,
-		latestAuctions,
-		newAuctions,
-		newLatest,
-		setDAuctions,
-		setDLatest,
-		updateAuctions,
-	])
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [auctions, latestAuctions])
 
 	useEffect(() => {
 		if (dLatest.length > 2) {
