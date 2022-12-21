@@ -65,6 +65,10 @@ const ReachContextProvider = ({ children }) => {
 	const [currentAuction, setCurrentAuction] = useState(null)
 	const [auctions, setAuctions] = useState([])
 	const [latestAuctions, setLatestAuctions] = useState([])
+	const [[newAuctions, setNewAuctions], [newLatest, setNewLatest]] = [
+		useState([]),
+		useState([]),
+	]
 
 	const [showBuyer, setShowBuyer] = useState(false)
 	const [showSeller, setShowSeller] = useState(false)
@@ -871,6 +875,7 @@ const ReachContextProvider = ({ children }) => {
 						alertThis({
 							message: 'Opt-In confirmed',
 							forConfirmation: false,
+							persist: true,
 						})
 						await new Promise((resolve) => setTimeout(resolve, 2000))
 					} catch (error) {
@@ -1160,6 +1165,10 @@ const ReachContextProvider = ({ children }) => {
 		currentAuction,
 		auctions,
 		latestAuctions,
+		newAuctions,
+		setNewAuctions,
+		newLatest,
+		setNewLatest,
 		setShowBuyer,
 		setShowSeller,
 		setShowConnectAccount,
