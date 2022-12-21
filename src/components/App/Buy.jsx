@@ -121,12 +121,18 @@ const Auction = ({ assetID, title, desiredPrice, url = '', fullAuction }) => {
 }
 
 const Buy = () => {
-	const { auctions, latestAuctions, alertThis } = useReach()
+	const { auctions, latestAuctions, alertThis, startWaiting, stopWaiting } =
+		useReach()
 	const [[newAuctions, setNewAuctions], [newLatest, setNewLatest]] = [
 		useState([]),
 		useState([]),
 	]
 	const [notified, setNotified] = useState(true)
+
+	useEffect(() => {
+		if (!newAuctions || !newLatest) startWaiting()
+		else stopWaiting()
+	}, [newAuctions, newLatest])
 
 	useEffect(() => {
 		const updateAuctions = async () => {
