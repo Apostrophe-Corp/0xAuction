@@ -116,8 +116,8 @@ const ReachContextProvider = ({ children }) => {
 	}
 
 	const updateAuctions = async () => {
-		await updateNewAuctions()
-		await updateNewLatest()
+		updateNewAuctions()
+		updateNewLatest()
 	}
 
 	const alertThis = async ({
@@ -274,7 +274,7 @@ const ReachContextProvider = ({ children }) => {
 					})
 					setAuctions((previous) => [...presentAuctions])
 					updateLatestAuctions(presentAuctions)
-					await updateAuctions()
+					updateAuctions()
 				}
 			}
 			if (process.env.REACT_APP_ADMIN_CONTRACT_INFO) {
@@ -355,7 +355,7 @@ const ReachContextProvider = ({ children }) => {
 			})
 			setAuctions((previous) => [...presentAuctions])
 			updateLatestAuctions(presentAuctions)
-			await updateAuctions()
+			updateAuctions()
 		}
 	}
 
@@ -1283,7 +1283,7 @@ const ReachContextProvider = ({ children }) => {
 							className={cf(s.flex, s.flexCenter, s.p10, s.m0, app.navItem)}
 							onClick={() => {
 								checkForContract(async () => {
-									if (newAuctions.length && newLatest.length) setView('Buy')
+									if (newLatest.length) setView('Buy')
 									else
 										alertThis({
 											message:
