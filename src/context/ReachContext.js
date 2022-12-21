@@ -1278,7 +1278,7 @@ const ReachContextProvider = ({ children }) => {
 							className={cf(s.flex, s.flexCenter, s.p10, s.m0, app.navItem)}
 							onClick={() => {
 								checkForContract(async () => {
-									if (newlatest.length) setView('Buy')
+									if (newLatest.length) setView('Buy')
 									else
 										alertThis({
 											message:
