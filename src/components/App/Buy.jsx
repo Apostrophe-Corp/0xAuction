@@ -132,7 +132,16 @@ const Buy = () => {
 		const updateAuctions = async () => {
 			const currentAuctions = auctions
 			const newSet = await Promise.all(
-				currentAuctions.filter(async (el) => (await el.ended()) === false && el.hide === false)
+				currentAuctions.filter(async (el) => {
+					const ended = await el.ended()
+					const cView = await el.tempCtc.v.live()
+					const view = cView[1]
+					console.log(
+						el.title,
+						view === true && ended === false && el.hide === false
+					)
+					return view === true && ended === false && el.hide === false
+				})
 			)
 			setNewAuctions((previous) => newSet)
 		}
@@ -143,7 +152,16 @@ const Buy = () => {
 		const updateAuctions = async () => {
 			const currentAuctions = latestAuctions
 			const newSet = await Promise.all(
-				currentAuctions.filter(async (el) => (await el.ended()) === false && el.hide === false)
+				currentAuctions.filter(async (el) => {
+					const ended = await el.ended()
+					const cView = await el.tempCtc.v.live()
+					const view = cView[1]
+					console.log(
+						el.title,
+						view === true && ended === false && el.hide === false
+					)
+					return view === true && ended === false && el.hide === false
+				})
 			)
 			setNewLatest((previous) => newSet)
 		}
