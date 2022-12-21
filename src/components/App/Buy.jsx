@@ -156,12 +156,12 @@ const Buy = () => {
 
 
 	useEffect(() => {
-		if (newLatest.length > 2) {
+		if (dLatest.length > 2) {
 			let progress = 0
 			const slide = setInterval(() => {
 				progress += 100
 				latestAuctionRef.current.style.transform = `translate(-${progress}%,0)`
-				const length = (newLatest.length - 1) * 100
+				const length = (dLatest.length - 1) * 100
 				if (progress === length) {
 					const revert = setTimeout(() => {
 						latestAuctionRef.current.style.transition = `none`
@@ -182,7 +182,7 @@ const Buy = () => {
 				clearInterval(slide)
 			}
 		}
-	}, [newLatest])
+	}, [dLatest])
 
 	return (
 		<div className={cf(s.wMax, s.window, buy.buyParent)}>
@@ -219,7 +219,7 @@ const Buy = () => {
 							)}
 							ref={latestAuctionRef}
 						>
-							{newLatest.map((el, i) => (
+							{dLatest.map((el, i) => (
 								<LatestAuction
 									key={i}
 									fullAuction={el}
@@ -248,7 +248,7 @@ const Buy = () => {
 						buy.aucAuctions
 					)}
 				>
-					{newAuctions.map((el, i) => (
+					{dAuctions.map((el, i) => (
 						<Auction
 							key={i}
 							fullAuction={el}
