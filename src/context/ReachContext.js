@@ -1198,7 +1198,7 @@ const ReachContextProvider = ({ children }) => {
 			const length = auc.length
 			let x = length - 1
 			const newAuctions = []
-			for (x; x > length - 5; x--) {
+			for (x; x > length - 6; x--) {
 				newAuctions.push(auc[x])
 				if (x === 0) break
 			}
