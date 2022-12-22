@@ -1218,8 +1218,7 @@ const ReachContextProvider = ({ children }) => {
 			const x = sortBy(newSet, 'id')
 			setNewAuctions((previous) => [...x])
 			const _currentAuctions = updateLatestAuctions(x)
-			const y = sortBy(_currentAuctions, 'id')
-			setNewLatest((previous) => [...y])
+			setNewLatest((previous) => [..._currentAuctions])
 		}
 		updateAuctions()
 	}, [auctions, setNewAuctions, setNewLatest])
