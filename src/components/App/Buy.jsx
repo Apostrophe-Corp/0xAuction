@@ -17,7 +17,7 @@ const LatestAuction = ({
 }) => {
 	const { standardUnit, joinAuction } = useReach()
 	const previewRef = useRef()
-	const [uName, setUName] = useState('NFT')
+	const [uName, setUName] = useState('')
 	const [name, setName] = useState(title)
 
 	const setPreviewBgs = ({ x = '', y = '', found = false } = {}) => {
@@ -83,7 +83,7 @@ const LatestAuction = ({
 const Auction = ({ assetID, title, desiredPrice, url = '', fullAuction }) => {
 	const { standardUnit, joinAuction } = useReach()
 	const auctionNFTRef = useRef()
-	const [uName, setUName] = useState('NFT')
+	const [uName, setUName] = useState('')
 	const [name, setName] = useState(title)
 
 	const setPreviewBgs = ({ x = '', y = '', found = false } = {}) => {

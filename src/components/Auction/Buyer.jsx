@@ -12,7 +12,7 @@ const Buyer = () => {
 		standardUnit,
 		currentAuction,
 		optIn,
-		auctions,
+		newAuctions,
 		setShowBuyer,
 		alertThis,
 		placeNewBid,
@@ -20,6 +20,7 @@ const Buyer = () => {
 
 	const aucAsset = useRef()
 	const [newAuction, setNewAuction] = useState({})
+	const [title, setTitle] = useState('')
 
 	const setPreviewBgs = ({ x = '', y = '', found = false } = {}) => {
 		aucAsset.current.style.background = `url(${x}), url(${y}), url(${
@@ -32,28 +33,22 @@ const Buyer = () => {
 
 	useLayoutEffect(() => {
 		const updateAuctions = async () => {
-			const currentAuctions = auctions
-			const newSet = await Promise.all(
-				currentAuctions.filter(async (el) => (await el.ended()) === false)
-			)
-			if (newSet.length === 0) setShowBuyer(false)
-			const updatedAuction = newSet.filter(
+			const currentAuctions = newAuctions
+			if (currentAuctions.length === 0) setShowBuyer(false)
+			const updatedAuction = currentAuctions.filter(
 				(el) => Number(el?.id) === currentAuction
 			)[0]
 			if (!updatedAuction) setShowBuyer(false)
 			setNewAuction(updatedAuction)
 		}
 		updateAuctions()
-	}, [auctions, currentAuction, setShowBuyer])
+	}, [newAuctions, currentAuction, setShowBuyer])
 
 	useEffect(() => {
 		const updateAuctions = async () => {
-			const currentAuctions = auctions
-			const newSet = await Promise.all(
-				currentAuctions.filter(async (el) => (await el.ended()) === false)
-			)
-			if (newSet.length === 0) setShowBuyer(false)
-			const updatedAuction = newSet.filter(
+			const currentAuctions = newAuctions
+			if (currentAuctions.length === 0) setShowBuyer(false)
+			const updatedAuction = currentAuctions.filter(
 				(el) => Number(el?.id) === currentAuction
 			)[0]
 			if (!updatedAuction) setShowBuyer(false)
@@ -64,6 +59,7 @@ const Buyer = () => {
 					.then((data) => {
 						if (data.success && data.url) {
 							// console.log('Media URL:', data.url)
+							setTitle(`${data?.name} (${data?.['unit-name']})`)
 							setPreviewBgs({ x: data.url, y: url, found: true })
 						} else {
 							setPreviewBgs({ y: url })
@@ -76,7 +72,7 @@ const Buyer = () => {
 			fetchAssetMetadata(updatedAuction)
 		}
 		updateAuctions()
-	}, [auctions, currentAuction, setShowBuyer])
+	}, [newAuctions, currentAuction, setShowBuyer])
 
 	return (
 		<div className={cf(s.wMax, s.flex, s.flexCenter, auc.auctionParent)}>
@@ -93,7 +89,7 @@ const Buyer = () => {
 							auc.aucTitleText
 						)}
 					>
-						{newAuction.title}
+						{title ?? newAuction.title}
 					</h2>
 				</div>
 				<div
