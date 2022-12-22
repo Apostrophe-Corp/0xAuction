@@ -808,7 +808,6 @@ const ReachContextProvider = ({ children }) => {
 				aucCtc.events.rejected.monitor(handleAuctionLog_rejected)
 			}
 			setShowBuyer(true)
-			setView('App')
 		}
 	}
 
@@ -920,7 +919,6 @@ const ReachContextProvider = ({ children }) => {
 									await new Promise((resolve) => {
 										let newWaiter = setTimeout(() => {
 											setShowBuyer(true)
-											setView('App')
 											resolve()
 											clearTimeout(newWaiter)
 											newWaiter = undefined
@@ -1033,7 +1031,6 @@ const ReachContextProvider = ({ children }) => {
 			const updatedAuctions = [auctionToBeEdited, ...remainingAuctions]
 			setAuctions((previous) => updatedAuctions)
 			loopVar = false
-			setView('App')
 			setShowBuyer(true)
 			stopWaiting()
 			alertThis({
