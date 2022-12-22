@@ -1227,7 +1227,9 @@ const ReachContextProvider = ({ children }) => {
 				const ended = await el.ended()
 				if (ended === false) newSet.push(el)
 			}
-			setNewAuctions((previous) => [...sortBy(newSet, 'id')])
+			const x = sortBy(newSet, 'id')
+			console.log(x)
+			setNewAuctions((previous) => [...x])
 			const _currentAuctions = latestAuctions
 			const _len = _currentAuctions.length
 			const _newSet = []
@@ -1237,7 +1239,8 @@ const ReachContextProvider = ({ children }) => {
 				const _ended = await el.ended()
 				if (_ended === false) _newSet.push(el)
 			}
-			setNewLatest((previous) => [...sortBy(_newSet, 'id')])
+			const y = sortBy(_newSet, 'id')
+			setNewLatest((previous) => [...y])
 		}
 		updateAuctions()
 	}, [auctions, latestAuctions, setNewAuctions, setNewLatest])
