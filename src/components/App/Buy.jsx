@@ -123,10 +123,7 @@ const Auction = ({ assetID, title, desiredPrice, url = '', fullAuction }) => {
 			}}
 		>
 			<div className={cf(s.flex, s.flex_dColumn, buy.aucAucDetails)}>
-				<h3 className={cf(s.m0, s.p0, s.wMax, buy.aucAucTitleText)}>{name}</h3>
-				<span className={cf(s.wMax, s.dInlineBlock, buy.aucAucDesiredPrice)}>
-					{uName}
-				</span>
+				<h3 className={cf(s.m0, s.p0, s.wMax, buy.aucAucTitleText)}>{name} ({uName})</h3>
 				<span className={cf(s.wMax, s.dInlineBlock, buy.aucAucDesiredPrice)}>
 					{desiredPrice} {standardUnit}
 				</span>

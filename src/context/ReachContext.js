@@ -845,16 +845,6 @@ const ReachContextProvider = ({ children }) => {
 			if (rejoin) {
 				rejoinAuction({ ...auctionInfo })
 			}
-		} else if (String(auctionInfo.highestBidder) === String(user.address)) {
-			const rejoin = await alertThis({
-				message: `You're still the highest bidder for this auction. Would you like to return to it?`,
-				accept: 'Yes',
-				decline: 'No',
-				neutral: true,
-			})
-			if (rejoin) {
-				continueAuction({ ...auctionInfo })
-			}
 		} else {
 			const joinIn = await alertThis({
 				message: 'Would you like to place a bid? Or require extra information?',
@@ -866,85 +856,93 @@ const ReachContextProvider = ({ children }) => {
 			if (joinIn === undefined) return null
 			const join = Boolean(joinIn)
 			if (join) {
-				alertThis({
-					message: 'Please wait',
-					forConfirmation: false,
-					persist: true,
-				})
-				if (!(await user.account.tokenAccepted(auctionInfo.tokenId))) {
+				if (String(auctionInfo.highestBidder) === String(user.address)) {
 					alertThis({
-						message: 'Please confirm asset opt-in on your wallet',
+						message: `You're still the highest bidder for this auction`,
+						forConfirmation: false,
+					})
+					continueAuction({ ...auctionInfo })
+				} else {
+					alertThis({
+						message: 'Please wait',
 						forConfirmation: false,
 						persist: true,
 					})
-					setCurrentAuction(auctionInfo.id)
-					try {
-						await user.account.tokenAccept(auctionInfo.tokenId)
+					if (!(await user.account.tokenAccepted(auctionInfo.tokenId))) {
 						alertThis({
-							message: 'Opt-In confirmed',
+							message: 'Please confirm asset opt-in on your wallet',
 							forConfirmation: false,
 							persist: true,
 						})
-						await new Promise((resolve) => setTimeout(resolve, 2000))
-					} catch (error) {
-						console.log({ error })
-						alertThis({
-							message:
-								'Opt-In failed and as such you cannot bid for this NFT at this point. But you can try again',
-							forConfirmation: false,
-						})
-						return
-					}
-				}
-
-				alertThis({
-					message: 'Please wait',
-					forConfirmation: false,
-					persist: true,
-				})
-				const ctc = user.account.contract(
-					auctionCtc,
-					JSON.parse(auctionInfo.contractInfo)
-				)
-				ctc.events.optInSuccess.monitor(handleAuctionLog_optInSuccess)
-				await new Promise((resolve) => {
-					let waiter = setTimeout(async () => {
-						const currentAuctions = auctions
-						const newAuction = currentAuctions.filter(
-							(el) => Number(el.id) === Number(auctionInfo.id)
-						)[0]
-						if (newAuction) {
-							auctionInfo = newAuction
-							setCurrentAuction(newAuction['id'])
-							if (newAuction['optIn']) {
-								ctc.events.bidSuccess.monitor(handleAuctionLog_bidSuccess)
-								await new Promise((resolve) => {
-									let newWaiter = setTimeout(() => {
-										setShowBuyer(true)
-										setView('App')
-										resolve()
-										clearTimeout(newWaiter)
-										newWaiter = undefined
-									}, 2500)
-								})
-							} else {
-								let continue_ = false
-								do {
-									continue_ = await handleBid({
-										auctionID: auctionInfo.id,
-										loopVar: continue_,
-										ctc,
-										justJoining: true,
-									})
-									if (continue_ === null) break
-								} while (continue_)
-							}
+						setCurrentAuction(auctionInfo.id)
+						try {
+							await user.account.tokenAccept(auctionInfo.tokenId)
+							alertThis({
+								message: 'Opt-In confirmed',
+								forConfirmation: false,
+								persist: true,
+							})
+							await new Promise((resolve) => setTimeout(resolve, 2000))
+						} catch (error) {
+							console.log({ error })
+							alertThis({
+								message:
+									'Opt-In failed and as such you cannot bid for this NFT at this point. But you can try again',
+								forConfirmation: false,
+							})
+							return
 						}
-						clearTimeout(waiter)
-						waiter = undefined
-						resolve()
-					}, 3000)
-				})
+					}
+
+					alertThis({
+						message: 'Please wait',
+						forConfirmation: false,
+						persist: true,
+					})
+					const ctc = user.account.contract(
+						auctionCtc,
+						JSON.parse(auctionInfo.contractInfo)
+					)
+					ctc.events.optInSuccess.monitor(handleAuctionLog_optInSuccess)
+					await new Promise((resolve) => {
+						let waiter = setTimeout(async () => {
+							const currentAuctions = auctions
+							const newAuction = currentAuctions.filter(
+								(el) => Number(el.id) === Number(auctionInfo.id)
+							)[0]
+							if (newAuction) {
+								auctionInfo = newAuction
+								setCurrentAuction(newAuction['id'])
+								if (newAuction['optIn']) {
+									ctc.events.bidSuccess.monitor(handleAuctionLog_bidSuccess)
+									await new Promise((resolve) => {
+										let newWaiter = setTimeout(() => {
+											setShowBuyer(true)
+											setView('App')
+											resolve()
+											clearTimeout(newWaiter)
+											newWaiter = undefined
+										}, 2500)
+									})
+								} else {
+									let continue_ = false
+									do {
+										continue_ = await handleBid({
+											auctionID: auctionInfo.id,
+											loopVar: continue_,
+											ctc,
+											justJoining: true,
+										})
+										if (continue_ === null) break
+									} while (continue_)
+								}
+							}
+							clearTimeout(waiter)
+							waiter = undefined
+							resolve()
+						}, 3000)
+					})
+				}
 			} else {
 				window.open(`${algoExplorerURI}/asset/${auctionInfo.tokenId}`, '_blank')
 			}
