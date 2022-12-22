@@ -848,7 +848,7 @@ const ReachContextProvider = ({ children }) => {
 			}
 		} else {
 			const joinIn = await alertThis({
-				message: 'Would you like to place a bid? Or require extra information?',
+				message: 'Would you like to place a bid on this NFT? Or do you require more information?',
 				accept: 'Place Bid',
 				decline: 'More Info',
 				neutral: true,
