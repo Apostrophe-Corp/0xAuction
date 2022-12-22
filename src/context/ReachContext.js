@@ -187,7 +187,7 @@ const ReachContextProvider = ({ children }) => {
 			?.sort(
 				isInt
 					? (a, b) =>
-							Number(a?.split('^-_-^')?.[0]) - Number(a?.split('^-_-^')?.[0])
+							Number(a?.split('^-_-^')?.[0]) - Number(b?.split('^-_-^')?.[0])
 					: undefined
 			)
 			?.map((el) => array[el?.split('^-_-^')?.[1]])
