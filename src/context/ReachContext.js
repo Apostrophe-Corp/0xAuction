@@ -170,6 +170,29 @@ const ReachContextProvider = ({ children }) => {
 
 	const sleep = (m) => new Promise((resolve) => setTimeout(resolve, m))
 
+	const sortBy = (array, key) => {
+		if (!array) return array
+		if (!Array.isArray(array)) return array
+		if (array.length <= 1) return array
+		let isInt = false
+		return array
+			.map((el, i) => {
+				isInt = !isNaN(el?.[key])
+				return !isInt
+					? `${el?.[key]?.[0]
+							?.toUpperCase()
+							?.concat(el?.[key]?.slice(1))}^-_-^${i}`
+					: `${el?.[key]}^-_-^${i}`
+			})
+			?.sort(
+				isInt
+					? (a, b) =>
+							Number(a?.split('^-_-^')?.[0]) - Number(a?.split('^-_-^')?.[0])
+					: undefined
+			)
+			?.map((el) => array[el?.split('^-_-^')?.[1]])
+	}
+
 	const connectToWallet = async (
 		walletPreference,
 		mnemonic = false,
@@ -1204,7 +1227,7 @@ const ReachContextProvider = ({ children }) => {
 				const ended = await el.ended()
 				if (ended === false) newSet.push(el)
 			}
-			setNewAuctions((previous) => [...newSet])
+			setNewAuctions((previous) => [...sortBy(newSet, 'id')])
 			const _currentAuctions = latestAuctions
 			const _len = _currentAuctions.length
 			const _newSet = []
@@ -1214,7 +1237,7 @@ const ReachContextProvider = ({ children }) => {
 				const _ended = await el.ended()
 				if (_ended === false) _newSet.push(el)
 			}
-			setNewLatest((previous) => [..._newSet])
+			setNewLatest((previous) => [...sortBy(_newSet, 'id')])
 		}
 		updateAuctions()
 	}, [auctions, latestAuctions, setNewAuctions, setNewLatest])
