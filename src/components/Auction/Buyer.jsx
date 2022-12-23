@@ -4,6 +4,7 @@ import auc from '../../styles/Auction.module.css'
 import notFound from '../../assets/images/no_image.jpg'
 import { useReach, fmtClasses as cf } from '../../hooks'
 import { Arc69 } from '../../ARC69/arc.js'
+import Deadline from './Deadline'
 
 const arc69 = new Arc69()
 
@@ -96,6 +97,7 @@ const Buyer = () => {
 					className={cf(s.wMax, auc.aucAsset)}
 					ref={aucAsset}
 				></div>
+				<Deadline blockCreated={newAuction.blockCreated} />
 				<div
 					className={cf(
 						s.w50,
@@ -202,7 +204,8 @@ const Buyer = () => {
 						type='button'
 						onClick={async () => {
 							const decision = await alertThis({
-								message: 'Are you sure you want to stop monitoring this auction?',
+								message:
+									'Are you sure you want to stop monitoring this auction?',
 								accept: 'No',
 								decline: 'Yes',
 							})

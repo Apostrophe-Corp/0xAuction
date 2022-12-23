@@ -4,6 +4,7 @@ import auc from '../../styles/Auction.module.css'
 import notFound from '../../assets/images/preview.jpg'
 import { useReach, fmtClasses as cf } from '../../hooks'
 import { Arc69 } from '../../ARC69/arc.js'
+import Deadline from './Deadline'
 
 const arc69 = new Arc69()
 
@@ -20,6 +21,7 @@ const Seller = () => {
 	const aucAsset = useRef()
 	const [newAuction, setNewAuction] = useState({})
 	const [title, setTitle] = useState('')
+
 
 	const setPreviewBgs = ({ x = '', y = '', found = false } = {}) => {
 		aucAsset.current.style.background = `url(${x}), url(${y}), url(${
@@ -95,6 +97,7 @@ const Seller = () => {
 					className={cf(s.wMax, auc.aucAsset)}
 					ref={aucAsset}
 				></div>
+				<Deadline blockCreated ={newAuction.blockCreated}/>
 				<div
 					className={cf(
 						s.w50,

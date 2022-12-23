@@ -6,6 +6,15 @@
 	/* z-index: 1000; */
 }
 
+.invisible {
+	opacity: 0 !important;
+}
+
+
+.visible {
+	opacity: 1 !important;
+}
+
 .auctionMask {
 	position: absolute;
 	height: 100%;
@@ -50,7 +59,7 @@
 
 .bidText {
 	font-weight: 400;
-    background: linear-gradient(
+	background: linear-gradient(
 			to bottom right,
 			rgb(255, 255, 255),
 			rgb(213, 3, 255)
@@ -63,7 +72,7 @@
 
 .terminateCon {
 	padding: 10px 5px 5px;
-	gap:10px;
+	gap: 10px;
 }
 
 .terminateBtn {

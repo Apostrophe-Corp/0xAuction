@@ -33,7 +33,10 @@ const Sell = () => {
 					setPreviewBgs(data.url)
 					setAuctionParams({
 						...auctionParams,
-						title: data.name,
+						title:
+							String(data.name).length > 20
+								? `${String(data.name).slice(0, 17)}...`
+								: data.name,
 					})
 				} else {
 					setPreviewBgs()
