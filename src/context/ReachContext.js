@@ -521,12 +521,12 @@ const ReachContextProvider = ({ children }) => {
 					)[0]
 					if (auction) {
 						setCurrentAuction(parseInt(what[0]))
-						setView('App')
+						if(view !== 'Buy') setView('App')
 						stopWaiting()
 						setShowSeller(true)
 					} else {
 						stopWaiting()
-						setView('App')
+						if (view !== 'Buy') setView('App')
 						alertThis({
 							message:
 								'Your auction is live. Click on it on the Buy Page to monitor',
@@ -1093,7 +1093,7 @@ const ReachContextProvider = ({ children }) => {
 
 	const optIn = async (id) => {
 		const agree = await alertThis({
-			message: `To view Live Bid, you must pay a small asset of 1 ${standardUnit}`,
+			message: `To view Live Bid, you must pay a small token of 1 ${standardUnit}`,
 			accept: 'Pay',
 			decline: 'Forfeit',
 		})
@@ -1195,7 +1195,7 @@ const ReachContextProvider = ({ children }) => {
 			const length = auc.length
 			let x = length - 1
 			const newAuctions = []
-			for (x; x > length - 6; x--) {
+			for (x; x > length - 5; x--) {
 				newAuctions.push(auc[x])
 				if (x === 0) break
 			}
