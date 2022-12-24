@@ -26,8 +26,13 @@ const Alert = () => {
 	}
 
 	const cancel = () => {
-		if ((alertInfo.canClear || alertInfo.prompt) && promiseOfConfirmation.reject)
+		if (
+			(alertInfo.canClear || alertInfo.prompt) &&
+			promiseOfConfirmation.reject
+		) {
 			promiseOfConfirmation.reject(null)
+			setResponse('')
+		}
 	}
 
 	// eslint-disable-next-line react-hooks/exhaustive-deps
