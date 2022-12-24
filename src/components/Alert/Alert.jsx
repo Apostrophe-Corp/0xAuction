@@ -22,6 +22,7 @@ const Alert = () => {
 	const submitResponse = (e) => {
 		e.preventDefault()
 		decide(response)
+		setResponse('')
 	}
 
 	const cancel = () => {
