@@ -373,7 +373,7 @@ const ReachContextProvider = ({ children }) => {
 	const checkForContract = async (func) => {
 		if (!user.account) {
 			const connect = await alertThis({
-				message: 'Connect your wallet account first, and try that again',
+				message: 'Connect your wallet first, and try that again',
 				accept: 'Connect now',
 				decline: 'Not now',
 			})
@@ -1324,7 +1324,7 @@ const ReachContextProvider = ({ children }) => {
 							  })
 					}}
 				>
-					{user.address ? user.address : `Connect Account`}
+					{user.address ? user.address : `Connect Wallet`}
 				</button>
 			</div>
 			{children}
