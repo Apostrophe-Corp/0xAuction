@@ -24,8 +24,8 @@ const Sell = () => {
 		previewRef.current.style.backgroundSize = 'contain'
 	}
 
-	const fetchAssetMetadata = (x) => {
-		arc69
+	const fetchAssetMetadata = async (x) => {
+		await arc69
 			.fetch(x)
 			.then((data) => {
 				if (data.success && data.url) {
@@ -70,8 +70,8 @@ const Sell = () => {
 				setAssetTimeout(null)
 			}
 
-			const getMetaData = setTimeout(() => {
-				fetchAssetMetadata(value)
+			const getMetaData = setTimeout(async () => {
+				await fetchAssetMetadata(value)
 				clearTimeout(getMetaData)
 				setAssetTimeout(null)
 			}, 2000)

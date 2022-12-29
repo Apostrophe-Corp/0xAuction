@@ -54,8 +54,8 @@ const Buyer = () => {
 			)[0]
 			if (!updatedAuction) setShowBuyer(false)
 			setNewAuction(updatedAuction)
-			const fetchAssetMetadata = ({ url = '', tokenId = 0 }) => {
-				arc69
+			const fetchAssetMetadata = async ({ url = '', tokenId = 0 }) => {
+				await arc69
 					.fetch(tokenId)
 					.then((data) => {
 						if (data.success && data.url) {
@@ -70,7 +70,7 @@ const Buyer = () => {
 						setPreviewBgs({ y: url })
 					})
 			}
-			fetchAssetMetadata(updatedAuction)
+			await fetchAssetMetadata(updatedAuction)
 		}
 		updateAuctions()
 	}, [newAuctions, currentAuction, setShowBuyer])
