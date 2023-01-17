@@ -34,6 +34,7 @@ export const ReachContext = React.createContext()
 
 const { standardUnit } = reach
 const waitingPro = {}
+let waiter = undefined
 
 const ReachContextProvider = ({ children }) => {
 	const [view, setView] = useState('App')
@@ -112,7 +113,6 @@ const ReachContextProvider = ({ children }) => {
 			setShowPreloader(display)
 			if (display) setProcessing(display)
 		}
-		let waiter = undefined
 		try {
 			await new Promise((resolve, reject) => {
 				waitingPro['resolve'] = resolve
@@ -124,6 +124,7 @@ const ReachContextProvider = ({ children }) => {
 							message: `This process is taking longer than expected. Please consider clearing the cookies used by this site, refresh and reconnect your wallet, then try this again if need be`,
 							forConfirmation: false,
 						})
+						if (waitingPro.reject) waitingPro.reject()
 						clearTimeout(waiter)
 					}, 120000)
 				}
@@ -141,6 +142,8 @@ const ReachContextProvider = ({ children }) => {
 	const stopWaiting = (mode = true) => {
 		if (mode && waitingPro.resolve) waitingPro.resolve()
 		else if (waitingPro.reject) waitingPro.reject()
+		clearTimeout(waiter)
+		waiter = undefined
 	}
 
 	const noneNull = (byte) => {
@@ -521,7 +524,7 @@ const ReachContextProvider = ({ children }) => {
 					)[0]
 					if (auction) {
 						setCurrentAuction(parseInt(what[0]))
-						if(view !== 'Buy') setView('App')
+						if (view !== 'Buy') setView('App')
 						stopWaiting()
 						setShowSeller(true)
 					} else {
@@ -618,25 +621,36 @@ const ReachContextProvider = ({ children }) => {
 							forConfirmation: false,
 						})
 					} else if (time < parseInt(what[4]) + deadline + 50) {
-						const agreeToBid = await alertThis({
-							message: `Do you accept the current bid of ${reach.formatCurrency(
-								what[1],
-								4
-							)} ${standardUnit} for the '${noneNull(what[5])}' auction?`,
-							accept: 'Yes',
-							decline: 'No',
-						})
-						try {
-							if (agreeToBid) await tempAuctionCtc.a.Auctioneer.acceptSale()
-							else await tempAuctionCtc.a.Auctioneer.rejectSale()
-						} catch (error) {
-							console.log({ error })
-							alertThis({
-								message:
-									'Unable to process your choice, defaulting to an agreement',
-								forConfirmation: false,
-							})
-							setShowSeller(false)
+						let userChoice = undefined
+						let complete = false
+						while (!complete) {
+							if (userChoice === undefined) {
+								const agreeToBid = await alertThis({
+									message: `Do you accept the current bid of ${reach.formatCurrency(
+										what[1],
+										4
+									)} ${standardUnit} for the '${noneNull(what[5])}' auction?`,
+									accept: 'Yes',
+									decline: 'No',
+								})
+								userChoice = agreeToBid
+							}
+							startWaiting()
+							try {								
+								if (userChoice) await tempAuctionCtc.a.Auctioneer.acceptSale()
+								else await tempAuctionCtc.a.Auctioneer.rejectSale()
+								complete = true
+								setShowSeller(false)
+								stopWaiting()
+							} catch (error) {
+								console.log({ error })
+								alertThis({
+									message: 'Sorry, the process failed, but lets try that again',
+									forConfirmation: false,
+									persist: true,
+								})
+								setShowSeller(false)
+							}
 						}
 					}
 				} catch (error) {
@@ -658,7 +672,7 @@ const ReachContextProvider = ({ children }) => {
 	const handleAuctionLog_accepted = async ({ what }) => {
 		if (String(reach.formatAddress(what[2])) === String(user.address)) {
 			alertThis({
-				message: `🥳 Congratulations!!! NFT sold at ${reach.formatCurrency(
+				message: `🥳 Congratulations!!! '${noneNull(what[0])}' sold at ${reach.formatCurrency(
 					what[1],
 					4
 				)} ${standardUnit} 🎉`,
@@ -666,9 +680,9 @@ const ReachContextProvider = ({ children }) => {
 			})
 		} else if (String(reach.formatAddress(what[3])) === String(user.address)) {
 			const viewToken = await alertThis({
-				message: `🥳 Congratulations!!! You now own this asset: ${parseInt(
-					what[4]
-				)}, at the cost of ${reach.formatCurrency(
+				message: `🥳 Congratulations!!! You now own '${noneNull(
+					what[0]
+				)}' ASA ID: #${parseInt(what[4])}, at the cost of ${reach.formatCurrency(
 					what[1],
 					4
 				)} ${standardUnit} 🎉. Proceed to view on AlgoExplorer.io?`,
@@ -848,7 +862,8 @@ const ReachContextProvider = ({ children }) => {
 			}
 		} else {
 			const joinIn = await alertThis({
-				message: 'Would you like to place a bid on this NFT? Or do you require more information?',
+				message:
+					'Would you like to place a bid on this NFT? Or do you require more information?',
 				accept: 'Place Bid',
 				decline: 'More Info',
 				neutral: true,
