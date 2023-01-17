@@ -59,7 +59,7 @@ const ConnectAccount = () => {
 							</span>
 						</div>
 					</div>
-					<div
+					{/* <div
 						className={cf(s.flex, s.flexCenter, ca.connectOption)}
 						onClick={() => {
 							connectToWallet('WalletConnect')
@@ -71,7 +71,7 @@ const ConnectAccount = () => {
 								WalletConnect
 							</span>
 						</div>
-					</div>
+					</div> */}
 					<div
 						className={cf(s.flex, s.flexCenter, ca.connectOption)}
 						onClick={() => {
