@@ -144,7 +144,7 @@ const Create = () => {
 								type='text'
 								name='name'
 								id='name'
-								onInput={handleInput}
+								onChange={handleInput}
 								placeholder=''
 								className={cf(cr8.formInput)}
 							/>
@@ -158,7 +158,7 @@ const Create = () => {
 								type='text'
 								name='symbol'
 								id='symbol'
-								onInput={handleInput}
+								onChange={handleInput}
 								placeholder=''
 								className={cf(cr8.formInput)}
 							/>
@@ -172,7 +172,7 @@ const Create = () => {
 								type='url'
 								name='url'
 								id='url'
-								onInput={handleInput}
+								onChange={handleInput}
 								placeholder=''
 								className={cf(cr8.formInput)}
 							/>
@@ -205,7 +205,7 @@ const Create = () => {
 								type='text'
 								name='clawback'
 								id='clawback'
-								onInput={handleInput}
+								onChange={handleInput}
 								placeholder=''
 								className={cf(cr8.formInput)}
 							/>
@@ -219,7 +219,7 @@ const Create = () => {
 								type='text'
 								name='freeze'
 								id='freeze'
-								onInput={handleInput}
+								onChange={handleInput}
 								placeholder=''
 								className={cf(cr8.formInput)}
 							/>
@@ -233,7 +233,7 @@ const Create = () => {
 								type='text'
 								name='reserve'
 								id='reserve'
-								onInput={handleInput}
+								onChange={handleInput}
 								placeholder=''
 								className={cf(cr8.formInput)}
 							/>
@@ -247,7 +247,7 @@ const Create = () => {
 								type='text'
 								name='manager'
 								id='manager'
-								onInput={handleInput}
+								onChange={handleInput}
 								placeholder=''
 								className={cf(cr8.formInput)}
 							/>
@@ -260,7 +260,7 @@ const Create = () => {
 								type='checkbox'
 								name='defaultFrozen'
 								id='defaultFrozen'
-								onInput={handleInput}
+								onChange={handleInput}
 								className={cf(
 									s.dInlineBlock,
 									s.flex,

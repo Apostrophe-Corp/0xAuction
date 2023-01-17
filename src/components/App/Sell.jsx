@@ -164,7 +164,7 @@ const Sell = () => {
 								type='number'
 								name='tokenId'
 								id='tokenId'
-								onInput={handleInput}
+								onChange={handleInput}
 								placeholder=''
 								className={cf(sell.formInput)}
 							/>
@@ -178,7 +178,7 @@ const Sell = () => {
 								type='text'
 								name='title'
 								id='title'
-								onInput={handleInput}
+								onChange={handleInput}
 								placeholder=''
 								className={cf(sell.formInput)}
 							/>
@@ -192,7 +192,7 @@ const Sell = () => {
 								name='description'
 								id='description'
 								rows='3'
-								onInput={handleInput}
+								onChange={handleInput}
 								placeholder=''
 								className={cf(sell.formInput)}
 							/>
@@ -208,7 +208,7 @@ const Sell = () => {
 								type='text'
 								name='price'
 								id='price'
-								onInput={handleInput}
+								onChange={handleInput}
 								placeholder=''
 								className={cf(sell.formInput)}
 							/>
