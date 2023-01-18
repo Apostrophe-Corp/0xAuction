@@ -186,7 +186,7 @@ const Buy = () => {
 				<FaExclamation className={cf(buy.ex)} />
 			</div>
 			<div className={cf(s.wMax, s.flex, s.flexRight, buy.topDiv)}>
-				<h1 className={cf(s.wMax, s.p0, s.m0, buy.topText)}>Latest Auctions</h1>
+				<h1 className={cf(s.wMax, s.p0, s.m0, buy.topText)}>Latest Listings</h1>
 			</div>
 			<div className={cf(s.wMax, s.flex, s.flexCenter)}>
 				<div className={cf(s.flex, s.flexCenter, buy.latest)}>
