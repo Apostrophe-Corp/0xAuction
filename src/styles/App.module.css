@@ -207,7 +207,7 @@
 	margin-top: var(--spacing-6);
 	line-height: calc(1.53983em + 0.13429vw - 0.42972px);
 	font-size: var(--font-size-1);
-	font-weight: var(--font-weight-normal-1);
+	font-weight: var(--font-weight-normal--1);
 	padding-right: 70px !important;
 }
 
