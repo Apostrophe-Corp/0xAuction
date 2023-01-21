@@ -60,7 +60,7 @@ const Sell = () => {
 				title: value,
 			})
 		} else if (name === 'tokenId') {
-			value = value > 0 ? Number(value) : 0
+			value = Number(value) > 0 ? Number(value) : 0
 			setAuctionParams({
 				...auctionParams,
 				tokenId: value,

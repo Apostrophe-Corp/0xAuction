@@ -948,9 +948,9 @@ const ReachContextProvider = ({ children }) => {
 		startWaiting()
 		const [, nftBal] = await reach.balancesOf(user.account, [
 			null,
-			auctionParams.tokenId,
+			Number(auctionParams.tokenId),
 		])
-		if (!parseInt(nftBal)) {
+		if (Number(nftBal) === 0) {
 			stopWaiting()
 			alertThis({
 				message: 'You do not own this asset',
