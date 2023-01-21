@@ -459,9 +459,9 @@ const ReachContextProvider = ({ children }) => {
 		})
 		setNewWalletConnection(false)
 		setCurrentAuction(null)
-		setAuctions([])
-		setNewAuctions([])
-		setNewLatest([])
+		// setAuctions([])
+		// setNewAuctions([])
+		// setNewLatest([])
 	}
 
 	const postAuction = async ({ what }) => {
