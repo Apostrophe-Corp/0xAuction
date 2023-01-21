@@ -32,7 +32,7 @@ const deadline = 1000000
 
 export let reach = loadStdlib({ REACH_CONNECTOR_MODE: 'ALGO' })
 const providerEnv = 'TestNet'
-reach.setProviderByName(providerEnv)
+reach.setProvider(providerEnv)
 
 export const ReachContext = React.createContext()
 
