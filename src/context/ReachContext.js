@@ -1568,7 +1568,7 @@ const ReachContextProvider = ({ children }) => {
 						0xAuction
 					</div>
 					<div className={cf(s.wMax, app.registered)}>
-						Copyright &copy; Apostrophe Corp 2022.
+						Copyright &copy; Apostrophe Corp. 2022.
 					</div>
 				</div>
 			</div>
