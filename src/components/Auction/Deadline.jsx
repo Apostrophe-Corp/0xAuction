@@ -38,7 +38,7 @@ const Deadline = ({ blockCreated }) => {
 	useEffect(() => {
 		let updateRemaining = setInterval(async () => {
 			const present = reach.bigNumberToNumber(await reach.getNetworkTime())
-			const remaining = blockCreated + 1000000 - present
+			const remaining = blockCreated + 23351 - present
 			setBlocksRemaining(remaining)
 		}, 3700)
 
