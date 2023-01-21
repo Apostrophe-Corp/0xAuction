@@ -79,6 +79,8 @@ const ReachContextProvider = ({ children }) => {
 	const [contractInstance, setContractInstance] = useState(null)
 	const [contract, setContract] = useState('')
 
+	const [newWalletConnection, setNewWalletConnection] = useState(true)
+
 	const alertThis = async ({
 		message = 'Confirm Action',
 		accept = 'Yes',
@@ -262,6 +264,7 @@ const ReachContextProvider = ({ children }) => {
 							})
 					  )
 					: await reach.getDefaultAccount()
+				setNewWalletConnection(true)
 				const postAuction = async ({ what }) => {
 					const presentAuctions = auctions
 					const tempCtc = account.contract(auctionCtc, what[1])
@@ -306,9 +309,11 @@ const ReachContextProvider = ({ children }) => {
 							ctcInfoStr: process.env.REACT_APP_ADMIN_CONTRACT_INFO,
 						})
 
-						ctc.events.create.monitor(postAuction)
-						ctc.events.updateHighestBidder.monitor(updateHighestBidder)
-						ctc.events.end.monitor(dropAuction)
+						if (newWalletConnection) {
+							ctc.events.create.monitor(postAuction)
+							ctc.events.updateHighestBidder.monitor(updateHighestBidder)
+							ctc.events.end.monitor(dropAuction)
+						}
 					} catch (error) {
 						console.log({ error })
 					}
@@ -406,9 +411,11 @@ const ReachContextProvider = ({ children }) => {
 						ctcInfoStr: process.env.REACT_APP_ADMIN_CONTRACT_INFO,
 					})
 
-					ctc.events.create.monitor(postAuction)
-					ctc.events.updateHighestBidder.monitor(updateHighestBidder)
-					ctc.events.end.monitor(dropAuction)
+					if (newWalletConnection) {
+						ctc.events.create.monitor(postAuction)
+						ctc.events.updateHighestBidder.monitor(updateHighestBidder)
+						ctc.events.end.monitor(dropAuction)
+					}
 				} catch (error) {
 					console.log({ error })
 				}
@@ -450,6 +457,11 @@ const ReachContextProvider = ({ children }) => {
 			message: 'Wallet connection terminated',
 			forConfirmation: false,
 		})
+		setNewWalletConnection(false)
+		setCurrentAuction(null)
+		setAuctions([])
+		setNewAuctions([])
+		setNewLatest([])
 	}
 
 	const postAuction = async ({ what }) => {
