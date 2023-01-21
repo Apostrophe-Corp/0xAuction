@@ -22,7 +22,7 @@ const Deadline = ({ blockCreated }) => {
 	useLayoutEffect(() => {
 		const getTimeRemaining = async () => {
 			const present = reach.bigNumberToNumber(await reach.getNetworkTime())
-			const remaining = blockCreated + 1000000 - present
+			const remaining = blockCreated + 23351 - present
 			const tRemaining = (remaining * 3.7) / 60 / 60
 			setTime(() => ({
 				sec: Math.floor(((((tRemaining % 24) % 1) * 60) % 1) * 60),
