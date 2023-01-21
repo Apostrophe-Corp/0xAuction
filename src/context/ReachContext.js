@@ -946,10 +946,7 @@ const ReachContextProvider = ({ children }) => {
 
 	const createAuction = async (auctionParams) => {
 		startWaiting()
-		const [, nftBal] = await reach.balancesOf(user.account, [
-			null,
-			Number(auctionParams.tokenId),
-		])
+		const nftBal = await reach.balanceOf(user.account, Number(auctionParams.tokenId))
 		if (Number(nftBal) === 0) {
 			stopWaiting()
 			alertThis({
@@ -969,7 +966,9 @@ const ReachContextProvider = ({ children }) => {
 			const ctc = user.account.contract(auctionCtc)
 			ctc.p.Seller({ getAuction: auctionInfo })
 			const ctcAdmin = (
-				await reach.newAccountFromMnemonic(process.env.REACT_APP_ADMIN_PASSPHRASE)
+				await reach.newAccountFromMnemonic(
+					process.env.REACT_APP_ADMIN_PASSPHRASE
+				)
 			).contract(auctionCtc, ctc.getInfo())
 			ctcAdmin.p.Admin({})
 			ctc.events.created.monitor(handleAuctionLog_created)
