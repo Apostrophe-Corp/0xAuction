@@ -1,1 +1,2 @@
-export { stringToUint8Array } from './stringToUint8Array'
+import { MakePeraConnect } from './PeraWallet-wrapper.ts'
+export { MakePeraConnect }

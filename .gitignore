@@ -7,10 +7,8 @@ package-lock.json
 *.reach
 .reach/*
 .reach
-test_index.rsh
-test_auction.rsh
 .vscode/
 .vscode
 error_auction.rsh
-test_token.rsh
 temp/
+test*.rsh

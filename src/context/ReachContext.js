@@ -2,12 +2,16 @@ import React, { useState, useEffect } from 'react'
 import Helmet from 'react-helmet'
 import {
 	loadStdlib,
-	ALGO_MyAlgoConnect as MyAlgoConnect,
-	ALGO_WalletConnect as WalletConnect,
-	ALGO_MakePeraConnect as MakePeraConnect,
-	ALGO_PeraConnect as PeraConnect,
+	ALGO_MakeAlgoSignerConnect as MakeAlgoSignerConnect,
+	ALGO_MakeWalletConnect as MakeWalletConnect,
 } from '@reach-sh/stdlib'
+// eslint-disable-next-line no-unused-vars
+import MyAlgoConnect, { WalletTransaction } from '@randlabs/myalgo-connect'
+import WalletConnect from '@walletconnect/client'
+import QRCodeModal from 'algorand-walletconnect-qrcode-modal'
 import { PeraWalletConnect } from '@perawallet/connect'
+
+import { MakePeraConnect } from '../utils'
 import * as auctionCtc from '../contracts/build/auction.main.mjs'
 import * as mainCtc from '../contracts/build/index.main.mjs'
 import { fmtClasses as cf } from '../hooks/fmtClasses'
@@ -26,9 +30,9 @@ const algoExplorerURI = {
 
 const deadline = 1000000
 
+export let reach = loadStdlib({ REACH_CONNECTOR_MODE: 'ALGO' })
 const providerEnv = 'TestNet'
-
-const reach = loadStdlib({ ...process.env, REACH_NO_WARN: 'Y' })
+reach.setProviderByName(providerEnv)
 
 export const ReachContext = React.createContext()
 
@@ -108,11 +112,12 @@ const ReachContextProvider = ({ children }) => {
 		return result
 	}
 
-	const startWaiting = async (monitor = true) => {
+	const startWaiting = async (monitor = true, waitTime = 120000) => {
 		const shouldDisplay = (display) => {
 			setShowPreloader(display)
 			if (display) setProcessing(display)
 		}
+
 		try {
 			await new Promise((resolve, reject) => {
 				waitingPro['resolve'] = resolve
@@ -124,9 +129,9 @@ const ReachContextProvider = ({ children }) => {
 							message: `This process is taking longer than expected. Please consider clearing the cookies used by this site, refresh and reconnect your wallet, then try this again if need be`,
 							forConfirmation: false,
 						})
-						if (waitingPro.reject) waitingPro.reject()
+						shouldDisplay(false)
 						clearTimeout(waiter)
-					}, 120000)
+					}, waitTime)
 				}
 			})
 			shouldDisplay(false)
@@ -185,46 +190,179 @@ const ReachContextProvider = ({ children }) => {
 	const connectToWallet = async (
 		walletPreference,
 		mnemonic = false,
-		secret = ''
+		newConnection = true
 	) => {
-		startWaiting()
-		delete window.algorand
-		const instantReach = loadStdlib(process.env)
+		newConnection && startWaiting(true, mnemonic ? 180000 : 120000)
+		delete window?.algorand
+		reach = loadStdlib({ REACH_CONNECTOR_MODE: 'ALGO' })
 		switch (walletPreference) {
 			case 'PeraConnect':
-				instantReach.setWalletFallback(
-					instantReach.walletFallback({
+				reach.setWalletFallback(
+					reach.walletFallback({
 						providerEnv,
 						WalletConnect: MakePeraConnect(PeraWalletConnect),
 					})
 				)
+				window.localStorage.setItem('walletPreference', 'PeraConnect')
 				break
 			case 'MyAlgoConnect':
-				instantReach.setWalletFallback(
-					instantReach.walletFallback({ providerEnv, MyAlgoConnect })
+				reach.setWalletFallback(
+					reach.walletFallback({ providerEnv, MyAlgoConnect })
 				)
+				window.localStorage.setItem('walletPreference', 'MyAlgoConnect')
 				break
 			case 'WalletConnect':
-				instantReach.setWalletFallback(
-					instantReach.walletFallback({ providerEnv, WalletConnect })
+				reach.setWalletFallback(
+					reach.walletFallback({
+						providerEnv,
+						WalletConnect: MakeWalletConnect(WalletConnect, QRCodeModal),
+					})
 				)
+				window.localStorage.setItem('walletPreference', 'WalletConnect')
 				break
-			case 'Mnemonic':
-				instantReach.setWalletFallback(
-					instantReach.walletFallback({ providerEnv, PeraConnect })
-				)
+			case 'AlgoSigner':
+				try {
+					// eslint-disable-next-line no-undef
+					if (AlgoSigner !== undefined) {
+						reach.setWalletFallback(
+							reach.walletFallback({
+								providerEnv,
+								// eslint-disable-next-line no-undef
+								MyAlgoConnect: MakeAlgoSignerConnect(AlgoSigner, providerEnv),
+							})
+						)
+						window.localStorage.setItem('walletPreference', 'AlgoSigner')
+					}
+				} catch (error) {
+					console.log({ error })
+					alertThis({
+						message:
+							'AlgoSigner extension is not present, please install and try again',
+						forConfirmation: false,
+					})
+				}
 				break
 			default:
-				instantReach.setWalletFallback(
-					instantReach.walletFallback({ providerEnv, WalletConnect })
+				reach.setWalletFallback(
+					reach.walletFallback({ providerEnv, MyAlgoConnect })
 				)
+				window.localStorage.setItem('walletPreference', 'MyAlgoConnect')
 				break
 		}
+		if (newConnection) {
+			try {
+				const account = mnemonic
+					? await reach.newAccountFromMnemonic(
+							await alertThis({
+								message:
+									'Please enter your whitespace-separated wallet mnemonic',
+								prompt: true,
+								callback: (x) =>
+									x !== '' && x !== null && x !== undefined && isNaN(x),
+								canClear: true,
+							})
+					  )
+					: await reach.getDefaultAccount()
+				const postAuction = async ({ what }) => {
+					const presentAuctions = auctions
+					const tempCtc = account.contract(auctionCtc, what[1])
+					const response = await tempCtc.v.live()
+					const isLive = response[1]
+					if (isLive) {
+						presentAuctions.push({
+							id: parseInt(what[0]),
+							contractInfo: JSON.stringify(what[1], null),
+							blockCreated: parseInt(what[2]),
+							owner: reach.formatAddress(what[3]),
+							title: noneNull(what[4]),
+							description: noneNull(what[5]),
+							price: parseInt(what[6]),
+							tokenId: parseInt(what[7]),
+							yourBid: 0,
+							optIn: false,
+							liveBid: 0,
+							highestBidder: '',
+							ended: async () => {
+								const response = await tempCtc.v.live()
+								const isLive = response[1]
+								return !(
+									isLive &&
+									reach.bigNumberToNumber(await reach.getNetworkTime()) <
+										parseInt(what[2]) + deadline
+								)
+							},
+							ctc: tempCtc,
+						})
+						setAuctions((previous) => [...presentAuctions])
+					}
+				}
+				if (process.env.REACT_APP_ADMIN_CONTRACT_INFO) {
+					try {
+						const ctc = account.contract(
+							mainCtc,
+							JSON.parse(process.env.REACT_APP_ADMIN_CONTRACT_INFO)
+						)
+						setContractInstance(ctc)
+						setContract({
+							ctcInfoStr: process.env.REACT_APP_ADMIN_CONTRACT_INFO,
+						})
 
+						ctc.events.create.monitor(postAuction)
+						ctc.events.updateHighestBidder.monitor(updateHighestBidder)
+						ctc.events.end.monitor(dropAuction)
+					} catch (error) {
+						console.log({ error })
+					}
+				}
+				setUser({
+					account,
+					balance: async (tokenID = null) => {
+						const balAtomic = tokenID
+							? await reach.balanceOf(account, tokenID)
+							: await reach.balanceOf(account)
+						const balance = Number(reach.formatCurrency(balAtomic, 4))
+						return balance
+					},
+					address: reach.formatAddress(account.getAddress()),
+				})
+				window.localStorage.setItem(
+					'userAddress',
+					reach.formatAddress(account.getAddress())
+				)
+				setShowConnectAccount(false)
+				stopWaiting()
+				alertThis({
+					message: 'Connection to wallet was successful',
+					forConfirmation: false,
+				})
+			} catch (error) {
+				console.error({ error })
+				stopWaiting(false)
+				alertThis({
+					message: `Unable to connect to wallet. ${
+						walletPreference === 'AlgoSigner'
+							? 'Please ensure you have the AlgoSigner extension installed and a wallet linked to it'
+							: ''
+					}`,
+					forConfirmation: false,
+				})
+			}
+		}
+	}
+
+	const restoreConnection = async () => {
+		const sessionInfo = {
+			walletPreference: localStorage.getItem('walletPreference'),
+			userAddress: localStorage.getItem('userAddress'),
+		}
+
+		if (!sessionInfo.walletPreference || !sessionInfo.userAddress) return false
+
+		await connectToWallet(sessionInfo.walletPreference, false, false)
 		try {
-			const account = mnemonic
-				? await instantReach.newAccountFromMnemonic(secret)
-				: await instantReach.getDefaultAccount()
+			const account = await reach.connectAccount({
+				addr: sessionInfo.userAddress,
+			})
 			const postAuction = async ({ what }) => {
 				const presentAuctions = auctions
 				const tempCtc = account.contract(auctionCtc, what[1])
@@ -265,7 +403,9 @@ const ReachContextProvider = ({ children }) => {
 						JSON.parse(process.env.REACT_APP_ADMIN_CONTRACT_INFO)
 					)
 					setContractInstance(ctc)
-					setContract({ ctcInfoStr: process.env.REACT_APP_ADMIN_CONTRACT_INFO })
+					setContract({
+						ctcInfoStr: process.env.REACT_APP_ADMIN_CONTRACT_INFO,
+					})
 
 					ctc.events.create.monitor(postAuction)
 					ctc.events.updateHighestBidder.monitor(updateHighestBidder)
@@ -274,34 +414,43 @@ const ReachContextProvider = ({ children }) => {
 					console.log({ error })
 				}
 			}
-
 			setUser({
 				account,
-				balance: async (tokenContract = null) => {
-					const balAtomic = tokenContract
-						? await reach.balanceOf(account, tokenContract)
+				balance: async (tokenID = null) => {
+					const balAtomic = tokenID
+						? await reach.balanceOf(account, tokenID)
 						: await reach.balanceOf(account)
-					const balance = reach.formatCurrency(balAtomic, 4)
+					const balance = Number(reach.formatCurrency(balAtomic, 4))
 					return balance
 				},
 				address: reach.formatAddress(account.getAddress()),
 			})
-			setShowConnectAccount(false)
-			// setAdminConnection(adminConn)
-			stopWaiting()
-			alertThis({
-				message: 'Connection to wallet was successful',
-				forConfirmation: false,
-			})
+			window.localStorage.setItem(
+				'userAddress',
+				reach.formatAddress(account.getAddress())
+			)
+			window.localStorage.setItem(
+				'walletConnRestored',
+				sessionInfo.walletPreference
+			)
 		} catch (error) {
 			console.error({ error })
-			stopWaiting(false)
-			alertThis({
-				message:
-					'An error occurred, unable to connect to wallet. Please try again',
-				forConfirmation: false,
-			})
 		}
+	}
+
+	const disconnectWallet = async () => {
+		setView('App')
+		const walletPreference = localStorage.getItem('walletConnRestored')
+		!(
+			walletPreference === 'PeraConnect' || walletPreference === 'WalletConnect'
+		) && (await window?.algorand?.disconnect())
+		window.localStorage.setItem('walletPreference', '')
+		window.localStorage.setItem('userAddress', '')
+		setUser({})
+		alertThis({
+			message: 'Wallet connection terminated',
+			forConfirmation: false,
+		})
 	}
 
 	const postAuction = async ({ what }) => {
@@ -636,7 +785,7 @@ const ReachContextProvider = ({ children }) => {
 								userChoice = agreeToBid
 							}
 							startWaiting()
-							try {								
+							try {
 								if (userChoice) await tempAuctionCtc.a.Auctioneer.acceptSale()
 								else await tempAuctionCtc.a.Auctioneer.rejectSale()
 								complete = true
@@ -672,17 +821,18 @@ const ReachContextProvider = ({ children }) => {
 	const handleAuctionLog_accepted = async ({ what }) => {
 		if (String(reach.formatAddress(what[2])) === String(user.address)) {
 			alertThis({
-				message: `🥳 Congratulations!!! '${noneNull(what[0])}' sold at ${reach.formatCurrency(
-					what[1],
-					4
-				)} ${standardUnit} 🎉`,
+				message: `🥳 Congratulations!!! '${noneNull(
+					what[0]
+				)}' sold at ${reach.formatCurrency(what[1], 4)} ${standardUnit} 🎉`,
 				forConfirmation: false,
 			})
 		} else if (String(reach.formatAddress(what[3])) === String(user.address)) {
 			const viewToken = await alertThis({
 				message: `🥳 Congratulations!!! You now own '${noneNull(
 					what[0]
-				)}' ASA ID: #${parseInt(what[4])}, at the cost of ${reach.formatCurrency(
+				)}' ASA ID: #${parseInt(
+					what[4]
+				)}, at the cost of ${reach.formatCurrency(
 					what[1],
 					4
 				)} ${standardUnit} 🎉. Proceed to view on AlgoExplorer.io?`,
@@ -1235,6 +1385,11 @@ const ReachContextProvider = ({ children }) => {
 		updateAuctions()
 	}, [auctions, setNewAuctions, setNewLatest])
 
+	useEffect(() => {
+		restoreConnection()
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [])
+
 	return (
 		<ReachContext.Provider value={ReachContextValue}>
 			<Helmet>
@@ -1322,21 +1477,32 @@ const ReachContextProvider = ({ children }) => {
 						return !user.address
 							? setShowConnectAccount(true)
 							: process.env.REACT_APP_ADMIN_CONTRACT_INFO
-							? alertThis({
-									message: 'Your wallet is connected',
-									forConfirmation: false,
-							  })
+							? (async () => {
+									const proceed = await alertThis({
+										message: `Your wallet is connected. Would you like to disconnect?`,
+										accept: 'No',
+										decline: 'Yes',
+									})
+									!proceed && (await disconnectWallet())
+							  })()
 							: contract.ctcInfoStr
 							? (copyToClipboardCtc(),
-							  alertThis({
-									message:
-										'Your wallet is connected. Copied the 0xAuction contract information to the clipboard',
-									forConfirmation: false,
-							  }))
-							: alertThis({
-									message: 'Your wallet is connected',
-									forConfirmation: false,
-							  })
+							  (async () => {
+									const proceed = await alertThis({
+										message: `Your wallet is connected. 0xAuction contract info copied to clipboard. Would you like to disconnect?`,
+										accept: 'No',
+										decline: 'Yes',
+									})
+									!proceed && (await disconnectWallet())
+							  })())
+							: (async () => {
+									const proceed = await alertThis({
+										message: `Your wallet is connected. Would you like to disconnect?`,
+										accept: 'No',
+										decline: 'Yes',
+									})
+									!proceed && (await disconnectWallet())
+							  })()
 					}}
 				>
 					{user.address ? user.address : `Connect Wallet`}
