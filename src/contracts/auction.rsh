@@ -24,6 +24,8 @@ export const main = Reach.App(() => {
 		published: Fun([UInt], Null),
 	})
 
+	const Admin = Participant('Admin', {})
+
 	const objectRep = Struct([
 		['id', UInt],
 		['contractInfo', Contract],
@@ -63,7 +65,7 @@ export const main = Reach.App(() => {
 	})
 
 	const AuctView = View({
-		live: Bool
+		live: Bool,
 	})
 
 	init()
@@ -76,19 +78,19 @@ export const main = Reach.App(() => {
 	Seller.publish(tokenId, auctionInfo, adminContract)
 	commit()
 	Seller.pay([[amt, tokenId]])
+	commit()
+	Admin.publish()
 
 	const externalStructure = {
 		Auctions_created: Fun([objectRep], Null),
 		Auctions_ended: Fun([endResponse], Null),
 		Auctions_getID: Fun([], UInt),
-		Auctions_getAdminAddress: Fun([], Address),
-		Auctions_updateHighestBidder: Fun([UInt, Address], Null)
+		Auctions_updateHighestBidder: Fun([UInt, Address], Null),
 	}
 
 	const externalCalls = remote(adminContract, externalStructure)
 
 	const id = externalCalls.Auctions_getID()
-	const AdminAddress = externalCalls.Auctions_getAdminAddress()
 
 	const createdAt = thisConsensusTime()
 
@@ -117,7 +119,7 @@ export const main = Reach.App(() => {
 			0,
 			true,
 			endResponse.fromObject({
-				id: 0,
+				id: id,
 				blockEnded: 0,
 				lastBid: 0,
 			}),
@@ -148,7 +150,7 @@ export const main = Reach.App(() => {
 					(notify) => {
 						const adminDue = (optToken / 100) * 90
 						const sellerDue = (optToken / 100) * 10
-						if (balance() >= adminDue) transfer(adminDue).to(AdminAddress)
+						if (balance() >= adminDue) transfer(adminDue).to(Admin)
 						if (balance() >= sellerDue) transfer(sellerDue).to(Seller)
 						Auction.optInSuccess(id, this)
 						notify(true)
@@ -173,6 +175,20 @@ export const main = Reach.App(() => {
 					return [false, highestBidder, lastPrice, isFirstBid, response]
 				}
 			)
+			.timeout(relativeTime(auctionInfo.deadline), () => {
+				Admin.publish()
+				return [
+					keepBidding,
+					highestBidder,
+					lastPrice,
+					isFirstBid,
+					endResponse.fromObject({
+						id: id,
+						blockEnded: thisConsensusTime(),
+						lastBid: lastPrice,
+					}),
+				]
+			})
 
 	AuctView.live.set(false)
 	externalCalls.Auctions_ended(endRes)
@@ -216,6 +232,10 @@ export const main = Reach.App(() => {
 					return [false, false]
 				}
 			)
+			.timeout(relativeTime(DEADLINE), () => {
+				Admin.publish()
+				return [awaitingDecision, agreed]
+			})
 
 		if (agreed) {
 			transfer(balance(tokenId), tokenId).to(highestBidder)

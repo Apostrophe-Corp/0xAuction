@@ -14,174 +14,167 @@ store 2 // GV_currentTime :: UInt
 byte base64(AA==)
 app_global_get
 preamble:
-pushbytess base64(B0BfPQ==) base64(FIl4rg==) base64(bK3kbw==) base64(be29gA==) base64(dbqs6A==) base64(wZStmQ==) base64(2MFkbQ==) base64(39kjKA==)
+pushbytess base64(B0BfPQ==) base64(FIl4rg==) base64(be29gA==) base64(dbqs6A==) base64(wZStmQ==) base64(2MFkbQ==) base64(39kjKA==)
 txna ApplicationArgs 0
-match Auctions_updateHHPRnUdH7Q5FeRMjoIqqOJu5xzdK61yJ1I5p4hg7f6Ms_ Auctions_ended__gjKIdoiU6ugG4igmmj_0bxDW1_N5rq1fv76nH8iSOZg_ Auctions_getAdmixvV61p7LliOpKRuTm0IslVtIr7UGsvCpfEEz6yjFzP8_ Auctions_getID__PESqLKOrhee3Eis_pr6CgpxJ3DJKtFl7aIicSd_OO5w_ Auctions_created1_Dy4hVJKXcMD_IAgCvGqoVZIJ2mY7ajfL3YwbpbZV0_ _reachp_0 _reachp_3 _reachp_1
+match Auctions_updateHHPRnUdH7Q5FeRMjoIqqOJu5xzdK61yJ1I5p4hg7f6Ms_ Auctions_ended__gjKIdoiU6ugG4igmmj_0bxDW1_N5rq1fv76nH8iSOZg_ Auctions_getID__PESqLKOrhee3Eis_pr6CgpxJ3DJKtFl7aIicSd_OO5w_ Auctions_created1_Dy4hVJKXcMD_IAgCvGqoVZIJ2mY7ajfL3YwbpbZV0_ _reachp_0 _reachp_3 _reachp_1
 errl:
 err
 Auctions_created1_Dy4hVJKXcMD_IAgCvGqoVZIJ2mY7ajfL3YwbpbZV0_:
 txna ApplicationArgs 1
-store 11 // v1488
+store 11 // v1113
 _reacha_Auctions_created:
 int 8
 bzero
 byte base64(AA==)
-load 11 // v1488
+load 11 // v1113
 concat
 concat
-store 11 // v1523
+store 11 // v1144
 _reachi_3:
 int 4
 load 1 // GV_currentStep :: UInt
 ==
 assert
 l5_LF_svsLoad_4:
-dup
-extract 0 32
-store 16 // Admin/330
-int 32
-extract_uint64
-store 15 // auctionID/339
-load 11 // v1523
 int 0
 extract_uint64
-store 12 // v1522
-load 11 // v1523
+store 15 // auctionID/304
+load 11 // v1144
+int 0
+extract_uint64
+store 12 // v1143
+load 11 // v1144
 extract 8 173
-store 13 // .fork44.msg/430
+store 13 // .fork43.msg/386
 byte base64(fZLXxQ==)
-load 12 // v1522
+load 12 // v1143
 itob
 concat
-load 13 // .fork44.msg/430
+load 13 // .fork43.msg/386
 concat
 log // up to 185 bytes
-// ^ log: "_reach_e3" [v1522,.fork44.msg/430] "_reach_e3(uint64,(byte,byte[172]))"
-load 12 // v1522
+// ^ log: "_reach_e3" [v1143,.fork43.msg/386] "_reach_e3(uint64,(byte,byte[172]))"
+load 12 // v1143
 callsub l2_LF_timeCheck
-load 13 // .fork44.msg/430
+load 13 // .fork43.msg/386
 int 0
 getbyte
-switch l6_Auctions_created0_44 l7_Auctions_ended0_44 l8_Auctions_getAdminAddress0_44 l9_Auctions_getID0_44 l10_Auctions_updateHighestBidder0_44
+switch l6_Auctions_created0_43 l7_Auctions_ended0_43 l8_Auctions_getID0_43 l9_Auctions_updateHighestBidder0_43
 b errl
 Auctions_ended__gjKIdoiU6ugG4igmmj_0bxDW1_N5rq1fv76nH8iSOZg_:
 txna ApplicationArgs 1
-store 11 // v1494
+store 11 // v1119
 _reacha_Auctions_ended:
 int 8
 bzero
 byte base64(AQ==)
-load 11 // v1494
+load 11 // v1119
 concat
 int 148
 bzero
 concat
 concat
-store 11 // v1523
-b _reachi_3
-Auctions_getAdmixvV61p7LliOpKRuTm0IslVtIr7UGsvCpfEEz6yjFzP8_:
-_reacha_Auctions_getAdminAddress:
-byte base64(AAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==)
-store 11 // v1523
+store 11 // v1144
 b _reachi_3
 Auctions_getID__PESqLKOrhee3Eis_pr6CgpxJ3DJKtFl7aIicSd_OO5w_:
 _reacha_Auctions_getID:
-byte base64(AAAAAAAAAAADAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==)
-store 11 // v1523
+byte base64(AAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==)
+store 11 // v1144
 b _reachi_3
 Auctions_updateHHPRnUdH7Q5FeRMjoIqqOJu5xzdK61yJ1I5p4hg7f6Ms_:
 txna ApplicationArgs 1
 btoi
 txna ApplicationArgs 2
-store 11 // v1509
-store 12 // v1508
+store 11 // v1130
+store 12 // v1129
 _reacha_Auctions_updateHighestBidder:
 int 8
 bzero
-byte base64(BA==)
-load 12 // v1508
+byte base64(Aw==)
+load 12 // v1129
 itob
-load 11 // v1509
+load 11 // v1130
 concat
 concat
 int 132
 bzero
 concat
 concat
-store 11 // v1523
+store 11 // v1144
 b _reachi_3
 _api_Auctions_created3:
-load 13 // .fork44.msg/430
+load 13 // .fork43.msg/386
 extract 1 172
-store 22 // obj/443
+store 21 // obj/398
 byte base64()
-store 11 // v444
-byte base64(AAAAAAAAAbw=)
-load 11 // v444
+store 11 // v399
+byte base64(AAAAAAAAAY8=)
+load 11 // v399
 concat
 log // up to 8 bytes
-load 11 // v444
+load 11 // v399
 store 4 // GV_apiRet :: Null
-load 22 // obj/443
+load 21 // obj/398
 int 0
 extract_uint64
-store 21 // v459
-load 22 // obj/443
+store 20 // v414
+load 21 // obj/398
 int 8
 extract_uint64
-store 20 // v460
-load 22 // obj/443
+store 19 // v415
+load 21 // obj/398
 int 16
 extract_uint64
-store 19 // v461
-load 22 // obj/443
+store 18 // v416
+load 21 // obj/398
 extract 24 32
-store 18 // v462
-load 22 // obj/443
+store 17 // v417
+load 21 // obj/398
 extract 56 20
-store 17 // v463
-load 22 // obj/443
+store 16 // v418
+load 21 // obj/398
 extract 76 80
-store 13 // v464
-load 22 // obj/443
+store 13 // v419
+load 21 // obj/398
 int 156
 extract_uint64
-store 12 // v465
-load 22 // obj/443
+store 12 // v420
+load 21 // obj/398
 int 164
 extract_uint64
-store 11 // v466
+store 11 // v421
 byte base64(Wo2dXw==)
-load 21 // v459
+load 20 // v414
 itob
 concat
-load 20 // v460
+load 19 // v415
 itob
 concat
-load 19 // v461
+load 18 // v416
 itob
 concat
-load 18 // v462
+load 17 // v417
 concat
-load 17 // v463
+load 16 // v418
 concat
-load 13 // v464
+load 13 // v419
 concat
-load 12 // v465
+load 12 // v420
 itob
 concat
-load 11 // v466
+load 11 // v421
 itob
 concat
 log // up to 176 bytes
-// ^ log: "create" [v459,v460,v461,v462,v463,v464,v465,v466] "create(uint64,uint64,uint64,address,byte[20],byte[80],uint64,uint64)"
+// ^ log: "create" [v414,v415,v416,v417,v418,v419,v420,v421] "create(uint64,uint64,uint64,address,byte[20],byte[80],uint64,uint64)"
 global Round
-store 14 // thisConsensusTime/340
+store 14 // thisConsensusTime/305
 _reachl_2:
-l11_LF_svsDump_4:
-load 16 // Admin/330
-load 15 // auctionID/339
+l10_LF_svsDump_4:
+load 15 // auctionID/304
 itob
+int 24
+bzero
 concat
 int 4
 global Round
@@ -190,7 +183,7 @@ store 2 // GV_currentTime :: UInt
 store 1 // GV_currentStep :: UInt
 byte base64(AA==)
 swap
-extract 0 40
+extract 0 32
 app_global_put
 byte base64()
 load 1 // GV_currentStep :: UInt
@@ -204,7 +197,7 @@ int NoOp
 ==
 assert
 // checked on completion
-callsub l12_LF_updateMbr
+callsub l11_LF_updateMbr
 updateState:
 load 3 // GV_wasntMeth :: Bool
 bnz done
@@ -212,121 +205,108 @@ apiReturn_noCheck:
 byte base64(FR98dQ==)
 load 4 // GV_apiRet :: Null
 concat
-log // up to 36 bytes
+log // up to 12 bytes
 done:
 int 1
 return
 _api_Auctions_ended3:
-load 13 // .fork44.msg/430
+load 13 // .fork43.msg/386
 extract 1 24
 dup
-store 17 // obj/541
+store 16 // obj/489
 int 0
 extract_uint64
-store 13 // v542
-load 17 // obj/541
+store 13 // v490
+load 16 // obj/489
 int 8
 extract_uint64
-store 12 // v543
-load 17 // obj/541
+store 12 // v491
+load 16 // obj/489
 int 16
 extract_uint64
-store 11 // v544
+store 11 // v492
 byte base64(8HKZ1A==)
-load 13 // v542
+load 13 // v490
 itob
 concat
-load 12 // v543
+load 12 // v491
 itob
 concat
-load 11 // v544
+load 11 // v492
 itob
 concat
 log // up to 28 bytes
-// ^ log: "end" [v542,v543,v544] "end(uint64,uint64,uint64)"
+// ^ log: "end" [v490,v491,v492] "end(uint64,uint64,uint64)"
 byte base64()
-store 11 // v545
-byte base64(AAAAAAAAAiE=)
-load 11 // v545
+store 11 // v493
+byte base64(AAAAAAAAAe0=)
+load 11 // v493
 concat
 log // up to 8 bytes
-load 11 // v545
+load 11 // v493
 store 4 // GV_apiRet :: Null
 global Round
-store 14 // thisConsensusTime/340
-b _reachl_2
-_api_Auctions_getAdminAddress3:
-byte base64(AAAAAAAAAUo=)
-load 16 // Admin/330
-concat
-log // up to 40 bytes
-load 16 // Admin/330
-store 4 // GV_apiRet :: Null
-global Round
-store 14 // thisConsensusTime/340
+store 14 // thisConsensusTime/305
 b _reachl_2
 _api_Auctions_getID3:
-byte base64(AAAAAAAAAVM=)
-load 15 // auctionID/339
+byte base64(AAAAAAAAATA=)
+load 15 // auctionID/304
 itob
 concat
 log // up to 16 bytes
-load 15 // auctionID/339
+load 15 // auctionID/304
 itob
 store 4 // GV_apiRet :: Null
-load 15 // auctionID/339
+load 15 // auctionID/304
 int 1
 +
 global Round
-store 14 // thisConsensusTime/340
-store 15 // auctionID/339
+store 14 // thisConsensusTime/305
+store 15 // auctionID/304
 b _reachl_2
 _api_Auctions_updateHighestBidder3:
-load 11 // data_id/725
+load 11 // data_id/587
 int 0
 extract_uint64
-store 13 // id/788
-load 11 // data_id/725
+store 13 // id/643
+load 11 // data_id/587
 extract 8 32
-store 12 // address/789
+store 12 // address/644
 byte base64(XhYloQ==)
-load 13 // id/788
+load 13 // id/643
 itob
 concat
-load 12 // address/789
+load 12 // address/644
 concat
 log // up to 44 bytes
-// ^ log: "updateHighestBidder" [id/788,address/789] "updateHighestBidder(uint64,address)"
+// ^ log: "updateHighestBidder" [id/643,address/644] "updateHighestBidder(uint64,address)"
 byte base64()
-store 11 // v790
-byte base64(AAAAAAAAAxY=)
-load 11 // v790
+store 11 // v645
+byte base64(AAAAAAAAAoU=)
+load 11 // v645
 concat
 log // up to 8 bytes
-load 11 // v790
+load 11 // v645
 store 4 // GV_apiRet :: Null
 global Round
-store 14 // thisConsensusTime/340
+store 14 // thisConsensusTime/305
 b _reachl_2
 _reachi_0:
 txn Sender
-store 16 // Admin/330
-load 11 // v1517
+store 13 // Admin/295
+load 11 // v1138
 btoi
-store 12 // v1516
+store 12 // v1137
 byte base64(gsRh/g==)
-load 12 // v1516
+load 12 // v1137
 itob
 concat
 log // up to 12 bytes
-// ^ log: "_reach_e0" [v1516] "_reach_e0(uint64)"
-load 12 // v1516
+// ^ log: "_reach_e0" [v1137] "_reach_e0(uint64)"
+load 12 // v1137
 callsub l2_LF_timeCheck
 l3_LF_svsDump_1:
-load 16 // Admin/330
-int 8
-bzero
-concat
+load 13 // Admin/295
 int 1
 global Round
 b updateStateNoOp
@@ -337,28 +317,28 @@ load 1 // GV_currentStep :: UInt
 assert
 l4_LF_svsLoad_1:
 extract 0 32
-store 16 // Admin/330
-load 11 // v1520
+store 13 // Admin/295
+load 11 // v1141
 btoi
-store 12 // v1519
+store 12 // v1140
 byte base64(1RUZFA==)
-load 12 // v1519
+load 12 // v1140
 itob
 concat
 log // up to 12 bytes
-// ^ log: "_reach_e1" [v1519] "_reach_e1(uint64)"
-load 12 // v1519
+// ^ log: "_reach_e1" [v1140] "_reach_e1(uint64)"
+load 12 // v1140
 callsub l2_LF_timeCheck
-load 16 // Admin/330
+load 13 // Admin/295
 txn Sender
 ==
 assert
 // ^ Claim: sender correct
-// at ./src/contracts/index.rsh:47:15:dot
+// at ./src/contracts/index.rsh:46:15:dot
 int 0
 global Round
-store 14 // thisConsensusTime/340
-store 15 // auctionID/339
+store 14 // thisConsensusTime/305
+store 15 // auctionID/304
 b _reachl_2
 _reachp_0:
 callsub l0_LF_wasntMeth
@@ -368,17 +348,17 @@ load 6 // GV_mbrAdd :: UInt
 +
 store 6 // GV_mbrAdd :: UInt
 txna ApplicationArgs 1
-store 11 // v1517
+store 11 // v1138
 b _reachi_0
 _reachp_1:
 callsub l0_LF_wasntMeth
 txna ApplicationArgs 1
-store 11 // v1520
+store 11 // v1141
 b _reachi_1
 _reachp_3:
 callsub l0_LF_wasntMeth
 txna ApplicationArgs 1
-store 11 // v1523
+store 11 // v1144
 b _reachi_3
 alloc:
 int 0
@@ -398,8 +378,7 @@ txn LocalNumByteSlice
 ==
 assert
 callsub l0_LF_wasntMeth
-int 40
-bzero
+global ZeroAddress
 int 0
 int 0
 b updateStateNoOp
@@ -410,12 +389,7 @@ int NoOp
 assert
 // checked on completion
 b apiReturn_noCheck
-l10_Auctions_updateHighestBidder0_44:
-load 13 // .fork44.msg/430
-extract 1 40
-store 11 // data_id/725
-b _api_Auctions_updateHighestBidder3
-l14_LF_makeTxnK_False_True:
+l13_LF_makeTxnK_False_True:
 int 0
 itxn_field Fee
 int pay
@@ -424,14 +398,17 @@ itxn_field Receiver
 itxn_field Amount
 itxn_submit
 retsub
-l6_Auctions_created0_44:
+l6_Auctions_created0_43:
 b _api_Auctions_created3
-l7_Auctions_ended0_44:
+l7_Auctions_ended0_43:
 b _api_Auctions_ended3
-l8_Auctions_getAdminAddress0_44:
-b _api_Auctions_getAdminAddress3
-l9_Auctions_getID0_44:
+l8_Auctions_getID0_43:
 b _api_Auctions_getID3
+l9_Auctions_updateHighestBidder0_43:
+load 13 // .fork43.msg/386
+extract 1 40
+store 11 // data_id/587
+b _api_Auctions_updateHighestBidder3
 updateMbr_eq:
 pop
 retsub
@@ -441,7 +418,7 @@ swap
 dup
 store 6 // GV_mbrAdd :: UInt
 global CreatorAddress
-callsub l16_LF_makeTxn_False_False_False_True
+callsub l15_LF_makeTxn_False_False_False_True
 retsub
 updateMbr_pos_eq:
 -
@@ -449,7 +426,7 @@ dup
 bz updateMbr_eq
 dup
 store 6 // GV_mbrAdd :: UInt
-l15_LF_checkTxn_False:
+l14_LF_checkTxn_False:
 // resource: R_Txn
 txn GroupIndex
 load 0 // GV_txnCounter :: UInt
@@ -477,12 +454,12 @@ int DeleteApplication
 ==
 assert
 // checked on completion
-callsub l12_LF_updateMbr
+callsub l11_LF_updateMbr
 // resource: R_Account
 int 0
 global CurrentApplicationAddress
 global CreatorAddress
-callsub l13_LF_makeTxn_False_True_False_True
+callsub l12_LF_makeTxn_False_True_False_True
 b updateState
 l0_LF_wasntMeth:
 int 1
@@ -498,17 +475,17 @@ load 2 // GV_currentTime :: UInt
 ||
 assert
 retsub
-l12_LF_updateMbr:
+l11_LF_updateMbr:
 load 6 // GV_mbrAdd :: UInt
 load 7 // GV_mbrSub :: UInt
 dup2
 >=
 bz updateMbr_neg
 b updateMbr_pos_eq
-l16_LF_makeTxn_False_False_False_True:
+l15_LF_makeTxn_False_False_False_True:
 itxn_begin
-b l14_LF_makeTxnK_False_True
-l13_LF_makeTxn_False_True_False_True:
+b l13_LF_makeTxnK_False_True
+l12_LF_makeTxn_False_True_False_True:
 itxn_begin
 itxn_field CloseRemainderTo
-b l14_LF_makeTxnK_False_True
+b l13_LF_makeTxnK_False_True

@@ -692,11 +692,11 @@ struct T1 {
   address payable elem0;
   uint256 elem1;
   }
-enum _enum_T3 {Auctioneer_acceptSale0_444, Auctioneer_rejectSale0_444}
+enum _enum_T3 {Auctioneer_acceptSale0_458, Auctioneer_rejectSale0_458}
 struct T3 {
   _enum_T3 which;
-  bool _Auctioneer_acceptSale0_444;
-  bool _Auctioneer_rejectSale0_444;
+  bool _Auctioneer_acceptSale0_458;
+  bool _Auctioneer_rejectSale0_458;
   }
 struct T4 {
   uint256 elem0;
@@ -705,12 +705,12 @@ struct T4 {
 struct T5 {
   uint256 elem0;
   }
-enum _enum_T6 {Auctioneer_stopAuction0_123, Bidder_bid0_123, Bidder_optIn0_123}
+enum _enum_T6 {Auctioneer_stopAuction0_114, Bidder_bid0_114, Bidder_optIn0_114}
 struct T6 {
   _enum_T6 which;
-  bool _Auctioneer_stopAuction0_123;
-  T5 _Bidder_bid0_123;
-  bool _Bidder_optIn0_123;
+  bool _Auctioneer_stopAuction0_114;
+  T5 _Bidder_bid0_114;
+  bool _Bidder_optIn0_114;
   }
 struct T7 {
   uint256 elem0;
@@ -722,33 +722,39 @@ struct T8 {
   bool elem2;
   }
 struct T10 {
-  address payable v701;
-  address payable v702;
-  bytes20 v749;
-  address payable v772;
-  uint256 v775;
-  uint256 v1250;
-  T8[1] v1259;
-  uint256 v1260;
+  address payable v734;
+  address payable v735;
+  address payable v754;
+  bytes20 v772;
+  address payable v795;
+  uint256 v798;
+  uint256 v1291;
+  bool v1292;
+  bool v1293;
+  T8[1] v1300;
+  uint256 v1301;
+  uint256 v1316;
   }
 struct T11 {
-  address payable v701;
-  address payable v702;
-  address payable v704;
-  bool v723;
-  uint256 v728;
-  address payable v741;
-  uint256 v747;
-  address payable v748;
-  bytes20 v749;
-  uint256 v769;
-  T0 v771;
-  address payable v772;
-  bool v773;
-  bool v774;
-  uint256 v775;
-  T8[1] v782;
-  uint256 v783;
+  address payable v734;
+  address payable v735;
+  address payable v737;
+  address payable v754;
+  bool v759;
+  uint256 v764;
+  uint256 v770;
+  address payable v771;
+  bytes20 v772;
+  uint256 v791;
+  uint256 v792;
+  T0 v794;
+  address payable v795;
+  bool v796;
+  bool v797;
+  uint256 v798;
+  T8[1] v805;
+  uint256 v806;
+  uint256 v824;
   }
 struct T12 {
   bytes32 elem0;
@@ -769,19 +775,22 @@ struct T14 {
   address payable elem3;
   }
 struct T15 {
-  address payable v701;
-  address payable v702;
-  T13 v703;
-  address payable v704;
-  T8[1] v709;
+  address payable v734;
+  address payable v735;
+  T13 v736;
+  address payable v737;
+  T8[1] v742;
   }
 struct T16 {
-  uint256 elem0;
-  uint256 elem1;
+  address payable v734;
+  address payable v735;
+  T13 v736;
+  address payable v737;
+  T8[1] v752;
   }
 struct T17 {
   uint256 elem0;
-  address payable elem1;
+  uint256 elem1;
   }
 struct T18 {
   uint256 id;
@@ -801,40 +810,39 @@ struct T20 {
   address payable elem0;
   address payable elem1;
   address payable elem2;
-  bool elem3;
-  uint256 elem4;
-  address payable elem5;
+  address payable elem3;
+  bool elem4;
+  uint256 elem5;
   uint256 elem6;
   address payable elem7;
   bytes20 elem8;
   uint256 elem9;
-  T0 elem10;
-  address payable elem11;
-  bool elem12;
+  uint256 elem10;
+  T0 elem11;
+  address payable elem12;
   bool elem13;
-  uint256 elem14;
+  bool elem14;
   uint256 elem15;
-  T8[1] elem16;
-  uint256 elem17;
+  uint256 elem16;
+  T8[1] elem17;
+  uint256 elem18;
   }
 struct T21 {
   address payable elem0;
   address payable elem1;
-  bytes20 elem2;
-  address payable elem3;
-  uint256 elem4;
+  address payable elem2;
+  bytes20 elem3;
+  address payable elem4;
   uint256 elem5;
-  bool elem6;
+  uint256 elem6;
   bool elem7;
-  uint256 elem8;
-  T8[1] elem9;
-  uint256 elem10;
+  bool elem8;
+  uint256 elem9;
+  T8[1] elem10;
+  uint256 elem11;
   }
 interface I0929d31897a8bf4ecce6b4113b39c0cdd711c6ed {
   function Auctions_updateHighestBidder(uint256, address payable) external payable returns (bool);
-  }
-interface I3defb57028d2e0220b6fe823333446eaca249a55 {
-  function Auctions_getAdminAddress() external payable returns (address payable);
   }
 interface I65c391f23b0f0e4ab619548bba5869629951b155 {
   function Auctions_getID() external payable returns (uint256);
@@ -862,23 +870,25 @@ contract ReachContract is Stdlib {
     }
   event _reach_e0(address _who, T14 _a);
   event _reach_e1(address _who, T5 _a);
-  event _reach_e4(address _who, T4 _a);
-  event _reach_e5(address _who, T7 _a);
-  event _reach_oe_v1006(T19 v0);
-  event _reach_oe_v1017(T1 v0);
-  event _reach_oe_v1030(T19 v0);
-  event _reach_oe_v1041(T1 v0);
-  event _reach_oe_v1195(bool v0);
-  event _reach_oe_v1202(bool v0);
-  event _reach_oe_v1215(bool v0);
-  event _reach_oe_v1222(bool v0);
-  event _reach_oe_v1235(T19 v0);
-  event _reach_oe_v1302(bool v0);
-  event _reach_oe_v1332(bool v0);
-  event _reach_oe_v724(T16 v0);
-  event _reach_oe_v737(T17 v0);
-  event _reach_oe_v756(T19 v0);
-  event _reach_oe_v850(T0 v0);
+  event _reach_e2(address _who, T5 _a);
+  event _reach_e5(address _who, T4 _a);
+  event _reach_e6(address _who, T5 _a);
+  event _reach_e7(address _who, T7 _a);
+  event _reach_e8(address _who, T5 _a);
+  event _reach_oe_v1038(T19 v0);
+  event _reach_oe_v1049(T1 v0);
+  event _reach_oe_v1062(T19 v0);
+  event _reach_oe_v1073(T1 v0);
+  event _reach_oe_v1227(bool v0);
+  event _reach_oe_v1234(bool v0);
+  event _reach_oe_v1247(bool v0);
+  event _reach_oe_v1254(bool v0);
+  event _reach_oe_v1276(T19 v0);
+  event _reach_oe_v1351(bool v0);
+  event _reach_oe_v1381(bool v0);
+  event _reach_oe_v760(T17 v0);
+  event _reach_oe_v779(T19 v0);
+  event _reach_oe_v882(T0 v0);
   event accepted(bytes20 v0, uint256 v1, address payable v2, address payable v3, address payable v4);
   event bidSuccess(uint256 v0, uint256 v1, address payable v2, bytes20 v3);
   event created(uint256 v0, address payable v1);
@@ -897,623 +907,700 @@ contract ReachContract is Stdlib {
     bool _reachr_Bidder_optIn;
     bool _reachr_live;
     }
-  struct _F4276 {
-    bool v4243;
-    T3 v4244;
+  struct _F4704 {
+    bool v4662;
+    T3 v4663;
     }
   function _reacha_Auctioneer_acceptSale(bool _a, Memory memory _Memory) internal  {
-    _F4276 memory _f;
-    _f.v4244.which = _enum_T3.Auctioneer_acceptSale0_444;
-    _f.v4244._Auctioneer_acceptSale0_444 = _f.v4243;
+    _F4704 memory _f;
+    _f.v4663.which = _enum_T3.Auctioneer_acceptSale0_458;
+    _f.v4663._Auctioneer_acceptSale0_458 = _f.v4662;
     T4  memory _ja;
     _ja.elem0 = (uint256(0));
-    _ja.elem1 = _f.v4244;
-    _reachi_4(_ja, _Memory);
+    _ja.elem1 = _f.v4663;
+    _reachi_5(_ja, _Memory);
     }
-  struct _F4277 {
-    bool v4247;
-    T3 v4248;
+  struct _F4705 {
+    bool v4666;
+    T3 v4667;
     }
   function _reacha_Auctioneer_rejectSale(bool _a, Memory memory _Memory) internal  {
-    _F4277 memory _f;
-    _f.v4248.which = _enum_T3.Auctioneer_rejectSale0_444;
-    _f.v4248._Auctioneer_rejectSale0_444 = _f.v4247;
+    _F4705 memory _f;
+    _f.v4667.which = _enum_T3.Auctioneer_rejectSale0_458;
+    _f.v4667._Auctioneer_rejectSale0_458 = _f.v4666;
     T4  memory _ja;
     _ja.elem0 = (uint256(0));
-    _ja.elem1 = _f.v4248;
-    _reachi_4(_ja, _Memory);
+    _ja.elem1 = _f.v4667;
+    _reachi_5(_ja, _Memory);
     }
-  struct _F4278 {
-    bool v4251;
-    T6 v4252;
+  struct _F4706 {
+    bool v4670;
+    T6 v4671;
     }
   function _reacha_Auctioneer_stopAuction(bool _a, Memory memory _Memory) internal  {
-    _F4278 memory _f;
-    _f.v4252.which = _enum_T6.Auctioneer_stopAuction0_123;
-    _f.v4252._Auctioneer_stopAuction0_123 = _f.v4251;
+    _F4706 memory _f;
+    _f.v4671.which = _enum_T6.Auctioneer_stopAuction0_114;
+    _f.v4671._Auctioneer_stopAuction0_114 = _f.v4670;
     T7  memory _ja;
     _ja.elem0 = (uint256(0));
-    _ja.elem1 = _f.v4252;
-    _reachi_5(_ja, _Memory);
+    _ja.elem1 = _f.v4671;
+    _reachi_7(_ja, _Memory);
     }
-  struct _F4279 {
-    T5 v4256;
-    T6 v4257;
+  struct _F4707 {
+    T5 v4675;
+    T6 v4676;
     }
   function _reacha_Bidder_bid(uint256 _a, Memory memory _Memory) internal  {
-    _F4279 memory _f;
-    _f.v4256.elem0 = _a;
-    _f.v4257.which = _enum_T6.Bidder_bid0_123;
-    _f.v4257._Bidder_bid0_123 = _f.v4256;
+    _F4707 memory _f;
+    _f.v4675.elem0 = _a;
+    _f.v4676.which = _enum_T6.Bidder_bid0_114;
+    _f.v4676._Bidder_bid0_114 = _f.v4675;
     T7  memory _ja;
     _ja.elem0 = (uint256(0));
-    _ja.elem1 = _f.v4257;
-    _reachi_5(_ja, _Memory);
+    _ja.elem1 = _f.v4676;
+    _reachi_7(_ja, _Memory);
     }
-  struct _F4280 {
-    bool v4261;
-    T6 v4262;
+  struct _F4708 {
+    bool v4680;
+    T6 v4681;
     }
   function _reacha_Bidder_optIn(bool _a, Memory memory _Memory) internal  {
-    _F4280 memory _f;
-    _f.v4262.which = _enum_T6.Bidder_optIn0_123;
-    _f.v4262._Bidder_optIn0_123 = _f.v4261;
+    _F4708 memory _f;
+    _f.v4681.which = _enum_T6.Bidder_optIn0_114;
+    _f.v4681._Bidder_optIn0_114 = _f.v4680;
     T7  memory _ja;
     _ja.elem0 = (uint256(0));
-    _ja.elem1 = _f.v4262;
-    _reachi_5(_ja, _Memory);
+    _ja.elem1 = _f.v4681;
+    _reachi_7(_ja, _Memory);
     }
   function _reacha_live(bool _a, Memory memory _Memory) internal view {
-    if ((current_step < uint256(8))) {
-      reachRequire(((current_step == uint256(6))), uint256(7) /*'(./src/contracts/auction.rsh:66:21:property binding,[],Just "Incorrect state: not leaf")'*/);
+    if ((current_step < uint256(9))) {
+      reachRequire(((current_step == uint256(7))), uint256(7) /*'(./src/contracts/auction.rsh:68:21:property binding,[],Just "Incorrect state: not leaf")'*/);
       (T10 memory _svs) = abi.decode(current_svbs, (T10));
       _Memory._reachr_live = false;
       }
     else {
-      reachRequire(((current_step == uint256(8))), uint256(8) /*'(./src/contracts/auction.rsh:66:21:property binding,[],Just "Incorrect state: not leaf")'*/);
+      reachRequire(((current_step == uint256(9))), uint256(8) /*'(./src/contracts/auction.rsh:68:21:property binding,[],Just "Incorrect state: not leaf")'*/);
       (T11 memory _svs) = abi.decode(current_svbs, (T11));
       _Memory._reachr_live = true;
       }
     }
-  struct _F4282 {
-    T8 v678;
-    T8[1] v679;
+  struct _F4710 {
+    T8 v711;
+    T8[1] v712;
     }
   function _reachi_0(T14 memory _a, Memory memory _Memory) internal  {
-    _F4282 memory _f;
+    _F4710 memory _f;
     reachRequire((! locked), uint256(9) /*'locked'*/);
     emit _reach_e0(msg.sender, _a);
-    reachRequire((((_a.elem0) == uint256(0)) || (current_time == (_a.elem0))), uint256(10) /*'time check at ./src/contracts/auction.rsh:76:16:dot'*/);
-    _f.v678.elem0 = uint256(0);
-    _f.v678.elem1 = uint256(0);
-    _f.v678.elem2 = false;
-    _f.v679[0] = _f.v678;
+    reachRequire((((_a.elem0) == uint256(0)) || (current_time == (_a.elem0))), uint256(10) /*'time check at ./src/contracts/auction.rsh:78:16:dot'*/);
+    _f.v711.elem0 = uint256(0);
+    _f.v711.elem1 = uint256(0);
+    _f.v711.elem2 = false;
+    _f.v712[0] = _f.v711;
     
-    reachRequire((msg.value == uint256(0)), uint256(11) /*'(./src/contracts/auction.rsh:76:16:dot,[],"verify network token pay amount")'*/);
+    reachRequire((msg.value == uint256(0)), uint256(11) /*'(./src/contracts/auction.rsh:78:16:dot,[],"verify network token pay amount")'*/);
     T15 memory nsvs;
-    nsvs.v701 = payable(msg.sender);
-    nsvs.v702 = (_a.elem1);
-    nsvs.v703 = (_a.elem2);
-    nsvs.v704 = (_a.elem3);
-    nsvs.v709 = (array_set9(_f.v679, uint256(0), (T8({elem0: uint256(0), elem1: (_f.v679[uint256(0)]).elem1, elem2: (_f.v679[uint256(0)]).elem2}))));
+    nsvs.v734 = payable(msg.sender);
+    nsvs.v735 = (_a.elem1);
+    nsvs.v736 = (_a.elem2);
+    nsvs.v737 = (_a.elem3);
+    nsvs.v742 = (array_set9(_f.v712, uint256(0), (T8({elem0: uint256(0), elem1: (_f.v712[uint256(0)]).elem1, elem2: (_f.v712[uint256(0)]).elem2}))));
     current_step = uint256(1);
     current_time = uint256(block.number);
     current_svbs = abi.encode(nsvs);
     }
-  struct _F4301 {
-    bool v723;
-    T16 v724;
-    T16 v725;
-    T17 v737;
-    T17 v738;
-    address payable v748;
-    T18 v755;
-    T19 v756;
-    T19 v757;
-    T0 v770;
-    uint256 v4285;
-    uint256 v4286;
-    uint256 v4287;
-    uint256 v4291;
-    uint256 v4292;
-    uint256 v4293;
-    uint256 v4297;
-    uint256 v4298;
-    uint256 v4299;
-    }
   function _reachi_1(T5 memory _a, Memory memory _Memory) internal  {
-    _F4301 memory _f;
-    reachRequire((current_step == uint256(1)), uint256(12) /*'state check at ./src/contracts/auction.rsh:78:16:dot'*/);
+    reachRequire((current_step == uint256(1)), uint256(12) /*'state check at ./src/contracts/auction.rsh:80:16:dot'*/);
     (T15 memory _svs) = abi.decode(current_svbs, (T15));
     reachRequire((! locked), uint256(13) /*'locked'*/);
     emit _reach_e1(msg.sender, _a);
-    reachRequire((((_a.elem0) == uint256(0)) || (current_time == (_a.elem0))), uint256(14) /*'time check at ./src/contracts/auction.rsh:78:16:dot'*/);
-    reachRequire((msg.value == uint256(0)), uint256(15) /*'(./src/contracts/auction.rsh:78:16:dot,[],"verify network token pay amount")'*/);
-    reachRequire((checkPayAmt(msg.sender, _svs.v702, uint256(1))), uint256(16) /*'(./src/contracts/auction.rsh:78:16:dot,[],"verify non-network token pay amount")'*/);
-    reachRequire(((_svs.v701 == payable(msg.sender))), uint256(17) /*'(./src/contracts/auction.rsh:78:16:dot,[],Just "sender correct")'*/);
-    {
-      _f.v4286 = unsafeSub(tokenBalanceOf(_svs.v702, address(this)), 0);
-      _f.v4285 = unsafeSub(address(this).balance, uint256(0));
-      locked = true;
-      bytes memory v4288 = abi.encodeWithSelector(I65c391f23b0f0e4ab619548bba5869629951b155.Auctions_getID.selector);
-      (bool v4283, bytes memory v4284) = _svs.v704.call{value: uint256(0)}(v4288);
-      checkFunReturn(v4283, v4284, uint256(19) /*'(./src/contracts/auction.rsh:90:48:application,[],"remote Auctions_getID failed")'*/);
-      locked = false;
-      _f.v4287 = unsafeSub(tokenBalanceOf(_svs.v702, address(this)), _f.v4286);
-      reachRequire((_f.v4287 == 0), uint256(18) /*'remote did not transfer unexpected non-network tokens'*/);
-      _f.v724.elem0 = unsafeSub(address(this).balance, _f.v4285);
-      _f.v724.elem1 = abi.decode(v4284, (uint256));
-      }
-    _f.v725 = _f.v724;
-    emit _reach_oe_v724( _f.v724);
-    reachRequire(((uint256(0) == (_f.v725.elem0))), uint256(20) /*'(./src/contracts/auction.rsh:90:48:application,[],Just "remote bill check")'*/);
-    {
-      _f.v4292 = unsafeSub(tokenBalanceOf(_svs.v702, address(this)), 0);
-      _f.v4291 = unsafeSub(address(this).balance, uint256(0));
-      locked = true;
-      bytes memory v4294 = abi.encodeWithSelector(I3defb57028d2e0220b6fe823333446eaca249a55.Auctions_getAdminAddress.selector);
-      (bool v4289, bytes memory v4290) = _svs.v704.call{value: uint256(0)}(v4294);
-      checkFunReturn(v4289, v4290, uint256(22) /*'(./src/contracts/auction.rsh:91:68:application,[],"remote Auctions_getAdminAddress failed")'*/);
-      locked = false;
-      _f.v4293 = unsafeSub(tokenBalanceOf(_svs.v702, address(this)), _f.v4292);
-      reachRequire((_f.v4293 == 0), uint256(21) /*'remote did not transfer unexpected non-network tokens'*/);
-      _f.v737.elem0 = unsafeSub(address(this).balance, _f.v4291);
-      _f.v737.elem1 = abi.decode(v4290, (address));
-      }
-    _f.v738 = _f.v737;
-    emit _reach_oe_v737( _f.v737);
-    reachRequire(((uint256(0) == (_f.v738.elem0))), uint256(23) /*'(./src/contracts/auction.rsh:91:68:application,[],Just "remote bill check")'*/);
-    _f.v748 = payable(address(this));
-    _f.v755.id = (_f.v725.elem1);
-    _f.v755.contractInfo = _f.v748;
-    _f.v755.blockCreated = uint256(block.number);
-    _f.v755.owner = _svs.v701;
-    _f.v755.title = (_svs.v703._title);
-    _f.v755.description = (_svs.v703._description);
-    _f.v755.price = (_svs.v703._price);
-    _f.v755.tokenId = _svs.v702;
-    {
-      _f.v4298 = unsafeSub(tokenBalanceOf(_svs.v702, address(this)), 0);
-      _f.v4297 = unsafeSub(address(this).balance, uint256(0));
-      locked = true;
-      bytes memory v4300 = abi.encodeWithSelector(Icd5b779c46c4fd20ee1204cb5762604a51f26777.Auctions_created.selector, _f.v755);
-      (bool v4295, bytes memory v4296) = _svs.v704.call{value: uint256(0)}(v4300);
-      checkFunReturn(v4295, v4296, uint256(25) /*'(./src/contracts/auction.rsh:107:39:application,[],"remote Auctions_created failed")'*/);
-      locked = false;
-      _f.v4299 = unsafeSub(tokenBalanceOf(_svs.v702, address(this)), _f.v4298);
-      reachRequire((_f.v4299 == 0), uint256(24) /*'remote did not transfer unexpected non-network tokens'*/);
-      _f.v756.elem0 = unsafeSub(address(this).balance, _f.v4297);
-      }
-    _f.v757 = _f.v756;
-    emit _reach_oe_v756( _f.v756);
-    reachRequire(((uint256(0) == (_f.v757.elem0))), uint256(26) /*'(./src/contracts/auction.rsh:107:39:application,[],Just "remote bill check")'*/);
-    emit created( (_f.v725.elem1),  _svs.v701);
-    _f.v770.id = uint256(0);
-    _f.v770.blockEnded = uint256(0);
-    _f.v770.lastBid = uint256(0);
-    T20  memory _ja;
-    _ja.elem0 = _svs.v701;
-    _ja.elem1 = _svs.v702;
-    _ja.elem2 = _svs.v704;
-    _ja.elem3 = _f.v723;
-    _ja.elem4 = (_f.v725.elem1);
-    _ja.elem5 = (_f.v738.elem1);
-    _ja.elem6 = (uint256(block.number));
-    _ja.elem7 = _f.v748;
-    _ja.elem8 = (_svs.v703._title);
-    _ja.elem9 = (safeAdd(uint256(block.number), (_svs.v703._deadline)));
-    _ja.elem10 = _f.v770;
-    _ja.elem11 = _svs.v701;
-    _ja.elem12 = true;
-    _ja.elem13 = true;
-    _ja.elem14 = uint256(0);
-    _ja.elem15 = uint256(block.number);
-    _ja.elem16 = (array_set9(_svs.v709, uint256(0), (T8({elem0: (unsafeAdd(((_svs.v709[uint256(0)]).elem0), uint256(1))), elem1: (_svs.v709[uint256(0)]).elem1, elem2: (_svs.v709[uint256(0)]).elem2}))));
-    _ja.elem17 = (unsafeAdd((unsafeAdd((_f.v725.elem0), (_f.v738.elem0))), (_f.v757.elem0)));
-    _reachl_2(_ja, _Memory);
+    reachRequire((((_a.elem0) == uint256(0)) || (current_time == (_a.elem0))), uint256(14) /*'time check at ./src/contracts/auction.rsh:80:16:dot'*/);
+    reachRequire((msg.value == uint256(0)), uint256(15) /*'(./src/contracts/auction.rsh:80:16:dot,[],"verify network token pay amount")'*/);
+    reachRequire((checkPayAmt(msg.sender, _svs.v735, uint256(1))), uint256(16) /*'(./src/contracts/auction.rsh:80:16:dot,[],"verify non-network token pay amount")'*/);
+    reachRequire(((_svs.v734 == payable(msg.sender))), uint256(17) /*'(./src/contracts/auction.rsh:80:16:dot,[],Just "sender correct")'*/);
+    T16 memory nsvs;
+    nsvs.v734 = _svs.v734;
+    nsvs.v735 = _svs.v735;
+    nsvs.v736 = _svs.v736;
+    nsvs.v737 = _svs.v737;
+    nsvs.v752 = (array_set9(_svs.v742, uint256(0), (T8({elem0: (unsafeAdd(((_svs.v742[uint256(0)]).elem0), uint256(1))), elem1: (_svs.v742[uint256(0)]).elem1, elem2: (_svs.v742[uint256(0)]).elem2}))));
+    current_step = uint256(2);
+    current_time = uint256(block.number);
+    current_svbs = abi.encode(nsvs);
     }
-  function _reachi_4(T4 memory _a, Memory memory _Memory) internal  {
-    reachRequire((current_step == uint256(6)), uint256(27) /*'state check at ./src/contracts/auction.rsh:193:66:dot'*/);
+  struct _F4724 {
+    bool v759;
+    T17 v760;
+    T17 v761;
+    address payable v771;
+    T18 v778;
+    T19 v779;
+    T19 v780;
+    T0 v793;
+    uint256 v4714;
+    uint256 v4715;
+    uint256 v4716;
+    uint256 v4720;
+    uint256 v4721;
+    uint256 v4722;
+    }
+  function _reachi_2(T5 memory _a, Memory memory _Memory) internal  {
+    _F4724 memory _f;
+    reachRequire((current_step == uint256(2)), uint256(18) /*'state check at ./src/contracts/auction.rsh:82:15:dot'*/);
+    (T16 memory _svs) = abi.decode(current_svbs, (T16));
+    reachRequire((! locked), uint256(19) /*'locked'*/);
+    emit _reach_e2(msg.sender, _a);
+    reachRequire((((_a.elem0) == uint256(0)) || (current_time == (_a.elem0))), uint256(20) /*'time check at ./src/contracts/auction.rsh:82:15:dot'*/);
+    reachRequire((msg.value == uint256(0)), uint256(21) /*'(./src/contracts/auction.rsh:82:15:dot,[],"verify network token pay amount")'*/);
+    {
+      _f.v4715 = unsafeSub(tokenBalanceOf(_svs.v735, address(this)), 0);
+      _f.v4714 = unsafeSub(address(this).balance, uint256(0));
+      locked = true;
+      bytes memory v4717 = abi.encodeWithSelector(I65c391f23b0f0e4ab619548bba5869629951b155.Auctions_getID.selector);
+      (bool v4712, bytes memory v4713) = _svs.v737.call{value: uint256(0)}(v4717);
+      checkFunReturn(v4712, v4713, uint256(23) /*'(./src/contracts/auction.rsh:93:48:application,[],"remote Auctions_getID failed")'*/);
+      locked = false;
+      _f.v4716 = unsafeSub(tokenBalanceOf(_svs.v735, address(this)), _f.v4715);
+      reachRequire((_f.v4716 == 0), uint256(22) /*'remote did not transfer unexpected non-network tokens'*/);
+      _f.v760.elem0 = unsafeSub(address(this).balance, _f.v4714);
+      _f.v760.elem1 = abi.decode(v4713, (uint256));
+      }
+    _f.v761 = _f.v760;
+    emit _reach_oe_v760( _f.v760);
+    reachRequire(((uint256(0) == (_f.v761.elem0))), uint256(24) /*'(./src/contracts/auction.rsh:93:48:application,[],Just "remote bill check")'*/);
+    _f.v771 = payable(address(this));
+    _f.v778.id = (_f.v761.elem1);
+    _f.v778.contractInfo = _f.v771;
+    _f.v778.blockCreated = uint256(block.number);
+    _f.v778.owner = _svs.v734;
+    _f.v778.title = (_svs.v736._title);
+    _f.v778.description = (_svs.v736._description);
+    _f.v778.price = (_svs.v736._price);
+    _f.v778.tokenId = _svs.v735;
+    {
+      _f.v4721 = unsafeSub(tokenBalanceOf(_svs.v735, address(this)), 0);
+      _f.v4720 = unsafeSub(address(this).balance, uint256(0));
+      locked = true;
+      bytes memory v4723 = abi.encodeWithSelector(Icd5b779c46c4fd20ee1204cb5762604a51f26777.Auctions_created.selector, _f.v778);
+      (bool v4718, bytes memory v4719) = _svs.v737.call{value: uint256(0)}(v4723);
+      checkFunReturn(v4718, v4719, uint256(26) /*'(./src/contracts/auction.rsh:109:39:application,[],"remote Auctions_created failed")'*/);
+      locked = false;
+      _f.v4722 = unsafeSub(tokenBalanceOf(_svs.v735, address(this)), _f.v4721);
+      reachRequire((_f.v4722 == 0), uint256(25) /*'remote did not transfer unexpected non-network tokens'*/);
+      _f.v779.elem0 = unsafeSub(address(this).balance, _f.v4720);
+      }
+    _f.v780 = _f.v779;
+    emit _reach_oe_v779( _f.v779);
+    reachRequire(((uint256(0) == (_f.v780.elem0))), uint256(27) /*'(./src/contracts/auction.rsh:109:39:application,[],Just "remote bill check")'*/);
+    emit created( (_f.v761.elem1),  _svs.v734);
+    _f.v793.id = (_f.v761.elem1);
+    _f.v793.blockEnded = uint256(0);
+    _f.v793.lastBid = uint256(0);
+    T20  memory _ja;
+    _ja.elem0 = _svs.v734;
+    _ja.elem1 = _svs.v735;
+    _ja.elem2 = _svs.v737;
+    _ja.elem3 = payable(msg.sender);
+    _ja.elem4 = _f.v759;
+    _ja.elem5 = (_f.v761.elem1);
+    _ja.elem6 = (uint256(block.number));
+    _ja.elem7 = _f.v771;
+    _ja.elem8 = (_svs.v736._title);
+    _ja.elem9 = (_svs.v736._deadline);
+    _ja.elem10 = (safeAdd(uint256(block.number), (_svs.v736._deadline)));
+    _ja.elem11 = _f.v793;
+    _ja.elem12 = _svs.v734;
+    _ja.elem13 = true;
+    _ja.elem14 = true;
+    _ja.elem15 = uint256(0);
+    _ja.elem16 = uint256(block.number);
+    _ja.elem17 = _svs.v752;
+    _ja.elem18 = (unsafeAdd((_f.v761.elem0), (_f.v780.elem0)));
+    _reachl_3(_ja, _Memory);
+    }
+  function _reachi_5(T4 memory _a, Memory memory _Memory) internal  {
+    reachRequire((current_step == uint256(7)), uint256(28) /*'state check at ./src/contracts/auction.rsh:209:66:dot'*/);
     (T10 memory _svs) = abi.decode(current_svbs, (T10));
-    reachRequire((! locked), uint256(28) /*'locked'*/);
-    emit _reach_e4(msg.sender, _a);
-    reachRequire((((_a.elem0) == uint256(0)) || (current_time == (_a.elem0))), uint256(29) /*'time check at ./src/contracts/auction.rsh:193:66:dot'*/);
-    if ((_a.elem1).which == _enum_T3.Auctioneer_acceptSale0_444) {
-    reachRequire((msg.value == uint256(0)), uint256(30) /*'(./src/contracts/auction.rsh:193:66:dot,[],"verify network token pay amount")'*/);
-    emit _reach_oe_v1302( (true));
+    reachRequire((! locked), uint256(29) /*'locked'*/);
+    emit _reach_e5(msg.sender, _a);
+    reachRequire((((_a.elem0) == uint256(0)) || (current_time == (_a.elem0))), uint256(30) /*'time check at ./src/contracts/auction.rsh:209:66:dot'*/);
+    reachRequire((uint256(block.number) < _svs.v1316), uint256(31) /*'timeout check at ./src/contracts/auction.rsh:209:66:dot'*/);
+    if ((_a.elem1).which == _enum_T3.Auctioneer_acceptSale0_458) {
+    reachRequire((msg.value == uint256(0)), uint256(32) /*'(./src/contracts/auction.rsh:209:66:dot,[],"verify network token pay amount")'*/);
+    emit _reach_oe_v1351( (true));
     _Memory._reachr_Auctioneer_acceptSale = (true);
     T21  memory _ja;
-    _ja.elem0 = _svs.v701;
-    _ja.elem1 = _svs.v702;
-    _ja.elem2 = _svs.v749;
+    _ja.elem0 = _svs.v734;
+    _ja.elem1 = _svs.v735;
+    _ja.elem2 = _svs.v754;
     _ja.elem3 = _svs.v772;
-    _ja.elem4 = _svs.v775;
-    _ja.elem5 = _svs.v1250;
-    _ja.elem6 = true;
-    _ja.elem7 = false;
-    _ja.elem8 = uint256(block.number);
-    _ja.elem9 = _svs.v1259;
-    _ja.elem10 = _svs.v1260;
-    _reachl_3(_ja, _Memory);
-    } else if ((_a.elem1).which == _enum_T3.Auctioneer_rejectSale0_444) {
-    reachRequire((msg.value == uint256(0)), uint256(31) /*'(./src/contracts/auction.rsh:193:66:dot,[],"verify network token pay amount")'*/);
-    emit _reach_oe_v1332( (false));
+    _ja.elem4 = _svs.v795;
+    _ja.elem5 = _svs.v798;
+    _ja.elem6 = _svs.v1291;
+    _ja.elem7 = true;
+    _ja.elem8 = false;
+    _ja.elem9 = uint256(block.number);
+    _ja.elem10 = _svs.v1300;
+    _ja.elem11 = _svs.v1301;
+    _reachl_4(_ja, _Memory);
+    } else if ((_a.elem1).which == _enum_T3.Auctioneer_rejectSale0_458) {
+    reachRequire((msg.value == uint256(0)), uint256(33) /*'(./src/contracts/auction.rsh:209:66:dot,[],"verify network token pay amount")'*/);
+    emit _reach_oe_v1381( (false));
     _Memory._reachr_Auctioneer_rejectSale = (false);
     T21  memory _ja;
-    _ja.elem0 = _svs.v701;
-    _ja.elem1 = _svs.v702;
-    _ja.elem2 = _svs.v749;
+    _ja.elem0 = _svs.v734;
+    _ja.elem1 = _svs.v735;
+    _ja.elem2 = _svs.v754;
     _ja.elem3 = _svs.v772;
-    _ja.elem4 = _svs.v775;
-    _ja.elem5 = _svs.v1250;
-    _ja.elem6 = false;
+    _ja.elem4 = _svs.v795;
+    _ja.elem5 = _svs.v798;
+    _ja.elem6 = _svs.v1291;
     _ja.elem7 = false;
-    _ja.elem8 = uint256(block.number);
-    _ja.elem9 = _svs.v1259;
-    _ja.elem10 = _svs.v1260;
-    _reachl_3(_ja, _Memory);
+    _ja.elem8 = false;
+    _ja.elem9 = uint256(block.number);
+    _ja.elem10 = _svs.v1300;
+    _ja.elem11 = _svs.v1301;
+    _reachl_4(_ja, _Memory);
     }
     }
-  struct _F4315 {
-    T0 v850;
-    T5 v967;
-    uint256 v978;
-    T19 v1006;
-    T19 v1007;
-    T1 v1017;
-    T19 v1030;
-    T19 v1031;
-    T1 v1041;
-    uint256 v1109;
-    uint256 v1188;
-    uint256 v4305;
-    uint256 v4306;
-    uint256 v4307;
-    uint256 v4311;
-    uint256 v4312;
-    uint256 v4313;
+  function _reachi_6(T5 memory _a, Memory memory _Memory) internal  {
+    reachRequire((current_step == uint256(7)), uint256(34) /*'state check at ./src/contracts/auction.rsh:236:39:dot'*/);
+    (T10 memory _svs) = abi.decode(current_svbs, (T10));
+    reachRequire((! locked), uint256(35) /*'locked'*/);
+    emit _reach_e6(msg.sender, _a);
+    reachRequire((((_a.elem0) == uint256(0)) || (current_time == (_a.elem0))), uint256(36) /*'time check at ./src/contracts/auction.rsh:236:39:dot'*/);
+    reachRequire((uint256(block.number) >= _svs.v1316), uint256(37) /*'timeout check at ./src/contracts/auction.rsh:236:39:dot'*/);
+    reachRequire((msg.value == uint256(0)), uint256(38) /*'(./src/contracts/auction.rsh:236:39:dot,[at ./src/contracts/auction.rsh:235:61:application call to [unknown function] (defined at: ./src/contracts/auction.rsh:235:61:function exp)],"verify network token pay amount")'*/);
+    reachRequire(((_svs.v754 == payable(msg.sender))), uint256(39) /*'(./src/contracts/auction.rsh:236:39:dot,[at ./src/contracts/auction.rsh:235:61:application call to [unknown function] (defined at: ./src/contracts/auction.rsh:235:61:function exp)],Just "sender correct")'*/);
+    T21  memory _ja;
+    _ja.elem0 = _svs.v734;
+    _ja.elem1 = _svs.v735;
+    _ja.elem2 = _svs.v754;
+    _ja.elem3 = _svs.v772;
+    _ja.elem4 = _svs.v795;
+    _ja.elem5 = _svs.v798;
+    _ja.elem6 = _svs.v1291;
+    _ja.elem7 = _svs.v1292;
+    _ja.elem8 = _svs.v1293;
+    _ja.elem9 = uint256(block.number);
+    _ja.elem10 = _svs.v1300;
+    _ja.elem11 = _svs.v1301;
+    _reachl_4(_ja, _Memory);
     }
-  function _reachi_5(T7 memory _a, Memory memory _Memory) internal  {
-    _F4315 memory _f;
-    reachRequire((current_step == uint256(8)), uint256(32) /*'state check at ./src/contracts/auction.rsh:114:31:dot'*/);
+  struct _F4739 {
+    T0 v882;
+    T5 v999;
+    uint256 v1010;
+    T19 v1038;
+    T19 v1039;
+    T1 v1049;
+    T19 v1062;
+    T19 v1063;
+    T1 v1073;
+    uint256 v1141;
+    uint256 v1220;
+    uint256 v4729;
+    uint256 v4730;
+    uint256 v4731;
+    uint256 v4735;
+    uint256 v4736;
+    uint256 v4737;
+    }
+  function _reachi_7(T7 memory _a, Memory memory _Memory) internal  {
+    _F4739 memory _f;
+    reachRequire((current_step == uint256(9)), uint256(40) /*'state check at ./src/contracts/auction.rsh:116:31:dot'*/);
     (T11 memory _svs) = abi.decode(current_svbs, (T11));
-    reachRequire((! locked), uint256(33) /*'locked'*/);
-    emit _reach_e5(msg.sender, _a);
-    reachRequire((((_a.elem0) == uint256(0)) || (current_time == (_a.elem0))), uint256(34) /*'time check at ./src/contracts/auction.rsh:114:31:dot'*/);
-    if ((_a.elem1).which == _enum_T6.Auctioneer_stopAuction0_123) {
-    reachRequire((msg.value == uint256(0)), uint256(35) /*'(./src/contracts/auction.rsh:114:31:dot,[],"verify network token pay amount")'*/);
-    emit endSuccess( _svs.v728,  _svs.v775);
-    _f.v850.id = _svs.v728;
-    _f.v850.blockEnded = uint256(block.number);
-    _f.v850.lastBid = _svs.v775;
-    emit _reach_oe_v850( _f.v850);
-    _Memory._reachr_Auctioneer_stopAuction = _f.v850;
+    reachRequire((! locked), uint256(41) /*'locked'*/);
+    emit _reach_e7(msg.sender, _a);
+    reachRequire((((_a.elem0) == uint256(0)) || (current_time == (_a.elem0))), uint256(42) /*'time check at ./src/contracts/auction.rsh:116:31:dot'*/);
+    reachRequire((uint256(block.number) < _svs.v824), uint256(43) /*'timeout check at ./src/contracts/auction.rsh:116:31:dot'*/);
+    if ((_a.elem1).which == _enum_T6.Auctioneer_stopAuction0_114) {
+    reachRequire((msg.value == uint256(0)), uint256(44) /*'(./src/contracts/auction.rsh:116:31:dot,[],"verify network token pay amount")'*/);
+    emit endSuccess( _svs.v764,  _svs.v798);
+    _f.v882.id = _svs.v764;
+    _f.v882.blockEnded = uint256(block.number);
+    _f.v882.lastBid = _svs.v798;
+    emit _reach_oe_v882( _f.v882);
+    _Memory._reachr_Auctioneer_stopAuction = _f.v882;
     T20  memory _ja;
-    _ja.elem0 = _svs.v701;
-    _ja.elem1 = _svs.v702;
-    _ja.elem2 = _svs.v704;
-    _ja.elem3 = _svs.v723;
-    _ja.elem4 = _svs.v728;
-    _ja.elem5 = _svs.v741;
-    _ja.elem6 = _svs.v747;
-    _ja.elem7 = _svs.v748;
-    _ja.elem8 = _svs.v749;
-    _ja.elem9 = _svs.v769;
-    _ja.elem10 = _f.v850;
-    _ja.elem11 = _svs.v772;
-    _ja.elem12 = _svs.v773;
-    _ja.elem13 = false;
-    _ja.elem14 = _svs.v775;
-    _ja.elem15 = uint256(block.number);
-    _ja.elem16 = _svs.v782;
-    _ja.elem17 = _svs.v783;
-    _reachl_2(_ja, _Memory);
-    } else if ((_a.elem1).which == _enum_T6.Bidder_bid0_123) {
-    _f.v967 = (_a.elem1)._Bidder_bid0_123;
-    reachRequire((((_f.v967.elem0) > _svs.v775)), uint256(36) /*'(reach standard library:57:5:application,[at ./src/contracts/auction.rsh:132:38:application call to "check" (defined at: reach standard library:49:32:function exp),at ./src/contracts/auction.rsh:131:49:application call to [unknown function] (defined at: ./src/contracts/auction.rsh:131:49:function exp),at ./src/contracts/auction.rsh:114:31:application call to [unknown function] (defined at: ./src/contracts/auction.rsh:131:49:function exp),at ./src/contracts/auction.rsh:114:31:application call to [unknown function] (defined at: ./src/contracts/auction.rsh:114:31:function exp)],Just "Your bid is too low, please try again")'*/);
-    _f.v978 = unsafeAdd(_svs.v783, (_f.v967.elem0));
-    reachRequire((msg.value == (_f.v967.elem0)), uint256(37) /*'(./src/contracts/auction.rsh:114:31:dot,[],"verify network token pay amount")'*/);
-    if (_svs.v773) {
+    _ja.elem0 = _svs.v734;
+    _ja.elem1 = _svs.v735;
+    _ja.elem2 = _svs.v737;
+    _ja.elem3 = _svs.v754;
+    _ja.elem4 = _svs.v759;
+    _ja.elem5 = _svs.v764;
+    _ja.elem6 = _svs.v770;
+    _ja.elem7 = _svs.v771;
+    _ja.elem8 = _svs.v772;
+    _ja.elem9 = _svs.v791;
+    _ja.elem10 = _svs.v792;
+    _ja.elem11 = _f.v882;
+    _ja.elem12 = _svs.v795;
+    _ja.elem13 = _svs.v796;
+    _ja.elem14 = false;
+    _ja.elem15 = _svs.v798;
+    _ja.elem16 = uint256(block.number);
+    _ja.elem17 = _svs.v805;
+    _ja.elem18 = _svs.v806;
+    _reachl_3(_ja, _Memory);
+    } else if ((_a.elem1).which == _enum_T6.Bidder_bid0_114) {
+    _f.v999 = (_a.elem1)._Bidder_bid0_114;
+    reachRequire((((_f.v999.elem0) > _svs.v798)), uint256(45) /*'(reach standard library:57:5:application,[at ./src/contracts/auction.rsh:134:38:application call to "check" (defined at: reach standard library:49:32:function exp),at ./src/contracts/auction.rsh:133:49:application call to [unknown function] (defined at: ./src/contracts/auction.rsh:133:49:function exp),at ./src/contracts/auction.rsh:116:31:application call to [unknown function] (defined at: ./src/contracts/auction.rsh:133:49:function exp),at ./src/contracts/auction.rsh:116:31:application call to [unknown function] (defined at: ./src/contracts/auction.rsh:116:31:function exp)],Just "Your bid is too low, please try again")'*/);
+    _f.v1010 = unsafeAdd(_svs.v806, (_f.v999.elem0));
+    reachRequire((msg.value == (_f.v999.elem0)), uint256(46) /*'(./src/contracts/auction.rsh:116:31:dot,[],"verify network token pay amount")'*/);
+    if (_svs.v796) {
       {
-        _f.v4306 = unsafeSub(tokenBalanceOf(_svs.v702, address(this)), 0);
-        _f.v4305 = unsafeSub(address(this).balance, uint256(0));
+        _f.v4730 = unsafeSub(tokenBalanceOf(_svs.v735, address(this)), 0);
+        _f.v4729 = unsafeSub(address(this).balance, uint256(0));
         locked = true;
-        bytes memory v4308 = abi.encodeWithSelector(I0929d31897a8bf4ecce6b4113b39c0cdd711c6ed.Auctions_updateHighestBidder.selector, _svs.v728, payable(msg.sender));
-        (bool v4303, bytes memory v4304) = _svs.v704.call{value: uint256(0)}(v4308);
-        checkFunReturn(v4303, v4304, uint256(39) /*'(./src/contracts/auction.rsh:138:91:application,[at ./src/contracts/auction.rsh:135:50:application call to [unknown function] (defined at: ./src/contracts/auction.rsh:135:50:function exp)],"remote Auctions_updateHighestBidder failed")'*/);
+        bytes memory v4732 = abi.encodeWithSelector(I0929d31897a8bf4ecce6b4113b39c0cdd711c6ed.Auctions_updateHighestBidder.selector, _svs.v764, payable(msg.sender));
+        (bool v4727, bytes memory v4728) = _svs.v737.call{value: uint256(0)}(v4732);
+        checkFunReturn(v4727, v4728, uint256(48) /*'(./src/contracts/auction.rsh:140:91:application,[at ./src/contracts/auction.rsh:137:50:application call to [unknown function] (defined at: ./src/contracts/auction.rsh:137:50:function exp)],"remote Auctions_updateHighestBidder failed")'*/);
         locked = false;
-        _f.v4307 = unsafeSub(tokenBalanceOf(_svs.v702, address(this)), _f.v4306);
-        reachRequire((_f.v4307 == 0), uint256(38) /*'remote did not transfer unexpected non-network tokens'*/);
-        _f.v1030.elem0 = unsafeSub(address(this).balance, _f.v4305);
+        _f.v4731 = unsafeSub(tokenBalanceOf(_svs.v735, address(this)), _f.v4730);
+        reachRequire((_f.v4731 == 0), uint256(47) /*'remote did not transfer unexpected non-network tokens'*/);
+        _f.v1062.elem0 = unsafeSub(address(this).balance, _f.v4729);
         }
-      _f.v1031 = _f.v1030;
-      emit _reach_oe_v1030( _f.v1030);
-      reachRequire(((uint256(0) == (_f.v1031.elem0))), uint256(40) /*'(./src/contracts/auction.rsh:138:91:application,[at ./src/contracts/auction.rsh:135:50:application call to [unknown function] (defined at: ./src/contracts/auction.rsh:135:50:function exp)],Just "remote bill check")'*/);
-      emit bidSuccess( _svs.v728,  (_f.v967.elem0),  payable(msg.sender),  _svs.v749);
-      _f.v1041.elem0 = payable(msg.sender);
-      _f.v1041.elem1 = _svs.v775;
-      emit _reach_oe_v1041( _f.v1041);
-      _Memory._reachr_Bidder_bid = _f.v1041;
+      _f.v1063 = _f.v1062;
+      emit _reach_oe_v1062( _f.v1062);
+      reachRequire(((uint256(0) == (_f.v1063.elem0))), uint256(49) /*'(./src/contracts/auction.rsh:140:91:application,[at ./src/contracts/auction.rsh:137:50:application call to [unknown function] (defined at: ./src/contracts/auction.rsh:137:50:function exp)],Just "remote bill check")'*/);
+      emit bidSuccess( _svs.v764,  (_f.v999.elem0),  payable(msg.sender),  _svs.v772);
+      _f.v1073.elem0 = payable(msg.sender);
+      _f.v1073.elem1 = _svs.v798;
+      emit _reach_oe_v1073( _f.v1073);
+      _Memory._reachr_Bidder_bid = _f.v1073;
       T20  memory _ja;
-      _ja.elem0 = _svs.v701;
-      _ja.elem1 = _svs.v702;
-      _ja.elem2 = _svs.v704;
-      _ja.elem3 = _svs.v723;
-      _ja.elem4 = _svs.v728;
-      _ja.elem5 = _svs.v741;
-      _ja.elem6 = _svs.v747;
-      _ja.elem7 = _svs.v748;
-      _ja.elem8 = _svs.v749;
-      _ja.elem9 = _svs.v769;
-      _ja.elem10 = _svs.v771;
-      _ja.elem11 = payable(msg.sender);
-      _ja.elem12 = false;
-      _ja.elem13 = _svs.v774;
-      _ja.elem14 = (_f.v967.elem0);
-      _ja.elem15 = uint256(block.number);
-      _ja.elem16 = _svs.v782;
-      _ja.elem17 = (unsafeAdd(_f.v978, (_f.v1031.elem0)));
-      _reachl_2(_ja, _Memory);
+      _ja.elem0 = _svs.v734;
+      _ja.elem1 = _svs.v735;
+      _ja.elem2 = _svs.v737;
+      _ja.elem3 = _svs.v754;
+      _ja.elem4 = _svs.v759;
+      _ja.elem5 = _svs.v764;
+      _ja.elem6 = _svs.v770;
+      _ja.elem7 = _svs.v771;
+      _ja.elem8 = _svs.v772;
+      _ja.elem9 = _svs.v791;
+      _ja.elem10 = _svs.v792;
+      _ja.elem11 = _svs.v794;
+      _ja.elem12 = payable(msg.sender);
+      _ja.elem13 = false;
+      _ja.elem14 = _svs.v797;
+      _ja.elem15 = (_f.v999.elem0);
+      _ja.elem16 = uint256(block.number);
+      _ja.elem17 = _svs.v805;
+      _ja.elem18 = (unsafeAdd(_f.v1010, (_f.v1063.elem0)));
+      _reachl_3(_ja, _Memory);
       }
     else {
-      _svs.v772.transfer(_svs.v775);
+      _svs.v795.transfer(_svs.v798);
       {
-        _f.v4312 = unsafeSub(tokenBalanceOf(_svs.v702, address(this)), 0);
-        _f.v4311 = unsafeSub(address(this).balance, uint256(0));
+        _f.v4736 = unsafeSub(tokenBalanceOf(_svs.v735, address(this)), 0);
+        _f.v4735 = unsafeSub(address(this).balance, uint256(0));
         locked = true;
-        bytes memory v4314 = abi.encodeWithSelector(I0929d31897a8bf4ecce6b4113b39c0cdd711c6ed.Auctions_updateHighestBidder.selector, _svs.v728, payable(msg.sender));
-        (bool v4309, bytes memory v4310) = _svs.v704.call{value: uint256(0)}(v4314);
-        checkFunReturn(v4309, v4310, uint256(42) /*'(./src/contracts/auction.rsh:138:91:application,[at ./src/contracts/auction.rsh:135:50:application call to [unknown function] (defined at: ./src/contracts/auction.rsh:135:50:function exp)],"remote Auctions_updateHighestBidder failed")'*/);
+        bytes memory v4738 = abi.encodeWithSelector(I0929d31897a8bf4ecce6b4113b39c0cdd711c6ed.Auctions_updateHighestBidder.selector, _svs.v764, payable(msg.sender));
+        (bool v4733, bytes memory v4734) = _svs.v737.call{value: uint256(0)}(v4738);
+        checkFunReturn(v4733, v4734, uint256(51) /*'(./src/contracts/auction.rsh:140:91:application,[at ./src/contracts/auction.rsh:137:50:application call to [unknown function] (defined at: ./src/contracts/auction.rsh:137:50:function exp)],"remote Auctions_updateHighestBidder failed")'*/);
         locked = false;
-        _f.v4313 = unsafeSub(tokenBalanceOf(_svs.v702, address(this)), _f.v4312);
-        reachRequire((_f.v4313 == 0), uint256(41) /*'remote did not transfer unexpected non-network tokens'*/);
-        _f.v1006.elem0 = unsafeSub(address(this).balance, _f.v4311);
+        _f.v4737 = unsafeSub(tokenBalanceOf(_svs.v735, address(this)), _f.v4736);
+        reachRequire((_f.v4737 == 0), uint256(50) /*'remote did not transfer unexpected non-network tokens'*/);
+        _f.v1038.elem0 = unsafeSub(address(this).balance, _f.v4735);
         }
-      _f.v1007 = _f.v1006;
-      emit _reach_oe_v1006( _f.v1006);
-      reachRequire(((uint256(0) == (_f.v1007.elem0))), uint256(43) /*'(./src/contracts/auction.rsh:138:91:application,[at ./src/contracts/auction.rsh:135:50:application call to [unknown function] (defined at: ./src/contracts/auction.rsh:135:50:function exp)],Just "remote bill check")'*/);
-      emit bidSuccess( _svs.v728,  (_f.v967.elem0),  payable(msg.sender),  _svs.v749);
-      _f.v1017.elem0 = payable(msg.sender);
-      _f.v1017.elem1 = _svs.v775;
-      emit _reach_oe_v1017( _f.v1017);
-      _Memory._reachr_Bidder_bid = _f.v1017;
+      _f.v1039 = _f.v1038;
+      emit _reach_oe_v1038( _f.v1038);
+      reachRequire(((uint256(0) == (_f.v1039.elem0))), uint256(52) /*'(./src/contracts/auction.rsh:140:91:application,[at ./src/contracts/auction.rsh:137:50:application call to [unknown function] (defined at: ./src/contracts/auction.rsh:137:50:function exp)],Just "remote bill check")'*/);
+      emit bidSuccess( _svs.v764,  (_f.v999.elem0),  payable(msg.sender),  _svs.v772);
+      _f.v1049.elem0 = payable(msg.sender);
+      _f.v1049.elem1 = _svs.v798;
+      emit _reach_oe_v1049( _f.v1049);
+      _Memory._reachr_Bidder_bid = _f.v1049;
       T20  memory _ja;
-      _ja.elem0 = _svs.v701;
-      _ja.elem1 = _svs.v702;
-      _ja.elem2 = _svs.v704;
-      _ja.elem3 = _svs.v723;
-      _ja.elem4 = _svs.v728;
-      _ja.elem5 = _svs.v741;
-      _ja.elem6 = _svs.v747;
-      _ja.elem7 = _svs.v748;
-      _ja.elem8 = _svs.v749;
-      _ja.elem9 = _svs.v769;
-      _ja.elem10 = _svs.v771;
-      _ja.elem11 = payable(msg.sender);
-      _ja.elem12 = false;
-      _ja.elem13 = _svs.v774;
-      _ja.elem14 = (_f.v967.elem0);
-      _ja.elem15 = uint256(block.number);
-      _ja.elem16 = _svs.v782;
-      _ja.elem17 = (unsafeAdd((unsafeSub(_f.v978, _svs.v775)), (_f.v1007.elem0)));
-      _reachl_2(_ja, _Memory);
+      _ja.elem0 = _svs.v734;
+      _ja.elem1 = _svs.v735;
+      _ja.elem2 = _svs.v737;
+      _ja.elem3 = _svs.v754;
+      _ja.elem4 = _svs.v759;
+      _ja.elem5 = _svs.v764;
+      _ja.elem6 = _svs.v770;
+      _ja.elem7 = _svs.v771;
+      _ja.elem8 = _svs.v772;
+      _ja.elem9 = _svs.v791;
+      _ja.elem10 = _svs.v792;
+      _ja.elem11 = _svs.v794;
+      _ja.elem12 = payable(msg.sender);
+      _ja.elem13 = false;
+      _ja.elem14 = _svs.v797;
+      _ja.elem15 = (_f.v999.elem0);
+      _ja.elem16 = uint256(block.number);
+      _ja.elem17 = _svs.v805;
+      _ja.elem18 = (unsafeAdd((unsafeSub(_f.v1010, _svs.v798)), (_f.v1039.elem0)));
+      _reachl_3(_ja, _Memory);
       }
-    } else if ((_a.elem1).which == _enum_T6.Bidder_optIn0_123) {
-    _f.v1109 = unsafeAdd(_svs.v783, uint256(1000000));
-    reachRequire((msg.value == uint256(1000000)), uint256(44) /*'(./src/contracts/auction.rsh:114:31:dot,[],"verify network token pay amount")'*/);
-    if ((_f.v1109 >= uint256(900000))) {
-      _f.v1188 = unsafeSub(_f.v1109, uint256(900000));
-      _svs.v741.transfer(uint256(900000));
-      if ((_f.v1188 >= uint256(100000))) {
-        _svs.v701.transfer(uint256(100000));
-        emit optInSuccess( _svs.v728,  payable(msg.sender));
-        emit _reach_oe_v1195( (true));
+    } else if ((_a.elem1).which == _enum_T6.Bidder_optIn0_114) {
+    _f.v1141 = unsafeAdd(_svs.v806, uint256(1000000));
+    reachRequire((msg.value == uint256(1000000)), uint256(53) /*'(./src/contracts/auction.rsh:116:31:dot,[],"verify network token pay amount")'*/);
+    if ((_f.v1141 >= uint256(900000))) {
+      _f.v1220 = unsafeSub(_f.v1141, uint256(900000));
+      _svs.v754.transfer(uint256(900000));
+      if ((_f.v1220 >= uint256(100000))) {
+        _svs.v734.transfer(uint256(100000));
+        emit optInSuccess( _svs.v764,  payable(msg.sender));
+        emit _reach_oe_v1227( (true));
         _Memory._reachr_Bidder_optIn = (true);
         T20  memory _ja;
-        _ja.elem0 = _svs.v701;
-        _ja.elem1 = _svs.v702;
-        _ja.elem2 = _svs.v704;
-        _ja.elem3 = _svs.v723;
-        _ja.elem4 = _svs.v728;
-        _ja.elem5 = _svs.v741;
-        _ja.elem6 = _svs.v747;
-        _ja.elem7 = _svs.v748;
-        _ja.elem8 = _svs.v749;
-        _ja.elem9 = _svs.v769;
-        _ja.elem10 = _svs.v771;
-        _ja.elem11 = _svs.v772;
-        _ja.elem12 = _svs.v773;
-        _ja.elem13 = _svs.v774;
-        _ja.elem14 = _svs.v775;
-        _ja.elem15 = uint256(block.number);
-        _ja.elem16 = _svs.v782;
-        _ja.elem17 = (unsafeSub(_f.v1188, uint256(100000)));
-        _reachl_2(_ja, _Memory);
-        }
-      else {
-        emit optInSuccess( _svs.v728,  payable(msg.sender));
-        emit _reach_oe_v1202( (true));
-        _Memory._reachr_Bidder_optIn = (true);
-        T20  memory _ja;
-        _ja.elem0 = _svs.v701;
-        _ja.elem1 = _svs.v702;
-        _ja.elem2 = _svs.v704;
-        _ja.elem3 = _svs.v723;
-        _ja.elem4 = _svs.v728;
-        _ja.elem5 = _svs.v741;
-        _ja.elem6 = _svs.v747;
-        _ja.elem7 = _svs.v748;
-        _ja.elem8 = _svs.v749;
-        _ja.elem9 = _svs.v769;
-        _ja.elem10 = _svs.v771;
-        _ja.elem11 = _svs.v772;
-        _ja.elem12 = _svs.v773;
-        _ja.elem13 = _svs.v774;
-        _ja.elem14 = _svs.v775;
-        _ja.elem15 = uint256(block.number);
-        _ja.elem16 = _svs.v782;
-        _ja.elem17 = _f.v1188;
-        _reachl_2(_ja, _Memory);
-        }
-      }
-    else {
-      if ((_f.v1109 >= uint256(100000))) {
-        _svs.v701.transfer(uint256(100000));
-        emit optInSuccess( _svs.v728,  payable(msg.sender));
-        emit _reach_oe_v1215( (true));
-        _Memory._reachr_Bidder_optIn = (true);
-        T20  memory _ja;
-        _ja.elem0 = _svs.v701;
-        _ja.elem1 = _svs.v702;
-        _ja.elem2 = _svs.v704;
-        _ja.elem3 = _svs.v723;
-        _ja.elem4 = _svs.v728;
-        _ja.elem5 = _svs.v741;
-        _ja.elem6 = _svs.v747;
-        _ja.elem7 = _svs.v748;
-        _ja.elem8 = _svs.v749;
-        _ja.elem9 = _svs.v769;
-        _ja.elem10 = _svs.v771;
-        _ja.elem11 = _svs.v772;
-        _ja.elem12 = _svs.v773;
-        _ja.elem13 = _svs.v774;
-        _ja.elem14 = _svs.v775;
-        _ja.elem15 = uint256(block.number);
-        _ja.elem16 = _svs.v782;
-        _ja.elem17 = (unsafeSub(_f.v1109, uint256(100000)));
-        _reachl_2(_ja, _Memory);
-        }
-      else {
-        emit optInSuccess( _svs.v728,  payable(msg.sender));
-        emit _reach_oe_v1222( (true));
-        _Memory._reachr_Bidder_optIn = (true);
-        T20  memory _ja;
-        _ja.elem0 = _svs.v701;
-        _ja.elem1 = _svs.v702;
-        _ja.elem2 = _svs.v704;
-        _ja.elem3 = _svs.v723;
-        _ja.elem4 = _svs.v728;
-        _ja.elem5 = _svs.v741;
-        _ja.elem6 = _svs.v747;
-        _ja.elem7 = _svs.v748;
-        _ja.elem8 = _svs.v749;
-        _ja.elem9 = _svs.v769;
-        _ja.elem10 = _svs.v771;
-        _ja.elem11 = _svs.v772;
-        _ja.elem12 = _svs.v773;
-        _ja.elem13 = _svs.v774;
-        _ja.elem14 = _svs.v775;
-        _ja.elem15 = uint256(block.number);
-        _ja.elem16 = _svs.v782;
-        _ja.elem17 = _f.v1109;
-        _reachl_2(_ja, _Memory);
-        }
-      }
-    }
-    }
-  struct _F4322 {
-    T19 v1235;
-    T19 v1236;
-    uint256 v1243;
-    uint256 v4318;
-    uint256 v4319;
-    uint256 v4320;
-    }
-  function _reachl_2(T20 memory _a, Memory memory _Memory) internal  {
-    _F4322 memory _f;
-    if (((_a.elem15 <= _a.elem9) ? _a.elem13 : false)) {
-      T11 memory nsvs;
-      nsvs.v701 = _a.elem0;
-      nsvs.v702 = _a.elem1;
-      nsvs.v704 = _a.elem2;
-      nsvs.v723 = _a.elem3;
-      nsvs.v728 = _a.elem4;
-      nsvs.v741 = _a.elem5;
-      nsvs.v747 = _a.elem6;
-      nsvs.v748 = _a.elem7;
-      nsvs.v749 = _a.elem8;
-      nsvs.v769 = _a.elem9;
-      nsvs.v771 = _a.elem10;
-      nsvs.v772 = _a.elem11;
-      nsvs.v773 = _a.elem12;
-      nsvs.v774 = true;
-      nsvs.v775 = _a.elem14;
-      nsvs.v782 = _a.elem16;
-      nsvs.v783 = _a.elem17;
-      current_step = uint256(8);
-      current_time = uint256(block.number);
-      current_svbs = abi.encode(nsvs);
-      }
-    else {
-      {
-        _f.v4319 = unsafeSub(tokenBalanceOf(_a.elem1, address(this)), 0);
-        _f.v4318 = unsafeSub(address(this).balance, uint256(0));
-        locked = true;
-        bytes memory v4321 = abi.encodeWithSelector(I71ecfd913dbeb55e00ddeba69e01686608f7a8ff.Auctions_ended.selector, _a.elem10);
-        (bool v4316, bytes memory v4317) = _a.elem2.call{value: uint256(0)}(v4321);
-        checkFunReturn(v4316, v4317, uint256(46) /*'(./src/contracts/auction.rsh:178:37:application,[],"remote Auctions_ended failed")'*/);
-        locked = false;
-        _f.v4320 = unsafeSub(tokenBalanceOf(_a.elem1, address(this)), _f.v4319);
-        reachRequire((_f.v4320 == 0), uint256(45) /*'remote did not transfer unexpected non-network tokens'*/);
-        _f.v1235.elem0 = unsafeSub(address(this).balance, _f.v4318);
-        }
-      _f.v1236 = _f.v1235;
-      emit _reach_oe_v1235( _f.v1235);
-      _f.v1243 = unsafeAdd(_a.elem17, (_f.v1236.elem0));
-      reachRequire(((uint256(0) == (_f.v1236.elem0))), uint256(47) /*'(./src/contracts/auction.rsh:178:37:application,[],Just "remote bill check")'*/);
-      emit down( _a.elem4,  _a.elem14,  _a.elem0,  _a.elem7,  _a.elem6,  _a.elem8);
-      if ((_a.elem14 > uint256(0))) {
-        T21  memory _ja;
-        _ja.elem0 = _a.elem0;
-        _ja.elem1 = _a.elem1;
-        _ja.elem2 = _a.elem8;
-        _ja.elem3 = _a.elem11;
-        _ja.elem4 = _a.elem14;
-        _ja.elem5 = (safeAdd(_a.elem15, uint256(50)));
-        _ja.elem6 = true;
-        _ja.elem7 = true;
-        _ja.elem8 = _a.elem15;
-        _ja.elem9 = _a.elem16;
-        _ja.elem10 = _f.v1243;
+        _ja.elem0 = _svs.v734;
+        _ja.elem1 = _svs.v735;
+        _ja.elem2 = _svs.v737;
+        _ja.elem3 = _svs.v754;
+        _ja.elem4 = _svs.v759;
+        _ja.elem5 = _svs.v764;
+        _ja.elem6 = _svs.v770;
+        _ja.elem7 = _svs.v771;
+        _ja.elem8 = _svs.v772;
+        _ja.elem9 = _svs.v791;
+        _ja.elem10 = _svs.v792;
+        _ja.elem11 = _svs.v794;
+        _ja.elem12 = _svs.v795;
+        _ja.elem13 = _svs.v796;
+        _ja.elem14 = _svs.v797;
+        _ja.elem15 = _svs.v798;
+        _ja.elem16 = uint256(block.number);
+        _ja.elem17 = _svs.v805;
+        _ja.elem18 = (unsafeSub(_f.v1220, uint256(100000)));
         _reachl_3(_ja, _Memory);
         }
       else {
-        safeTokenTransfer(_a.elem1, _a.elem0, ((_a.elem16[uint256(0)]).elem0));
-        _a.elem11.transfer(_f.v1243);
+        emit optInSuccess( _svs.v764,  payable(msg.sender));
+        emit _reach_oe_v1234( (true));
+        _Memory._reachr_Bidder_optIn = (true);
+        T20  memory _ja;
+        _ja.elem0 = _svs.v734;
+        _ja.elem1 = _svs.v735;
+        _ja.elem2 = _svs.v737;
+        _ja.elem3 = _svs.v754;
+        _ja.elem4 = _svs.v759;
+        _ja.elem5 = _svs.v764;
+        _ja.elem6 = _svs.v770;
+        _ja.elem7 = _svs.v771;
+        _ja.elem8 = _svs.v772;
+        _ja.elem9 = _svs.v791;
+        _ja.elem10 = _svs.v792;
+        _ja.elem11 = _svs.v794;
+        _ja.elem12 = _svs.v795;
+        _ja.elem13 = _svs.v796;
+        _ja.elem14 = _svs.v797;
+        _ja.elem15 = _svs.v798;
+        _ja.elem16 = uint256(block.number);
+        _ja.elem17 = _svs.v805;
+        _ja.elem18 = _f.v1220;
+        _reachl_3(_ja, _Memory);
+        }
+      }
+    else {
+      if ((_f.v1141 >= uint256(100000))) {
+        _svs.v734.transfer(uint256(100000));
+        emit optInSuccess( _svs.v764,  payable(msg.sender));
+        emit _reach_oe_v1247( (true));
+        _Memory._reachr_Bidder_optIn = (true);
+        T20  memory _ja;
+        _ja.elem0 = _svs.v734;
+        _ja.elem1 = _svs.v735;
+        _ja.elem2 = _svs.v737;
+        _ja.elem3 = _svs.v754;
+        _ja.elem4 = _svs.v759;
+        _ja.elem5 = _svs.v764;
+        _ja.elem6 = _svs.v770;
+        _ja.elem7 = _svs.v771;
+        _ja.elem8 = _svs.v772;
+        _ja.elem9 = _svs.v791;
+        _ja.elem10 = _svs.v792;
+        _ja.elem11 = _svs.v794;
+        _ja.elem12 = _svs.v795;
+        _ja.elem13 = _svs.v796;
+        _ja.elem14 = _svs.v797;
+        _ja.elem15 = _svs.v798;
+        _ja.elem16 = uint256(block.number);
+        _ja.elem17 = _svs.v805;
+        _ja.elem18 = (unsafeSub(_f.v1141, uint256(100000)));
+        _reachl_3(_ja, _Memory);
+        }
+      else {
+        emit optInSuccess( _svs.v764,  payable(msg.sender));
+        emit _reach_oe_v1254( (true));
+        _Memory._reachr_Bidder_optIn = (true);
+        T20  memory _ja;
+        _ja.elem0 = _svs.v734;
+        _ja.elem1 = _svs.v735;
+        _ja.elem2 = _svs.v737;
+        _ja.elem3 = _svs.v754;
+        _ja.elem4 = _svs.v759;
+        _ja.elem5 = _svs.v764;
+        _ja.elem6 = _svs.v770;
+        _ja.elem7 = _svs.v771;
+        _ja.elem8 = _svs.v772;
+        _ja.elem9 = _svs.v791;
+        _ja.elem10 = _svs.v792;
+        _ja.elem11 = _svs.v794;
+        _ja.elem12 = _svs.v795;
+        _ja.elem13 = _svs.v796;
+        _ja.elem14 = _svs.v797;
+        _ja.elem15 = _svs.v798;
+        _ja.elem16 = uint256(block.number);
+        _ja.elem17 = _svs.v805;
+        _ja.elem18 = _f.v1141;
+        _reachl_3(_ja, _Memory);
+        }
+      }
+    }
+    }
+  struct _F4740 {
+    T0 v1266;
+    }
+  function _reachi_8(T5 memory _a, Memory memory _Memory) internal  {
+    _F4740 memory _f;
+    reachRequire((current_step == uint256(9)), uint256(54) /*'state check at ./src/contracts/auction.rsh:179:39:dot'*/);
+    (T11 memory _svs) = abi.decode(current_svbs, (T11));
+    reachRequire((! locked), uint256(55) /*'locked'*/);
+    emit _reach_e8(msg.sender, _a);
+    reachRequire((((_a.elem0) == uint256(0)) || (current_time == (_a.elem0))), uint256(56) /*'time check at ./src/contracts/auction.rsh:179:39:dot'*/);
+    reachRequire((uint256(block.number) >= _svs.v824), uint256(57) /*'timeout check at ./src/contracts/auction.rsh:179:39:dot'*/);
+    reachRequire((msg.value == uint256(0)), uint256(58) /*'(./src/contracts/auction.rsh:179:39:dot,[at ./src/contracts/auction.rsh:178:73:application call to [unknown function] (defined at: ./src/contracts/auction.rsh:178:73:function exp)],"verify network token pay amount")'*/);
+    reachRequire(((_svs.v754 == payable(msg.sender))), uint256(59) /*'(./src/contracts/auction.rsh:179:39:dot,[at ./src/contracts/auction.rsh:178:73:application call to [unknown function] (defined at: ./src/contracts/auction.rsh:178:73:function exp)],Just "sender correct")'*/);
+    _f.v1266.id = _svs.v764;
+    _f.v1266.blockEnded = uint256(block.number);
+    _f.v1266.lastBid = _svs.v798;
+    T20  memory _ja;
+    _ja.elem0 = _svs.v734;
+    _ja.elem1 = _svs.v735;
+    _ja.elem2 = _svs.v737;
+    _ja.elem3 = _svs.v754;
+    _ja.elem4 = _svs.v759;
+    _ja.elem5 = _svs.v764;
+    _ja.elem6 = _svs.v770;
+    _ja.elem7 = _svs.v771;
+    _ja.elem8 = _svs.v772;
+    _ja.elem9 = _svs.v791;
+    _ja.elem10 = _svs.v792;
+    _ja.elem11 = _f.v1266;
+    _ja.elem12 = _svs.v795;
+    _ja.elem13 = _svs.v796;
+    _ja.elem14 = _svs.v797;
+    _ja.elem15 = _svs.v798;
+    _ja.elem16 = uint256(block.number);
+    _ja.elem17 = _svs.v805;
+    _ja.elem18 = _svs.v806;
+    _reachl_3(_ja, _Memory);
+    }
+  struct _F4747 {
+    T19 v1276;
+    T19 v1277;
+    uint256 v1284;
+    uint256 v4743;
+    uint256 v4744;
+    uint256 v4745;
+    }
+  function _reachl_3(T20 memory _a, Memory memory _Memory) internal  {
+    _F4747 memory _f;
+    if (((_a.elem16 <= _a.elem10) ? _a.elem14 : false)) {
+      T11 memory nsvs;
+      nsvs.v734 = _a.elem0;
+      nsvs.v735 = _a.elem1;
+      nsvs.v737 = _a.elem2;
+      nsvs.v754 = _a.elem3;
+      nsvs.v759 = _a.elem4;
+      nsvs.v764 = _a.elem5;
+      nsvs.v770 = _a.elem6;
+      nsvs.v771 = _a.elem7;
+      nsvs.v772 = _a.elem8;
+      nsvs.v791 = _a.elem9;
+      nsvs.v792 = _a.elem10;
+      nsvs.v794 = _a.elem11;
+      nsvs.v795 = _a.elem12;
+      nsvs.v796 = _a.elem13;
+      nsvs.v797 = true;
+      nsvs.v798 = _a.elem15;
+      nsvs.v805 = _a.elem17;
+      nsvs.v806 = _a.elem18;
+      nsvs.v824 = (safeAdd(_a.elem16, _a.elem9));
+      current_step = uint256(9);
+      current_time = uint256(block.number);
+      current_svbs = abi.encode(nsvs);
+      }
+    else {
+      {
+        _f.v4744 = unsafeSub(tokenBalanceOf(_a.elem1, address(this)), 0);
+        _f.v4743 = unsafeSub(address(this).balance, uint256(0));
+        locked = true;
+        bytes memory v4746 = abi.encodeWithSelector(I71ecfd913dbeb55e00ddeba69e01686608f7a8ff.Auctions_ended.selector, _a.elem11);
+        (bool v4741, bytes memory v4742) = _a.elem2.call{value: uint256(0)}(v4746);
+        checkFunReturn(v4741, v4742, uint256(61) /*'(./src/contracts/auction.rsh:194:37:application,[],"remote Auctions_ended failed")'*/);
+        locked = false;
+        _f.v4745 = unsafeSub(tokenBalanceOf(_a.elem1, address(this)), _f.v4744);
+        reachRequire((_f.v4745 == 0), uint256(60) /*'remote did not transfer unexpected non-network tokens'*/);
+        _f.v1276.elem0 = unsafeSub(address(this).balance, _f.v4743);
+        }
+      _f.v1277 = _f.v1276;
+      emit _reach_oe_v1276( _f.v1276);
+      _f.v1284 = unsafeAdd(_a.elem18, (_f.v1277.elem0));
+      reachRequire(((uint256(0) == (_f.v1277.elem0))), uint256(62) /*'(./src/contracts/auction.rsh:194:37:application,[],Just "remote bill check")'*/);
+      emit down( _a.elem5,  _a.elem15,  _a.elem0,  _a.elem7,  _a.elem6,  _a.elem8);
+      if ((_a.elem15 > uint256(0))) {
+        T21  memory _ja;
+        _ja.elem0 = _a.elem0;
+        _ja.elem1 = _a.elem1;
+        _ja.elem2 = _a.elem3;
+        _ja.elem3 = _a.elem8;
+        _ja.elem4 = _a.elem12;
+        _ja.elem5 = _a.elem15;
+        _ja.elem6 = (safeAdd(_a.elem16, uint256(50)));
+        _ja.elem7 = true;
+        _ja.elem8 = true;
+        _ja.elem9 = _a.elem16;
+        _ja.elem10 = _a.elem17;
+        _ja.elem11 = _f.v1284;
+        _reachl_4(_ja, _Memory);
+        }
+      else {
+        safeTokenTransfer(_a.elem1, _a.elem0, ((_a.elem17[uint256(0)]).elem0));
+        _a.elem12.transfer(_f.v1284);
         current_step = 0x0;
         current_time = 0x0;
         delete current_svbs;
         }
       }
     }
-  function _reachl_3(T21 memory _a, Memory memory _Memory) internal  {
-    if (((_a.elem8 <= _a.elem5) ? _a.elem7 : false)) {
+  function _reachl_4(T21 memory _a, Memory memory _Memory) internal  {
+    if (((_a.elem9 <= _a.elem6) ? _a.elem8 : false)) {
       T10 memory nsvs;
-      nsvs.v701 = _a.elem0;
-      nsvs.v702 = _a.elem1;
-      nsvs.v749 = _a.elem2;
+      nsvs.v734 = _a.elem0;
+      nsvs.v735 = _a.elem1;
+      nsvs.v754 = _a.elem2;
       nsvs.v772 = _a.elem3;
-      nsvs.v775 = _a.elem4;
-      nsvs.v1250 = _a.elem5;
-      nsvs.v1259 = _a.elem9;
-      nsvs.v1260 = _a.elem10;
-      current_step = uint256(6);
+      nsvs.v795 = _a.elem4;
+      nsvs.v798 = _a.elem5;
+      nsvs.v1291 = _a.elem6;
+      nsvs.v1292 = _a.elem7;
+      nsvs.v1293 = true;
+      nsvs.v1300 = _a.elem10;
+      nsvs.v1301 = _a.elem11;
+      nsvs.v1316 = (safeAdd(_a.elem9, uint256(50)));
+      current_step = uint256(7);
       current_time = uint256(block.number);
       current_svbs = abi.encode(nsvs);
       }
     else {
-      if (_a.elem6) {
-        safeTokenTransfer(_a.elem1, _a.elem3, ((_a.elem9[uint256(0)]).elem0));
-        _a.elem0.transfer(_a.elem10);
-        emit accepted( _a.elem2,  _a.elem4,  _a.elem0,  _a.elem3,  _a.elem1);
+      if (_a.elem7) {
+        safeTokenTransfer(_a.elem1, _a.elem4, ((_a.elem10[uint256(0)]).elem0));
+        _a.elem0.transfer(_a.elem11);
+        emit accepted( _a.elem3,  _a.elem5,  _a.elem0,  _a.elem4,  _a.elem1);
         current_step = 0x0;
         current_time = 0x0;
         delete current_svbs;
         }
       else {
-        safeTokenTransfer(_a.elem1, _a.elem0, ((_a.elem9[uint256(0)]).elem0));
-        _a.elem3.transfer(_a.elem10);
-        emit rejected( _a.elem2,  _a.elem4,  _a.elem0,  _a.elem3,  _a.elem1);
+        safeTokenTransfer(_a.elem1, _a.elem0, ((_a.elem10[uint256(0)]).elem0));
+        _a.elem4.transfer(_a.elem11);
+        emit rejected( _a.elem3,  _a.elem5,  _a.elem0,  _a.elem4,  _a.elem1);
         current_step = 0x0;
         current_time = 0x0;
         delete current_svbs;
@@ -1538,9 +1625,9 @@ contract ReachContract is Stdlib {
     _reacha_Auctioneer_stopAuction(_ja, _Memory);
     return _Memory._reachr_Auctioneer_stopAuction;
     }
-  function Bidder_bid(uint256 v4259) external payable returns (T1 memory) {
+  function Bidder_bid(uint256 v4678) external payable returns (T1 memory) {
     Memory memory _Memory;
-    _reacha_Bidder_bid(v4259, _Memory);
+    _reacha_Bidder_bid(v4678, _Memory);
     return _Memory._reachr_Bidder_bid;
     }
   function Bidder_optIn() external payable returns (bool) {
@@ -1549,23 +1636,35 @@ contract ReachContract is Stdlib {
     _reacha_Bidder_optIn(_ja, _Memory);
     return _Memory._reachr_Bidder_optIn;
     }
-  constructor(T14 memory v4266) payable {
+  constructor(T14 memory v4685) payable {
     current_step = 0x0;
     creation_time = uint256(block.number);
     Memory memory _Memory;
-    _reachi_0(v4266, _Memory);
+    _reachi_0(v4685, _Memory);
     }
-  function _reachp_1(T5 calldata v4269) external payable returns (bool) {
+  function _reachp_1(T5 calldata v4688) external payable returns (bool) {
     Memory memory _Memory;
-    _reachi_1(v4269, _Memory);
+    _reachi_1(v4688, _Memory);
     }
-  function _reachp_4(T4 calldata v4272) external payable returns (bool) {
+  function _reachp_2(T5 calldata v4691) external payable returns (bool) {
     Memory memory _Memory;
-    _reachi_4(v4272, _Memory);
+    _reachi_2(v4691, _Memory);
     }
-  function _reachp_5(T7 calldata v4275) external payable returns (bool) {
+  function _reachp_5(T4 calldata v4694) external payable returns (bool) {
     Memory memory _Memory;
-    _reachi_5(v4275, _Memory);
+    _reachi_5(v4694, _Memory);
+    }
+  function _reachp_6(T5 calldata v4697) external payable returns (bool) {
+    Memory memory _Memory;
+    _reachi_6(v4697, _Memory);
+    }
+  function _reachp_7(T7 calldata v4700) external payable returns (bool) {
+    Memory memory _Memory;
+    _reachi_7(v4700, _Memory);
+    }
+  function _reachp_8(T5 calldata v4703) external payable returns (bool) {
+    Memory memory _Memory;
+    _reachi_8(v4703, _Memory);
     }
   function live() external view returns (bool) {
     Memory memory _Memory;

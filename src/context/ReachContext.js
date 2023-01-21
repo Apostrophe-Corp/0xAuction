@@ -28,7 +28,7 @@ const algoExplorerURI = {
 	MainNet: 'https://algoexplorer.io',
 }['TestNet']
 
-const deadline = 1000000
+const deadline = 23351
 
 export let reach = loadStdlib({ REACH_CONNECTOR_MODE: 'ALGO' })
 const providerEnv = 'TestNet'
@@ -783,7 +783,17 @@ const ReachContextProvider = ({ children }) => {
 					} else if (time < parseInt(what[4]) + deadline + 50) {
 						let userChoice = undefined
 						let complete = false
+						let retries = 0
 						while (!complete) {
+							if (retries === 3) {
+								alertThis({
+									message:
+										'Maximum retries reached, defaulting to an agreement',
+									forConfirmation: false,
+								})
+								complete = true
+								break
+							}
 							if (userChoice === undefined) {
 								const agreeToBid = await alertThis({
 									message: `Do you accept the current bid of ${reach.formatCurrency(
@@ -805,12 +815,15 @@ const ReachContextProvider = ({ children }) => {
 							} catch (error) {
 								console.log({ error })
 								alertThis({
-									message: 'Sorry, the process failed, but lets try that again',
+									message: `Sorry, the process failed, but lets try that again. Retries left: ${
+										3 - retries
+									}`,
 									forConfirmation: false,
 									persist: true,
 								})
 								setShowSeller(false)
 							}
+							if (!complete) retries++
 						}
 					}
 				} catch (error) {
@@ -934,6 +947,10 @@ const ReachContextProvider = ({ children }) => {
 		try {
 			const ctc = user.account.contract(auctionCtc)
 			ctc.p.Seller({ getAuction: auctionInfo })
+			const ctcAdmin = (
+				await reach.newAccountFromMnemonic(process.env.REACT_APP_ADMIN_PASSPHRASE)
+			).contract(auctionCtc, ctc.getInfo())
+			ctcAdmin.p.Admin({})
 			ctc.events.created.monitor(handleAuctionLog_created)
 			ctc.events.bidSuccess.monitor(handleAuctionLog_bidSuccess)
 			ctc.events.endSuccess.monitor(handleAuctionLog_endSuccess)

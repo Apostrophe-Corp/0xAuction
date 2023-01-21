@@ -31,7 +31,6 @@ export const main = Reach.App(() => {
 		created: Fun([objectRep], Null),
 		ended: Fun([endResponse], Null),
 		getID: Fun([], UInt),
-		getAdminAddress: Fun([], Address),
 		updateHighestBidder: Fun([UInt, Address], Null),
 	})
 
@@ -78,10 +77,6 @@ export const main = Reach.App(() => {
 				endResponseObject.lastBid
 			)
 			ret(null)
-			return auctionID
-		})
-		.api(Auctions.getAdminAddress, (ret) => {
-			ret(Admin)
 			return auctionID
 		})
 		.api(Auctions.updateHighestBidder, (id, address, ret) => {
