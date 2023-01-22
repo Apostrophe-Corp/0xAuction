@@ -5,11 +5,11 @@
     {
       "src": "logo.jpg",
       "type": "image/png",
-      "sizes": "2500x2500"
+      "sizes": "4500x4500 2500x2500 512x512 192x192"
     }
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#000000",
+  "theme_color": "#ad3de0",
   "background_color": "#ffffff"
 }
