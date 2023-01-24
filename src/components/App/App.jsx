@@ -4,7 +4,11 @@ import app from '../../styles/App.module.css'
 import { useReach, fmtClasses as cf } from '../../hooks'
 
 const App = () => {
-	const { setView, checkForContract, alertThis, auctions } = useReach()
+	const {
+		setView,
+		checkForContract,
+		alertThis, newAuctions, endedAuctions
+	} = useReach()
 	return (
 		<div className={cf(s.wMax, s.window)}>
 			{/* The Hero */}
@@ -166,7 +170,8 @@ const App = () => {
 						className={cf(app.card)}
 						onClick={() => {
 							checkForContract(() => {
-								if (auctions.length) setView('Buy')
+								if (newAuctions.length || endedAuctions.length)
+								setView('Buy')
 								else
 									alertThis({
 										message:
@@ -325,13 +330,14 @@ const App = () => {
 								<span
 									className={cf(s.wMax, s.dInlineBlock, app.comSocialDesText)}
 								>
-									Buyers can all opt-in to receive realtime notifications
-									to see the exact bid amount made anytime a bid higher than 
-									theirs is made, and at the auction's end they get to see the 
-									outcome of the auction, if the highest bid got accepted or rejected. 
-									For every Buyer that opts in, the Seller gets 10% of the opt-in 
-									fee, and the rest is sent to the deployer of the 0xAuction contract
-									as a way of appreciating users for choosing 0xAuction.
+									Buyers can all opt-in to receive realtime notifications to see
+									the exact bid amount made anytime a bid higher than theirs is
+									made, and at the auction's end they get to see the outcome of
+									the auction, if the highest bid got accepted or rejected. For
+									every Buyer that opts in, the Seller gets 10% of the opt-in
+									fee, and the rest is sent to the deployer of the 0xAuction
+									contract as a way of appreciating users for choosing
+									0xAuction.
 								</span>
 							</div>
 						</div>

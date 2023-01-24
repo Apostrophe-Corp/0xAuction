@@ -6,7 +6,7 @@
 /* eslint-disable no-undef */
 'reach 0.1'
 
-const state = Bytes(20)
+const state = Bytes(32)
 const DEADLINE = 50
 const amt = 1
 const optToken = 1000000
@@ -31,7 +31,7 @@ export const main = Reach.App(() => {
 		['contractInfo', Contract],
 		['blockCreated', UInt],
 		['owner', Address],
-		['title', Bytes(20)],
+		['title', Bytes(32)],
 		['description', Bytes(80)],
 		['price', UInt],
 		['tokenId', Token],
@@ -46,6 +46,7 @@ export const main = Reach.App(() => {
 	const Bidder = API('Bidder', {
 		bid: Fun([UInt], Tuple(Address, UInt)),
 		optIn: Fun([], Bool),
+		updateState: Fun([], Null),
 	})
 
 	const Auctioneer = API('Auctioneer', {
@@ -54,10 +55,13 @@ export const main = Reach.App(() => {
 		rejectSale: Fun([], Bool),
 	})
 
+	const AdminCall = API('AdminCall', {
+		adminCall: Fun([], Null),
+	})
+
 	const Auction = Events({
 		created: [UInt, Address],
 		bidSuccess: [UInt, UInt, Address, state],
-		endSuccess: [UInt, UInt],
 		down: [UInt, UInt, Address, Contract, UInt, state],
 		accepted: [state, UInt, Address, Address, Token],
 		rejected: [state, UInt, Address, Address, Token],
@@ -66,10 +70,11 @@ export const main = Reach.App(() => {
 
 	const AuctView = View({
 		live: Bool,
+		highestPrice: UInt,
+		hasEnded: Bool,
 	})
 
 	init()
-
 	Seller.only(() => {
 		const { tokenId, adminContract, ...auctionInfo } = declassify(
 			interact.getAuction
@@ -86,6 +91,7 @@ export const main = Reach.App(() => {
 		Auctions_ended: Fun([endResponse], Null),
 		Auctions_getID: Fun([], UInt),
 		Auctions_updateHighestBidder: Fun([UInt, Address], Null),
+		Auctions_endSuccess: Fun([UInt], Null),
 	}
 
 	const externalCalls = remote(adminContract, externalStructure)
@@ -106,10 +112,11 @@ export const main = Reach.App(() => {
 	})
 
 	AuctView.live.set(true)
+	AuctView.hasEnded.set(false)
 	externalCalls.Auctions_created(auction)
 
 	const balAfter1stCall = balance()
-	const timeRemaining = thisConsensusTime() + auctionInfo.deadline
+	const end = thisConsensusTime() + auctionInfo.deadline
 
 	Auction.created(id, Seller)
 	const [keepBidding, highestBidder, lastPrice, isFirstBid, endRes] =
@@ -129,7 +136,7 @@ export const main = Reach.App(() => {
 				balance() ==
 					(isFirstBid ? balAfter1stCall : lastPrice + balAfter1stCall)
 			)
-			.while(thisConsensusTime() <= timeRemaining && keepBidding)
+			.while(thisConsensusTime() < end && keepBidding)
 			.api_(Bidder.bid, (bid) => {
 				check(bid > lastPrice, 'Your bid is too low, please try again')
 				return [
@@ -158,42 +165,29 @@ export const main = Reach.App(() => {
 					},
 				]
 			})
-			.api(
-				Auctioneer.stopAuction,
-				() => {
-					check(this == Seller, 'You are not the Seller')
-				},
-				() => 0,
-				(notify) => {
+			.api(Auctioneer.stopAuction, (notify) => {
+				if (this == Seller || this == Admin) {
 					const response = endResponse.fromObject({
 						id: id,
 						blockEnded: thisConsensusTime(),
 						lastBid: lastPrice,
 					})
-					Auction.endSuccess(id, lastPrice)
 					notify(response)
 					return [false, highestBidder, lastPrice, isFirstBid, response]
+				} else {
+					const response = endResponse.fromObject({
+						id: 0,
+						blockEnded: 0,
+						lastBid: 0,
+					})
+					notify(response)
+					return [keepBidding, highestBidder, lastPrice, isFirstBid, endRes]
 				}
-			)
-			.timeout(relativeTime(auctionInfo.deadline), () => {
-				Admin.publish()
-				return [
-					keepBidding,
-					highestBidder,
-					lastPrice,
-					isFirstBid,
-					endResponse.fromObject({
-						id: id,
-						blockEnded: thisConsensusTime(),
-						lastBid: lastPrice,
-					}),
-				]
 			})
 
+	externalCalls.Auctions_endSuccess(id)
 	AuctView.live.set(false)
-	externalCalls.Auctions_ended(endRes)
-
-	const balAfter2ndCall = balance()
+	AuctView.highestPrice.set(lastPrice)
 	Auction.down(
 		id,
 		lastPrice,
@@ -203,37 +197,26 @@ export const main = Reach.App(() => {
 		auctionInfo.title
 	)
 
-	if (lastPrice > 0) {
-		const end = thisConsensusTime() + DEADLINE
+	const balAfter2ndCall = balance()
 
+	if (lastPrice > 0) {
+		const end_ = thisConsensusTime() + DEADLINE
 		const [awaitingDecision, agreed] = parallelReduce([true, true])
 			.invariant(balance(tokenId) == amt)
 			.invariant(balance() == balAfter2ndCall)
-			.while(thisConsensusTime() <= end && awaitingDecision)
-			.api(
-				Auctioneer.acceptSale,
-				() => {
-					check(this == Seller, 'You are not the Seller')
-				},
-				() => 0,
-				(notify) => {
-					notify(true)
-					return [false, true]
-				}
-			)
-			.api(
-				Auctioneer.rejectSale,
-				() => {
-					check(this == Seller, 'You are not the Seller')
-				},
-				() => 0,
-				(notify) => {
-					notify(false)
-					return [false, false]
-				}
-			)
-			.timeout(relativeTime(DEADLINE), () => {
-				Admin.publish()
+			.while(thisConsensusTime() < end_ && awaitingDecision)
+			.api(Auctioneer.acceptSale, (notify) => {
+				notify(true)
+				if (this == Seller || this == Admin) return [false, true]
+				else return [awaitingDecision, agreed]
+			})
+			.api(Auctioneer.rejectSale, (notify) => {
+				notify(false)
+				if (this == Seller || this == Admin) return [false, false]
+				else return [awaitingDecision, agreed]
+			})
+			.api(Bidder.updateState, (notify) => {
+				notify(null)
 				return [awaitingDecision, agreed]
 			})
 
@@ -263,6 +246,18 @@ export const main = Reach.App(() => {
 		transfer(balance()).to(highestBidder)
 	}
 
+	AuctView.hasEnded.set(true)
+	externalCalls.Auctions_ended(endRes)
+	const rideOn = parallelReduce(true)
+		.invariant(balance(tokenId) == 0)
+		.invariant(balance() == 0)
+		.while(rideOn)
+		.api(AdminCall.adminCall, (ret) => {
+			ret(null)
+			return rideOn
+		})
+	transfer(balance(tokenId), tokenId).to(Admin)
+	transfer(balance()).to(Admin)
 	commit()
 	exit()
 })

@@ -1,9 +1,10 @@
-import React, { useRef, useEffect, useState } from 'react'
+import React, { useRef, useEffect, useState, useLayoutEffect } from 'react'
 import { FaExclamation } from 'react-icons/fa'
 import s from '../../styles/Shared.module.css'
 import buy from '../../styles/Buy.module.css'
 import notFound from '../../assets/images/preview.jpg'
 import { useReach, fmtClasses as cf } from '../../hooks'
+import * as auctionCtc from '../../contracts/build/auction.main.mjs'
 import { Arc69 } from '../../ARC69/arc.js'
 
 const arc69 = new Arc69()
@@ -80,8 +81,23 @@ const LatestAuction = ({
 	)
 }
 
-const Auction = ({ assetID, title, desiredPrice, url = '', fullAuction }) => {
-	const { standardUnit, joinAuction } = useReach()
+const Auction = ({
+	ended = false,
+	assetID,
+	title,
+	desiredPrice,
+	url = '',
+	fullAuction,
+}) => {
+	const {
+		standardUnit,
+		joinAuction,
+		reach,
+		alertThis,
+		user,
+		startWaiting,
+		stopWaiting,
+	} = useReach()
 	const auctionNFTRef = useRef()
 	const [uName, setUName] = useState('')
 	const [name, setName] = useState(title)
@@ -93,6 +109,87 @@ const Auction = ({ assetID, title, desiredPrice, url = '', fullAuction }) => {
 		auctionNFTRef.current.style.backgroundPosition = 'center'
 		auctionNFTRef.current.style.backgroundRepeat = 'no-repeat'
 		auctionNFTRef.current.style.backgroundSize = 'contain'
+	}
+
+	const handleEnded = async () => {
+		if (String(fullAuction.owner) === String(user.address)) {
+			alertThis({
+				message: 'Please wait as we retrieve the current bid',
+				forConfirmation: false,
+				persist: true,
+			})
+
+			const ctcAdmin = user.account.contract(
+				auctionCtc,
+				JSON.parse(fullAuction.contractInfo)
+			)
+			const bid = (await ctcAdmin.v.highestPrice())[1]
+			if (bid !== null) {
+				let userChoice = undefined
+				let complete = false
+				let retries = 0
+				while (!complete) {
+					if (retries === 3) {
+						alertThis({
+							message: 'Maximum retries reached, defaulting to an agreement',
+							forConfirmation: false,
+						})
+						complete = true
+						break
+					}
+					if (userChoice === undefined) {
+						const agreeToBid = await alertThis({
+							message: `Do you accept the current bid of ${reach.formatCurrency(
+								bid,
+								4
+							)} ${standardUnit} for this auction?`,
+							accept: 'Yes',
+							decline: 'No',
+						})
+						userChoice = agreeToBid
+					}
+					startWaiting()
+					try {
+						if (userChoice) await ctcAdmin.a.Auctioneer.acceptSale()
+						else await ctcAdmin.a.Auctioneer.rejectSale()
+						complete = true
+						stopWaiting()
+					} catch (error) {
+						console.log({ error })
+						alertThis({
+							message: `Sorry, the process failed, but we are giving it another go. Retries left: ${
+								3 - retries
+							}`,
+							forConfirmation: false,
+							persist: true,
+						})
+					}
+					if (!complete) retries++
+				}
+			}
+		} else {
+			const agree = await alertThis({
+				message: `This auction has ended but the Auctioneer hasn't made a decision to sell. Would you mind helping to update the contract state?`,
+				accept: 'Yes',
+				decline: 'No',
+			})
+			if (agree) {
+				alertThis({
+					message: `Thanks so much for your contribution`,
+					forConfirmation: false,
+				})
+				try {
+					const ctcAdmin = (
+						await reach.newAccountFromMnemonic(
+							process.env.REACT_APP_ADMIN_PASSPHRASE
+						)
+					).contract(auctionCtc, JSON.parse(fullAuction.contractInfo))
+					await ctcAdmin.a.Bidder.updateState()
+				} catch (error) {
+					console.log({ error })
+				}
+			}
+		}
 	}
 
 	useEffect(() => {
@@ -119,11 +216,13 @@ const Auction = ({ assetID, title, desiredPrice, url = '', fullAuction }) => {
 			className={cf(s.flex, s.flexCenter, buy.aucAuction)}
 			ref={auctionNFTRef}
 			onClick={() => {
-				joinAuction(fullAuction)
+				ended ? handleEnded() : joinAuction(fullAuction)
 			}}
 		>
 			<div className={cf(s.flex, s.flex_dColumn, buy.aucAucDetails)}>
-				<h3 className={cf(s.m0, s.p0, s.wMax, buy.aucAucTitleText)}>{name} ({uName})</h3>
+				<h3 className={cf(s.m0, s.p0, s.wMax, buy.aucAucTitleText)}>
+					{name} ({uName})
+				</h3>
 				<span className={cf(s.wMax, s.dInlineBlock, buy.aucAucDesiredPrice)}>
 					{desiredPrice} {standardUnit}
 				</span>
@@ -134,8 +233,25 @@ const Auction = ({ assetID, title, desiredPrice, url = '', fullAuction }) => {
 
 const Buy = () => {
 	const latestAuctionRef = useRef()
-	const { alertThis, newAuctions, newLatest } = useReach()
+	const {
+		alertThis,
+		newAuctions,
+		newLatest,
+		endedAuctions,
+		setView,
+	} = useReach()
 	const [notified, setNotified] = useState(true)
+
+	useLayoutEffect(() => {
+		if (!newAuctions.length && !endedAuctions.length) {
+			setView('App')
+			// alertThis({
+			// 	message:
+			// 		'Please hold while auctions get uploaded. Try again sometime later',
+			// 	forConfirmation: false,
+			// })
+		}
+	}, [newAuctions, endedAuctions, setView, alertThis])
 
 	useEffect(() => {
 		if (newLatest.length > 2) {
@@ -164,7 +280,8 @@ const Buy = () => {
 				clearInterval(slide)
 			}
 		}
-	}, [newLatest])
+		if (!newAuctions.length && !endedAuctions.length) setView('App')
+	}, [newLatest, newAuctions, endedAuctions, setView])
 
 	return (
 		<div className={cf(s.wMax, s.window, buy.buyParent)}>
@@ -185,42 +302,56 @@ const Buy = () => {
 			>
 				<FaExclamation className={cf(buy.ex)} />
 			</div>
-			<div className={cf(s.wMax, s.flex, s.flexRight, buy.topDiv)}>
-				<h1 className={cf(s.wMax, s.p0, s.m0, buy.topText)}>Latest Listings</h1>
-			</div>
-			<div className={cf(s.wMax, s.flex, s.flexCenter)}>
-				<div className={cf(s.flex, s.flexCenter, buy.latest)}>
-					{newLatest && (
-						<div
-							className={cf(
-								s.flex,
-								s.wMax,
-								s.flexCenter,
-								s.flex_dColumn,
-								buy.latestAuctions
-							)}
-							ref={latestAuctionRef}
-						>
-							{newLatest.map((el, i) => (
-								<LatestAuction
-									key={i}
-									fullAuction={el}
-									assetID={el.tokenId}
-									title={el.title}
-									desiredPrice={el.price}
-									description={el.description}
-								/>
-							))}
-						</div>
-					)}
+			{newLatest.length > 0 ? (
+				<div className={cf(s.wMax, s.flex, s.flexRight, buy.topDiv)}>
+					<h1 className={cf(s.wMax, s.p0, s.m0, buy.topText)}>
+						Latest Listings
+					</h1>
 				</div>
-			</div>
-			<div className={cf(s.wMax, s.flex, s.flexRight, buy.topDiv)}>
-				<h1 className={cf(s.wMax, s.p0, s.m0, buy.topText)}>
-					Available Auctions
-				</h1>
-			</div>
-			{newAuctions && (
+			) : (
+				<div></div>
+			)}
+			{newLatest.length > 0 ? (
+				<div className={cf(s.wMax, s.flex, s.flexCenter)}>
+					<div className={cf(s.flex, s.flexCenter, buy.latest)}>
+						{newLatest && (
+							<div
+								className={cf(
+									s.flex,
+									s.wMax,
+									s.flexCenter,
+									s.flex_dColumn,
+									buy.latestAuctions
+								)}
+								ref={latestAuctionRef}
+							>
+								{newLatest.map((el, i) => (
+									<LatestAuction
+										key={i}
+										fullAuction={el}
+										assetID={el.tokenId}
+										title={el.title}
+										desiredPrice={el.price}
+										description={el.description}
+									/>
+								))}
+							</div>
+						)}
+					</div>
+				</div>
+			) : (
+				<div></div>
+			)}
+			{newAuctions.length > 0 ? (
+				<div className={cf(s.wMax, s.flex, s.flexRight, buy.topDiv)}>
+					<h1 className={cf(s.wMax, s.p0, s.m0, buy.topText)}>
+						Available Auctions
+					</h1>
+				</div>
+			) : (
+				<div></div>
+			)}
+			{newAuctions.length > 0 ? (
 				<div
 					className={cf(
 						s.wMax,
@@ -241,6 +372,42 @@ const Buy = () => {
 						/>
 					))}
 				</div>
+			) : (
+				<div></div>
+			)}
+			{endedAuctions.length > 0 ? (
+				<div className={cf(s.wMax, s.flex, s.flexRight, buy.topDiv)}>
+					<h1 className={cf(s.wMax, s.p0, s.m0, buy.topText)}>
+						Ended Auctions
+					</h1>
+				</div>
+			) : (
+				<div></div>
+			)}
+			{endedAuctions.length > 0 ? (
+				<div
+					className={cf(
+						s.wMax,
+						s.flex,
+						s.spaceXAround,
+						s.spaceYCenter,
+						buy.aucAuctions
+					)}
+				>
+					{endedAuctions.map((el, i) => (
+						<Auction
+							ended={true}
+							key={i}
+							fullAuction={el}
+							assetID={el.tokenId}
+							title={el.title}
+							desiredPrice={el.price}
+							description={el.description}
+						/>
+					))}
+				</div>
+			) : (
+				<div></div>
 			)}
 		</div>
 	)

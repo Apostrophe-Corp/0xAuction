@@ -28,9 +28,12 @@ const algoExplorerURI = {
 	MainNet: 'https://algoexplorer.io',
 }['TestNet']
 
-const deadline = 23351
+const deadline = 985
 
-export let reach = loadStdlib({ REACH_CONNECTOR_MODE: 'ALGO' })
+export let reach = loadStdlib({
+	REACH_CONNECTOR_MODE: 'ALGO',
+	REACH_NO_WARN: 'Y',
+})
 const providerEnv = 'TestNet'
 
 export const ReachContext = React.createContext()
@@ -38,6 +41,11 @@ export const ReachContext = React.createContext()
 const { standardUnit } = reach
 const waitingPro = {}
 let waiter = undefined
+
+let newWalletConnection = true
+const setNewWalletConnection = (x) => {
+	newWalletConnection = x
+}
 
 const ReachContextProvider = ({ children }) => {
 	const [view, setView] = useState('App')
@@ -72,14 +80,13 @@ const ReachContextProvider = ({ children }) => {
 		useState([]),
 		useState([]),
 	]
+	const [endedAuctions, setEndedAuctions] = useState([])
 
 	const [showBuyer, setShowBuyer] = useState(false)
 	const [showSeller, setShowSeller] = useState(false)
 	const [showConnectAccount, setShowConnectAccount] = useState(false)
 	const [contractInstance, setContractInstance] = useState(null)
 	const [contract, setContract] = useState('')
-
-	const [newWalletConnection, setNewWalletConnection] = useState(true)
 
 	const alertThis = async ({
 		message = 'Confirm Action',
@@ -195,7 +202,8 @@ const ReachContextProvider = ({ children }) => {
 	) => {
 		newConnection && startWaiting(true, mnemonic ? 180000 : 120000)
 		delete window?.algorand
-		reach = loadStdlib({ REACH_CONNECTOR_MODE: 'ALGO' })
+		reach = undefined
+		reach = loadStdlib({ REACH_CONNECTOR_MODE: 'ALGO', REACH_NO_WARN: 'Y' })
 		switch (walletPreference) {
 			case 'PeraConnect':
 				reach.setWalletFallback(
@@ -250,6 +258,10 @@ const ReachContextProvider = ({ children }) => {
 				window.localStorage.setItem('walletPreference', 'MyAlgoConnect')
 				break
 		}
+		if (mnemonic) {
+			window.localStorage.setItem('walletPreference', '')
+			window.localStorage.setItem('userAddress', '')
+		}
 		if (newConnection) {
 			try {
 				const account = mnemonic
@@ -264,39 +276,45 @@ const ReachContextProvider = ({ children }) => {
 							})
 					  )
 					: await reach.getDefaultAccount()
-				setNewWalletConnection(true)
+
 				const postAuction = async ({ what }) => {
+					let exists = false
 					const presentAuctions = auctions
-					const tempCtc = account.contract(auctionCtc, what[1])
-					const response = await tempCtc.v.live()
-					const isLive = response[1]
-					if (isLive) {
-						presentAuctions.push({
-							id: parseInt(what[0]),
-							contractInfo: JSON.stringify(what[1], null),
-							blockCreated: parseInt(what[2]),
-							owner: reach.formatAddress(what[3]),
-							title: noneNull(what[4]),
-							description: noneNull(what[5]),
-							price: parseInt(what[6]),
-							tokenId: parseInt(what[7]),
-							yourBid: 0,
-							optIn: false,
-							liveBid: 0,
-							highestBidder: '',
-							ended: async () => {
-								const response = await tempCtc.v.live()
-								const isLive = response[1]
-								return !(
-									isLive &&
-									reach.bigNumberToNumber(await reach.getNetworkTime()) <
-										parseInt(what[2]) + deadline
-								)
-							},
-							ctc: tempCtc,
-						})
-						setAuctions((previous) => [...presentAuctions])
-					}
+					const tempCtc = (
+						await reach.newAccountFromMnemonic(
+							process.env.REACT_APP_ADMIN_PASSPHRASE
+						)
+					).contract(auctionCtc, what[1])
+					const response = await tempCtc.v.hasEnded()
+					const hasEnded = response[1]
+					if (hasEnded === true) return
+					exists = presentAuctions.some(
+						(el) => Number(el.id) === parseInt(what[0])
+					)
+					if (exists) return
+					presentAuctions.push({
+						id: parseInt(what[0]),
+						contractInfo: JSON.stringify(what[1], null),
+						blockCreated: parseInt(what[2]),
+						owner: reach.formatAddress(what[3]),
+						title: noneNull(what[4]),
+						description: noneNull(what[5]),
+						price: parseInt(what[6]),
+						tokenId: parseInt(what[7]),
+						yourBid: 0,
+						optIn: false,
+						liveBid: 0,
+						highestBidder: '',
+						liveStatus: true,
+						ended: async () => {
+							const response = await tempCtc.v.live()
+							const isLive = response[1]
+							return isLive === false ? true : isLive === null ? true : false
+						},
+						ctc: tempCtc,
+					})
+					setAuctions((previous) => [...presentAuctions])
+					// }
 				}
 				if (process.env.REACT_APP_ADMIN_CONTRACT_INFO) {
 					try {
@@ -313,6 +331,8 @@ const ReachContextProvider = ({ children }) => {
 							ctc.events.create.monitor(postAuction)
 							ctc.events.updateHighestBidder.monitor(updateHighestBidder)
 							ctc.events.end.monitor(dropAuction)
+							ctc.events.endSuccess.monitor(handleAuctionLog_endSuccess)
+							setNewWalletConnection(false)
 						}
 					} catch (error) {
 						console.log({ error })
@@ -360,7 +380,8 @@ const ReachContextProvider = ({ children }) => {
 			userAddress: localStorage.getItem('userAddress'),
 		}
 
-		if (!sessionInfo.walletPreference || !sessionInfo.userAddress) return false
+		if (sessionInfo.walletPreference === '' || sessionInfo.userAddress === '')
+			return false
 
 		await connectToWallet(sessionInfo.walletPreference, false, false)
 		try {
@@ -368,37 +389,42 @@ const ReachContextProvider = ({ children }) => {
 				addr: sessionInfo.userAddress,
 			})
 			const postAuction = async ({ what }) => {
+				let exists = false
 				const presentAuctions = auctions
-				const tempCtc = account.contract(auctionCtc, what[1])
-				const response = await tempCtc.v.live()
-				const isLive = response[1]
-				if (isLive) {
-					presentAuctions.push({
-						id: parseInt(what[0]),
-						contractInfo: JSON.stringify(what[1], null),
-						blockCreated: parseInt(what[2]),
-						owner: reach.formatAddress(what[3]),
-						title: noneNull(what[4]),
-						description: noneNull(what[5]),
-						price: parseInt(what[6]),
-						tokenId: parseInt(what[7]),
-						yourBid: 0,
-						optIn: false,
-						liveBid: 0,
-						highestBidder: '',
-						ended: async () => {
-							const response = await tempCtc.v.live()
-							const isLive = response[1]
-							return !(
-								isLive &&
-								reach.bigNumberToNumber(await reach.getNetworkTime()) <
-									parseInt(what[2]) + deadline
-							)
-						},
-						ctc: tempCtc,
-					})
-					setAuctions((previous) => [...presentAuctions])
-				}
+				const tempCtc = (
+					await reach.newAccountFromMnemonic(
+						process.env.REACT_APP_ADMIN_PASSPHRASE
+					)
+				).contract(auctionCtc, what[1])
+				const response = await tempCtc.v.hasEnded()
+				const hasEnded = response[1]
+				if (hasEnded === true) return
+				exists = presentAuctions.some(
+					(el) => Number(el.id) === parseInt(what[0])
+				)
+				if (exists) return
+				presentAuctions.push({
+					id: parseInt(what[0]),
+					contractInfo: JSON.stringify(what[1], null),
+					blockCreated: parseInt(what[2]),
+					owner: reach.formatAddress(what[3]),
+					title: noneNull(what[4]),
+					description: noneNull(what[5]),
+					price: parseInt(what[6]),
+					tokenId: parseInt(what[7]),
+					yourBid: 0,
+					optIn: false,
+					liveBid: 0,
+					highestBidder: '',
+					liveStatus: true,
+					ended: async () => {
+						const response = await tempCtc.v.live()
+						const isLive = response[1]
+						return isLive === false ? true : isLive === null ? true : false
+					},
+					ctc: tempCtc,
+				})
+				setAuctions((previous) => [...presentAuctions])
 			}
 			if (process.env.REACT_APP_ADMIN_CONTRACT_INFO) {
 				try {
@@ -415,6 +441,8 @@ const ReachContextProvider = ({ children }) => {
 						ctc.events.create.monitor(postAuction)
 						ctc.events.updateHighestBidder.monitor(updateHighestBidder)
 						ctc.events.end.monitor(dropAuction)
+						ctc.events.endSuccess.monitor(handleAuctionLog_endSuccess)
+						setNewWalletConnection(false)
 					}
 				} catch (error) {
 					console.log({ error })
@@ -471,68 +499,66 @@ const ReachContextProvider = ({ children }) => {
 		!(
 			walletPreference === 'PeraConnect' || walletPreference === 'WalletConnect'
 		) && (await window?.algorand?.disconnect())
+		delete window?.algorand
 		window.localStorage.setItem('walletPreference', '')
 		window.localStorage.setItem('userAddress', '')
 		setUser({})
-		alertThis({
-			message: 'Wallet connection terminated',
-			forConfirmation: false,
-		})
 		setNewWalletConnection(false)
 		setCurrentAuction(null)
-		// setAuctions([])
-		// setNewAuctions([])
-		// setNewLatest([])
 	}
 
 	const postAuction = async ({ what }) => {
+		let exists = false
 		const presentAuctions = auctions
-		const tempCtc = user.account.contract(auctionCtc, what[1])
-		const response = await tempCtc.v.live()
-		const isLive = response[1]
-		if (isLive) {
-			presentAuctions.push({
-				id: parseInt(what[0]),
-				contractInfo: JSON.stringify(what[1], null),
-				blockCreated: parseInt(what[2]),
-				owner: reach.formatAddress(what[3]),
-				title: noneNull(what[4]),
-				description: noneNull(what[5]),
-				price: parseInt(what[6]),
-				tokenId: parseInt(what[7]),
-				yourBid: 0,
-				optIn: false,
-				liveBid: 0,
-				highestBidder: '',
-				ended: async () => {
-					const response = await tempCtc.v.live()
-					const isLive = response[1]
-					return !(
-						isLive &&
-						reach.bigNumberToNumber(await reach.getNetworkTime()) <
-							parseInt(what[2]) + deadline
-					)
-				},
-				ctc: tempCtc,
-			})
-			setAuctions((previous) => [...presentAuctions])
-		}
+		const tempCtc = (
+			await reach.newAccountFromMnemonic(process.env.REACT_APP_ADMIN_PASSPHRASE)
+		).contract(auctionCtc, what[1])
+		const response = await tempCtc.v.hasEnded()
+		const hasEnded = response[1]
+		if (hasEnded === true) return
+		exists = presentAuctions.some((el) => Number(el.id) === parseInt(what[0]))
+		if (exists) return
+		presentAuctions.push({
+			id: parseInt(what[0]),
+			contractInfo: JSON.stringify(what[1], null),
+			blockCreated: parseInt(what[2]),
+			owner: reach.formatAddress(what[3]),
+			title: noneNull(what[4]),
+			description: noneNull(what[5]),
+			price: parseInt(what[6]),
+			tokenId: parseInt(what[7]),
+			yourBid: 0,
+			optIn: false,
+			liveBid: 0,
+			highestBidder: '',
+			liveStatus: true,
+			ended: async () => {
+				const response = await tempCtc.v.live()
+				const isLive = response[1]
+				return isLive === false ? true : isLive === null ? true : false
+			},
+			ctc: tempCtc,
+		})
+		setAuctions((previous) => [...presentAuctions])
 	}
 
 	const dropAuction = async ({ what }) => {
 		await sleep(5000).then(async () => {
-			if (view === 'Buy' && auctions.length <= 1) setView('App')
 			if ((showBuyer || showSeller) && currentAuction === parseInt(what[0])) {
 				setView('App')
 				setShowBuyer(false)
 				setShowSeller(false)
 			}
-			const auctionsToBeEdited = auctions
+			const toBeMapped = auctions
+			const auctionsToBeEdited = toBeMapped.map((el) => {
+				if (Number(el.id) === parseInt(what[0])) el.liveStatus = false
+				return el
+			})
 			const remainingAuctions = auctionsToBeEdited.filter(
 				(el) => Number(el.id) !== parseInt(what[0])
 			)
 			if (remainingAuctions.length === 0 && view === 'Buy') setView('App')
-			setAuctions((previous) => remainingAuctions)
+			setAuctions((previous) => [...remainingAuctions])
 		})
 		stopWaiting()
 	}
@@ -608,7 +634,10 @@ const ReachContextProvider = ({ children }) => {
 							},
 						})
 						ctc.events.create.monitor(postAuction)
+						ctc.events.updateHighestBidder.monitor(updateHighestBidder)
 						ctc.events.end.monitor(dropAuction)
+						ctc.events.endSuccess.monitor(handleAuctionLog_endSuccess)
+						setNewWalletConnection(false)
 						func()
 					} catch (error) {
 						console.log({ error })
@@ -633,7 +662,10 @@ const ReachContextProvider = ({ children }) => {
 							forConfirmation: false,
 						})
 						ctc.events.create.monitor(postAuction)
+						ctc.events.updateHighestBidder.monitor(updateHighestBidder)
 						ctc.events.end.monitor(dropAuction)
+						ctc.events.endSuccess.monitor(handleAuctionLog_endSuccess)
+						setNewWalletConnection(false)
 						func()
 					} catch (error) {
 						console.log({ error })
@@ -665,7 +697,6 @@ const ReachContextProvider = ({ children }) => {
 
 		const note = new Uint8Array(0)
 
-		// console.log(launchOpts)
 		try {
 			const launchedToken = await reach.launchToken(
 				user.account,
@@ -779,17 +810,56 @@ const ReachContextProvider = ({ children }) => {
 	}
 
 	const handleAuctionLog_endSuccess = async ({ what }) => {
-		if (auctions.length === 1) setView('App')
-		setShowBuyer(false)
-		setShowSeller(false)
-		const presentAuc = auctions
-		const leftoverAuctions = presentAuc.filter(
-			(el) => Number(el.id) !== parseInt(what[0])
-		)
-		setAuctions((previous) => leftoverAuctions)
+		const updateLatestAuctions = (auc) => {
+			if (auc.length === 0) return auc
+			const length = auc.length
+			let x = length - 1
+			const newAuctions = []
+			for (x; x > length - 5; x--) {
+				newAuctions.push(auc[x])
+				if (x === 0) break
+			}
+			newAuctions.push(auc[length - 1])
+			return newAuctions
+		}
+		const updateAuctions = async () => {
+			const currentAuctions = auctions
+			const len = currentAuctions.length
+			const newSet = []
+			const oldSet = []
+			let i = 0
+			for (i; i < len; i++) {
+				const el = currentAuctions[i]
+				const currentTime = reach.bigNumberToNumber(
+					await reach.getNetworkTime()
+				)
+				const tempCtc = (
+					await reach.newAccountFromMnemonic(
+						process.env.REACT_APP_ADMIN_PASSPHRASE
+					)
+				).contract(auctionCtc, JSON.parse(el.contractInfo))
+				const response = await tempCtc.v.live()
+				const hasEnded = (await tempCtc.v.hasEnded())[1]
+				const isLive = response[1]
+				const ended =
+					isLive === false ||
+					(currentTime > deadline + el.blockCreated && isLive === true)
+				if (!ended && hasEnded === false) newSet.push(el)
+				else if (isLive !== null && isLive === false && hasEnded === false)
+					oldSet.push(el)
+			}
+			const x = sortBy(newSet, 'id')
+			setNewAuctions((previous) => [...x])
+			const _currentAuctions = updateLatestAuctions(x)
+			setNewLatest((previous) => [..._currentAuctions])
+			const o = sortBy(oldSet, 'id')
+			setEndedAuctions((previous) => [...o])
+		}
+		updateAuctions()
 	}
 
 	const handleAuctionLog_down = async ({ what }) => {
+		setShowSeller(false)
 		stopWaiting()
 		try {
 			if (reach.formatAddress(what[2]) === String(user.address)) {
@@ -807,11 +877,24 @@ const ReachContextProvider = ({ children }) => {
 						let retries = 0
 						while (!complete) {
 							if (retries === 3) {
+								stopWaiting()
 								alertThis({
 									message:
-										'Maximum retries reached, defaulting to an agreement',
+										'Maximum retries reached. Please sometime later. In the meantime we would do some cleanup',
 									forConfirmation: false,
 								})
+								const ctcAdmin = (
+									await reach.newAccountFromMnemonic(
+										process.env.REACT_APP_ADMIN_PASSPHRASE
+									)
+								).contract(auctionCtc, what[3])
+								try {
+									if (userChoice) await ctcAdmin.a.Auctioneer.acceptSale()
+									else await ctcAdmin.a.Auctioneer.rejectSale()
+									complete = true
+								} catch (error) {
+									console.log({ error })
+								}
 								complete = true
 								break
 							}
@@ -826,13 +909,19 @@ const ReachContextProvider = ({ children }) => {
 								})
 								userChoice = agreeToBid
 							}
-							startWaiting()
+							alertThis({
+								message: 'Please sign your transactions...',
+								forConfirmation: false,
+								persist: true,
+							})
 							try {
 								if (userChoice) await tempAuctionCtc.a.Auctioneer.acceptSale()
 								else await tempAuctionCtc.a.Auctioneer.rejectSale()
 								complete = true
-								setShowSeller(false)
-								stopWaiting()
+								alertThis({
+									message: 'Success',
+									forConfirmation: false,
+								})
 							} catch (error) {
 								console.log({ error })
 								alertThis({
@@ -842,7 +931,6 @@ const ReachContextProvider = ({ children }) => {
 									forConfirmation: false,
 									persist: true,
 								})
-								setShowSeller(false)
 							}
 							if (!complete) retries++
 						}
@@ -946,7 +1034,10 @@ const ReachContextProvider = ({ children }) => {
 
 	const createAuction = async (auctionParams) => {
 		startWaiting()
-		const nftBal = await reach.balanceOf(user.account, Number(auctionParams.tokenId))
+		const nftBal = await reach.balanceOf(
+			user.account,
+			Number(auctionParams.tokenId)
+		)
 		if (Number(nftBal) === 0) {
 			stopWaiting()
 			alertThis({
@@ -969,11 +1060,10 @@ const ReachContextProvider = ({ children }) => {
 				await reach.newAccountFromMnemonic(
 					process.env.REACT_APP_ADMIN_PASSPHRASE
 				)
-			).contract(auctionCtc, ctc.getInfo())
+			).contract(auctionCtc, await ctc.getInfo())
 			ctcAdmin.p.Admin({})
 			ctc.events.created.monitor(handleAuctionLog_created)
 			ctc.events.bidSuccess.monitor(handleAuctionLog_bidSuccess)
-			ctc.events.endSuccess.monitor(handleAuctionLog_endSuccess)
 			ctc.events.down.monitor(handleAuctionLog_down)
 			ctc.events.accepted.monitor(handleAuctionLog_accepted)
 			ctc.events.rejected.monitor(handleAuctionLog_rejected)
@@ -994,7 +1084,6 @@ const ReachContextProvider = ({ children }) => {
 			setCurrentAuction(id)
 			aucCtc.events.created.monitor(handleAuctionLog_created)
 			aucCtc.events.bidSuccess.monitor(handleAuctionLog_bidSuccess)
-			aucCtc.events.endSuccess.monitor(handleAuctionLog_endSuccess)
 			aucCtc.events.down.monitor(handleAuctionLog_down)
 			aucCtc.events.accepted.monitor(handleAuctionLog_accepted)
 			aucCtc.events.rejected.monitor(handleAuctionLog_rejected)
@@ -1012,7 +1101,6 @@ const ReachContextProvider = ({ children }) => {
 			const aucCtc = user.account.contract(auctionCtc, JSON.parse(contractInfo))
 			setCurrentAuction(id)
 			aucCtc.events.bidSuccess.monitor(handleAuctionLog_bidSuccess)
-			aucCtc.events.endSuccess.monitor(handleAuctionLog_endSuccess)
 			aucCtc.events.down.monitor(handleAuctionLog_down)
 			aucCtc.events.optInSuccess.monitor(handleAuctionLog_optInSuccess)
 			if (optIn) {
@@ -1232,7 +1320,6 @@ const ReachContextProvider = ({ children }) => {
 			}
 			if (justJoining) {
 				ctc.events.bidSuccess.monitor(handleAuctionLog_bidSuccess)
-				ctc.events.endSuccess.monitor(handleAuctionLog_endSuccess)
 				ctc.events.down.monitor(handleAuctionLog_down)
 				// ctc.events.optInSuccess.monitor(handleAuctionLog_optInSuccess)
 			}
@@ -1282,11 +1369,9 @@ const ReachContextProvider = ({ children }) => {
 					setShowBuyer(true)
 					if (ctc) {
 						ctc.events.bidSuccess.monitor(handleAuctionLog_bidSuccess)
-						ctc.events.endSuccess.monitor(handleAuctionLog_endSuccess)
 					} else {
 						ctc = user.account.contract(auctionCtc, JSON.parse(ctcInfo))
 						ctc.events.bidSuccess.monitor(handleAuctionLog_bidSuccess)
-						ctc.events.endSuccess.monitor(handleAuctionLog_endSuccess)
 					}
 					return true
 				} else if (didOptIn) {
@@ -1315,7 +1400,7 @@ const ReachContextProvider = ({ children }) => {
 				await reach.balanceOf(user.account),
 				4
 			)
-			const resultingBalance = userBal - 1 // Opt-In fee
+			const resultingBalance = userBal - 1
 			const minimumBalance = reach.formatCurrency(
 				await reach.minimumBalanceOf(user.account),
 				4
@@ -1387,6 +1472,8 @@ const ReachContextProvider = ({ children }) => {
 		setNewAuctions,
 		newLatest,
 		setNewLatest,
+		endedAuctions,
+		setEndedAuctions,
 		setShowBuyer,
 		setShowSeller,
 		setShowConnectAccount,
@@ -1400,9 +1487,16 @@ const ReachContextProvider = ({ children }) => {
 		optIn,
 		joinAuction,
 		placeNewBid,
+		reach,
 	}
 
 	useEffect(() => {
+		restoreConnection()
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [])
+
+	useEffect(() => {
+		let refresher = undefined
 		const updateLatestAuctions = (auc) => {
 			if (auc.length === 0) return auc
 			const length = auc.length
@@ -1415,28 +1509,69 @@ const ReachContextProvider = ({ children }) => {
 			newAuctions.push(auc[length - 1])
 			return newAuctions
 		}
-		const updateAuctions = async () => {
-			const currentAuctions = auctions
-			const len = currentAuctions.length
-			const newSet = []
-			let i = 0
-			for (i; i < len; i++) {
-				const el = currentAuctions[i]
-				const ended = await el.ended()
-				if (ended === false) newSet.push(el)
+		refresher = setInterval(async () => {
+			const updateAuctions = async () => {
+				const currentAuctions = auctions
+				const len = currentAuctions.length
+				const newSet = []
+				const oldSet = []
+				let i = 0
+				for (i; i < len; i++) {
+					const el = currentAuctions[i]
+					const ended =
+						reach.bigNumberToNumber(await reach.getNetworkTime()) >
+						deadline + el.blockCreated
+					if (ended && !(await el.ended())) {
+						let retries = 0,
+							continue_ = true
+						do {
+							try {
+								const ctcAdmin = (
+									await reach.newAccountFromMnemonic(
+										process.env.REACT_APP_ADMIN_PASSPHRASE
+									)
+								).contract(auctionCtc, JSON.parse(el.contractInfo))
+								await ctcAdmin.a.Auctioneer.stopAuction()
+								oldSet.push(el)
+								continue_ = false
+							} catch (error) {
+								retries++
+							}
+						} while (continue_ && retries < 4)
+						continue
+					} else {
+						const currentTime = reach.bigNumberToNumber(
+							await reach.getNetworkTime()
+						)
+						const tempCtc = (
+							await reach.newAccountFromMnemonic(
+								process.env.REACT_APP_ADMIN_PASSPHRASE
+							)
+						).contract(auctionCtc, JSON.parse(el.contractInfo))
+						const response = await tempCtc.v.live()
+						const hasEnded = (await tempCtc.v.hasEnded())[1]
+						const isLive = response[1]
+						const ended =
+							isLive === false ||
+							(currentTime > deadline + el.blockCreated && isLive === true)
+						if (!ended && hasEnded === false) newSet.push(el)
+						else if (isLive !== null && isLive === false && hasEnded === false)
+							oldSet.push(el)
+					}
+				}
+				const x = sortBy(newSet, 'id')
+				setNewAuctions((previous) => [...x])
+				const _currentAuctions = updateLatestAuctions(x)
+				setNewLatest((previous) => [..._currentAuctions])
+				const o = sortBy(oldSet, 'id')
+				setEndedAuctions((previous) => [...o])
 			}
-			const x = sortBy(newSet, 'id')
-			setNewAuctions((previous) => [...x])
-			const _currentAuctions = updateLatestAuctions(x)
-			setNewLatest((previous) => [..._currentAuctions])
+			updateAuctions()
+		}, 5000)
+		return () => {
+			clearInterval(refresher)
 		}
-		updateAuctions()
 	}, [auctions, setNewAuctions, setNewLatest])
-
-	useEffect(() => {
-		restoreConnection()
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [])
 
 	return (
 		<ReachContext.Provider value={ReachContextValue}>
@@ -1502,7 +1637,7 @@ const ReachContextProvider = ({ children }) => {
 							className={cf(s.flex, s.flexCenter, s.p10, s.m0, app.navItem)}
 							onClick={() => {
 								checkForContract(async () => {
-									if (newLatest.length) setView('Buy')
+									if (newAuctions.length || endedAuctions.length) setView('Buy')
 									else
 										alertThis({
 											message:
@@ -1521,6 +1656,9 @@ const ReachContextProvider = ({ children }) => {
 					onClick={() => {
 						const copyToClipboardCtc = async () => {
 							navigator.clipboard.writeText(contract.ctcInfoStr)
+						}
+						const copyToClipboardAddr = async () => {
+							navigator.clipboard.writeText(user.address)
 						}
 						return !user.address
 							? setShowConnectAccount(true)
@@ -1543,14 +1681,15 @@ const ReachContextProvider = ({ children }) => {
 									})
 									!proceed && (await disconnectWallet())
 							  })())
-							: (async () => {
+							: (copyToClipboardAddr(),
+							  (async () => {
 									const proceed = await alertThis({
-										message: `Your wallet is connected. Would you like to disconnect?`,
+										message: `Your wallet is connected. Your address has been copied to clipboard. Would you like to disconnect?`,
 										accept: 'No',
 										decline: 'Yes',
 									})
 									!proceed && (await disconnectWallet())
-							  })()
+							  })())
 					}}
 				>
 					{user.address ? user.address : `Connect Wallet`}

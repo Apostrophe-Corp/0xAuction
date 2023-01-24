@@ -8,184 +8,86 @@ dup
 int 0
 extract_uint64
 store 1 // GV_currentStep :: UInt
+dup
 int 8
 extract_uint64
 store 2 // GV_currentTime :: UInt
+int 16
+extract_uint64
+store 5 // GV_companion :: Contract
 byte base64(AA==)
 app_global_get
 byte base64(AQ==)
 app_global_get
 concat
 preamble:
-pushbytess base64(CTAN+w==) base64(CZqFoA==) base64(EC8NoA==) base64(FVIDlg==) base64(SWM97Q==) base64(dQ7kBg==) base64(gRPbMw==) base64(jECAug==) base64(l00j+g==) base64(39kjKA==) base64(53RcUg==) base64(76/OQw==) base64(8Trqig==)
+pushbytess base64(CZqFoA==) base64(EC8NoA==) base64(FVIDlg==) base64(Mm+L0w==) base64(MpxfqQ==) base64(OGcNJA==) base64(ZYYprQ==) base64(aZOYYg==) base64(bS+8jw==) base64(dQ7kBg==) base64(gRPbMw==) base64(lK19YQ==) base64(xpggrA==) base64(39kjKA==) base64(44Z6iQ==) base64(5Rm1VA==) base64(53RcUg==) base64(8Trqig==)
 txna ApplicationArgs 0
-match _reachp_7 Auctioneer_stopA3Q586xdCjhxQpvRMU6g8222LO5grhpBLLI2D93hgXt0_ Bidder_bid_uint6goQHXCnK_wHARKLsCoUm_iSsXW1kHoqBIeA9oHisRXI_ Bidder_optIn__bylfoYSeYy5jv_C82Jq26fm8sUyboZO5x5IxL5qhNA_Ys_ _reachp_0 _reachp_2 Auctioneer_rejecRG0M7R35nNr_A2cdEHxZHMuyHdRx6nDGQxwS346qXYc_ _reachp_6 _reachp_5 _reachp_1 Auctioneer_accepEfYVQR7kHS62L_WIA9FDUQG2ZNPurtoElfVZHb1Qor0_ _reachp_8 live__bytevEYhhKwsTMkq5gDpSKYRz7Vjsh8qsSWQ6ENyCX8wGGo_
+match Auctioneer_stopA3Q586xdCjhxQpvRMU6g8222LO5grhpBLLI2D93hgXt0_ Bidder_bid_uint6goQHXCnK_wHARKLsCoUm_iSsXW1kHoqBIeA9oHisRXI_ Bidder_optIn__bylfoYSeYy5jv_C82Jq26fm8sUyboZO5x5IxL5qhNA_Ys_ highestPrice__ui5WJ2ajpeBRmuMgj5ufd_hSQZwMOiodPdt_Bqmi1wDQo_ _reachp_8 AdminCall_adminC8rb9NhNWXe8LvmkCa3sbnKZsG8ZXViCnA7VMhyrfNq4_ _reachp_0 Bidder_updateStaA4JodPG8XRnxi_Maa5fIT8pwT1c4Mdd4Ky_NVSkQutw_ _reachp_12 _reachp_2 Auctioneer_rejecRG0M7R35nNr_A2cdEHxZHMuyHdRx6nDGQxwS346qXYc_ _reachp_6 _reachp_11 _reachp_1 hasEnded__bytepX6OTtup_VFAW6oeAvnoNxyS_EyjvBzcUVPbSUvHpb4_ _reachp_9 Auctioneer_accepEfYVQR7kHS62L_WIA9FDUQG2ZNPurtoElfVZHb1Qor0_ live__bytevEYhhKwsTMkq5gDpSKYRz7Vjsh8qsSWQ6ENyCX8wGGo_
 errl:
 err
-Auctioneer_accepEfYVQR7kHS62L_WIA9FDUQG2ZNPurtoElfVZHb1Qor0_:
-_reacha_Auctioneer_acceptSale:
-int 9
+AdminCall_adminC8rb9NhNWXe8LvmkCa3sbnKZsG8ZXViCnA7VMhyrfNq4_:
+// CompanionLabel False "AdminCall_adminC8rb9NhNWXe8LvmkCa3sbnKZsG8ZXViCnA7VMhyrfNq4_"
+_reacha_AdminCall_adminCall:
+// CompanionLabel False "_reacha_AdminCall_adminCall"
+load 1 // GV_currentStep :: UInt
+int 10
+<
+bz l3_ifF
+int 8
 bzero
-store 15 // v4693
-_reachi_5:
+store 11 // v10290
+_reachi_6:
+// CompanionLabel False "_reachi_6"
 int 7
 load 1 // GV_currentStep :: UInt
 ==
 assert
-callsub l3_LF_svsLoad_7
-load 15 // v4693
+callsub l7_LF_svsLoad_7
+load 11 // v10290
 int 0
 extract_uint64
-store 16 // v4692
-load 15 // v4693
-extract 8 1
-store 19 // .fork458.msg/1341
-byte base64(BRynmg==)
-load 16 // v4692
+store 12 // v10289
+byte base64(sjzgqQ==)
+load 12 // v10289
 itob
 concat
-load 19 // .fork458.msg/1341
+log // up to 12 bytes
+// ^ log: "_reach_e6" [v10289,.fork607.msg/1640] "_reach_e6(uint64,())"
+load 12 // v10289
+callsub l21_LF_timeCheck
+_api_AdminCall_adminCall6:
+// CompanionLabel True "_api_AdminCall_adminCall6"
+byte base64()
+store 11 // v1644
+byte base64(AAAAAAAABmw=)
+load 11 // v1644
 concat
-log // up to 13 bytes
-// ^ log: "_reach_e5" [v4692,.fork458.msg/1341] "_reach_e5(uint64,(byte,byte[0]))"
-load 16 // v4692
-callsub l5_LF_timeCheck
-global Round
-load 18 // v1316
-<
-assert
-load 19 // .fork458.msg/1341
-int 0
-getbyte
-switch l12_Auctioneer_acceptSale0_458 l13_Auctioneer_rejectSale0_458
-b errl
-Auctioneer_rejecRG0M7R35nNr_A2cdEHxZHMuyHdRx6nDGQxwS346qXYc_:
-_reacha_Auctioneer_rejectSale:
-byte base64(AAAAAAAAAAAB)
-store 15 // v4693
-b _reachi_5
-Auctioneer_stopA3Q586xdCjhxQpvRMU6g8222LO5grhpBLLI2D93hgXt0_:
-_reacha_Auctioneer_stopAuction:
-int 17
-bzero
-store 11 // v4699
-_reachi_7:
-int 9
-load 1 // GV_currentStep :: UInt
-==
-assert
-callsub l4_LF_svsLoad_9
-load 11 // v4699
-int 0
-extract_uint64
-store 12 // v4698
-load 11 // v4699
-extract 8 9
-store 33 // .fork114.msg/865
-byte base64(EtFEBQ==)
-load 12 // v4698
-itob
-concat
-load 33 // .fork114.msg/865
-concat
-log // up to 21 bytes
-// ^ log: "_reach_e7" [v4698,.fork114.msg/865] "_reach_e7(uint64,(byte,byte[8]))"
-load 12 // v4698
-callsub l5_LF_timeCheck
-global Round
-load 13 // v824
-<
-assert
-load 33 // .fork114.msg/865
-int 0
-getbyte
-switch l14_Auctioneer_stopAuction0_114 l15_Bidder_bid0_114 l16_Bidder_optIn0_114
-b errl
-Bidder_bid_uint6goQHXCnK_wHARKLsCoUm_iSsXW1kHoqBIeA9oHisRXI_:
-txna ApplicationArgs 1
-btoi
-store 11 // v4673
-_reacha_Bidder_bid:
-int 8
-bzero
-byte base64(AQ==)
-load 11 // v4673
-itob
-concat
-concat
-store 11 // v4699
-b _reachi_7
-Bidder_optIn__bylfoYSeYy5jv_C82Jq26fm8sUyboZO5x5IxL5qhNA_Ys_:
-_reacha_Bidder_optIn:
-byte base64(AAAAAAAAAAACAAAAAAAAAAA=)
-store 11 // v4699
-b _reachi_7
-_api_Auctioneer_acceptSale5:
-int 1
-store 15 // v1351
-byte base64(AAAAAAAABUc=)
-load 15 // v1351
-itob
-substring 7 8
-concat
-log // up to 9 bytes
-load 15 // v1351
-itob
-substring 7 8
+log // up to 8 bytes
+load 11 // v1644
 store 4 // GV_apiRet :: Null
 int 1
-int 0
 global Round
-store 13 // thisConsensusTime/1294
-store 33 // awaitingDecision/1293
-store 34 // agreed/1292
-_reachl_4:
-load 13 // thisConsensusTime/1294
-load 14 // end/1291
-<=
-load 33 // awaitingDecision/1293
-&&
-bz l27_ifF
-load 13 // thisConsensusTime/1294
-int 50
-+
-store 18 // v1316
-int 1
-store 33 // awaitingDecision/1293
-l28_LF_svsDump_7:
-load 32 // Seller/734
-load 31 // tokenId/735
+store 18 // thisConsensusTime/1621
+store 19 // rideOn/1620
+_reachl_5:
+// CompanionLabel False "_reachl_5"
+load 19 // rideOn/1620
+bz l52_ifF
+l53_LF_svsDump_7:
+load 30 // tokenId/779
+itob
+load 28 // Admin/798
+concat
+load 17 // lastPrice/842
 itob
 concat
-load 29 // Admin/754
+load 16 // tokenInfos/1627
 concat
-load 24 // v772
-concat
-load 20 // highestBidder/795
-concat
-load 17 // lastPrice/798
+load 15 // netBalance/1628
 itob
 concat
-load 14 // end/1291
-itob
-concat
-load 34 // agreed/1292
-itob
-substring 7 8
-concat
-load 33 // awaitingDecision/1293
-itob
-substring 7 8
-concat
-load 12 // tokenInfos/1300
-concat
-load 11 // netBalance/1301
-itob
-concat
-load 18 // v1316
-itob
-concat
-int 64
+int 162
 bzero
 concat
 int 7
@@ -199,12 +101,15 @@ extract 0 127
 app_global_put
 byte base64(AQ==)
 swap
-extract 127 112
+extract 127 108
 app_global_put
 byte base64()
 load 1 // GV_currentStep :: UInt
 itob
 load 2 // GV_currentTime :: UInt
+itob
+concat
+load 5 // GV_companion :: Contract
 itob
 concat
 app_global_put
@@ -213,7 +118,7 @@ int NoOp
 ==
 assert
 // checked on completion
-callsub l30_LF_updateMbr
+callsub l57_LF_updateMbr
 updateState:
 load 3 // GV_wasntMeth :: Bool
 bnz done
@@ -225,152 +130,419 @@ log // up to 44 bytes
 done:
 int 1
 return
-_api_Auctioneer_rejectSale5:
+Auctioneer_accepEfYVQR7kHS62L_WIA9FDUQG2ZNPurtoElfVZHb1Qor0_:
+// CompanionLabel False "Auctioneer_accepEfYVQR7kHS62L_WIA9FDUQG2ZNPurtoElfVZHb1Qor0_"
+_reacha_Auctioneer_acceptSale:
+// CompanionLabel False "_reacha_Auctioneer_acceptSale"
+int 9
+bzero
+store 15 // v10296
+_reachi_9:
+// CompanionLabel False "_reachi_9"
+int 11
+load 1 // GV_currentStep :: UInt
+==
+assert
+callsub l10_LF_svsLoad_11
+load 15 // v10296
 int 0
-store 15 // v1381
-byte base64(AAAAAAAABWU=)
-load 15 // v1381
+extract_uint64
+store 16 // v10295
+load 15 // v10296
+extract 8 1
+store 18 // .fork419.msg/1431
+byte base64(70M9cA==)
+load 16 // v10295
+itob
+concat
+load 18 // .fork419.msg/1431
+concat
+log // up to 13 bytes
+// ^ log: "_reach_e9" [v10295,.fork419.msg/1431] "_reach_e9(uint64,(byte,byte[0]))"
+load 16 // v10295
+callsub l21_LF_timeCheck
+load 18 // .fork419.msg/1431
+int 0
+getbyte
+switch l38_Auctioneer_acceptSale0_419 l39_Auctioneer_rejectSale0_419 l40_Bidder_updateState0_419
+b errl
+Auctioneer_rejecRG0M7R35nNr_A2cdEHxZHMuyHdRx6nDGQxwS346qXYc_:
+// CompanionLabel False "Auctioneer_rejecRG0M7R35nNr_A2cdEHxZHMuyHdRx6nDGQxwS346qXYc_"
+_reacha_Auctioneer_rejectSale:
+// CompanionLabel False "_reacha_Auctioneer_rejectSale"
+byte base64(AAAAAAAAAAAB)
+store 15 // v10296
+b _reachi_9
+Auctioneer_stopA3Q586xdCjhxQpvRMU6g8222LO5grhpBLLI2D93hgXt0_:
+// CompanionLabel False "Auctioneer_stopA3Q586xdCjhxQpvRMU6g8222LO5grhpBLLI2D93hgXt0_"
+_reacha_Auctioneer_stopAuction:
+// CompanionLabel False "_reacha_Auctioneer_stopAuction"
+int 17
+bzero
+store 11 // v10302
+_reachi_12:
+// CompanionLabel False "_reachi_12"
+int 15
+load 1 // GV_currentStep :: UInt
+==
+assert
+callsub l13_LF_svsLoad_15
+load 11 // v10302
+int 0
+extract_uint64
+store 12 // v10301
+load 11 // v10302
+extract 8 9
+store 13 // .fork114.msg/898
+byte base64(GwbIiw==)
+load 12 // v10301
+itob
+concat
+load 13 // .fork114.msg/898
+concat
+log // up to 21 bytes
+// ^ log: "_reach_e12" [v10301,.fork114.msg/898] "_reach_e12(uint64,(byte,byte[8]))"
+load 12 // v10301
+callsub l21_LF_timeCheck
+load 13 // .fork114.msg/898
+int 0
+getbyte
+switch l27_Auctioneer_stopAuction0_114 l28_Bidder_bid0_114 l29_Bidder_optIn0_114
+b errl
+Bidder_bid_uint6goQHXCnK_wHARKLsCoUm_iSsXW1kHoqBIeA9oHisRXI_:
+// CompanionLabel False "Bidder_bid_uint6goQHXCnK_wHARKLsCoUm_iSsXW1kHoqBIeA9oHisRXI_"
+txna ApplicationArgs 1
+btoi
+store 11 // v10266
+_reacha_Bidder_bid:
+// CompanionLabel False "_reacha_Bidder_bid"
+int 8
+bzero
+byte base64(AQ==)
+load 11 // v10266
+itob
+concat
+concat
+store 11 // v10302
+b _reachi_12
+Bidder_optIn__bylfoYSeYy5jv_C82Jq26fm8sUyboZO5x5IxL5qhNA_Ys_:
+// CompanionLabel False "Bidder_optIn__bylfoYSeYy5jv_C82Jq26fm8sUyboZO5x5IxL5qhNA_Ys_"
+_reacha_Bidder_optIn:
+// CompanionLabel False "_reacha_Bidder_optIn"
+byte base64(AAAAAAAAAAACAAAAAAAAAAA=)
+store 11 // v10302
+b _reachi_12
+Bidder_updateStaA4JodPG8XRnxi_Maa5fIT8pwT1c4Mdd4Ky_NVSkQutw_:
+// CompanionLabel False "Bidder_updateStaA4JodPG8XRnxi_Maa5fIT8pwT1c4Mdd4Ky_NVSkQutw_"
+_reacha_Bidder_updateState:
+// CompanionLabel False "_reacha_Bidder_updateState"
+byte base64(AAAAAAAAAAAC)
+store 15 // v10296
+b _reachi_9
+_api_AdminCall_adminCall11:
+// CompanionLabel True "_api_AdminCall_adminCall11"
+byte base64()
+store 14 // v1811
+byte base64(AAAAAAAABxM=)
+load 14 // v1811
+concat
+log // up to 8 bytes
+load 14 // v1811
+store 4 // GV_apiRet :: Null
+int 1
+global Round
+store 13 // thisConsensusTime/1788
+store 32 // rideOn/1787
+_reachl_10:
+// CompanionLabel False "_reachl_10"
+load 32 // rideOn/1787
+bz l43_ifF
+l44_LF_svsDump_14:
+load 30 // tokenId/779
+itob
+load 28 // Admin/798
+concat
+load 17 // lastPrice/842
+itob
+concat
+load 12 // tokenInfos/1794
+concat
+load 11 // netBalance/1795
+itob
+concat
+int 162
+bzero
+concat
+int 14
+global Round
+b updateStateNoOp
+_api_AdminCall_adminCall8:
+// CompanionLabel True "_api_AdminCall_adminCall8"
+byte base64()
+store 11 // v1728
+byte base64(AAAAAAAABsA=)
+load 11 // v1728
+concat
+log // up to 8 bytes
+load 11 // v1728
+store 4 // GV_apiRet :: Null
+int 1
+global Round
+store 18 // thisConsensusTime/1705
+store 19 // rideOn/1704
+_reachl_7:
+// CompanionLabel False "_reachl_7"
+load 19 // rideOn/1704
+bz l54_ifF
+l55_LF_svsDump_10:
+load 30 // tokenId/779
+itob
+load 28 // Admin/798
+concat
+load 17 // lastPrice/842
+itob
+concat
+load 16 // tokenInfos/1711
+concat
+load 15 // netBalance/1712
+itob
+concat
+int 162
+bzero
+concat
+int 10
+global Round
+b updateStateNoOp
+_api_Auctioneer_acceptSale9:
+// CompanionLabel True "_api_Auctioneer_acceptSale9"
+int 1
+store 15 // v1442
+byte base64(AAAAAAAABaI=)
+load 15 // v1442
 itob
 substring 7 8
 concat
 log // up to 9 bytes
-load 15 // v1381
+load 15 // v1442
 itob
 substring 7 8
 store 4 // GV_apiRet :: Null
-int 0
-int 0
-global Round
-store 13 // thisConsensusTime/1294
-store 33 // awaitingDecision/1293
-store 34 // agreed/1292
-b _reachl_4
-_api_Auctioneer_stopAuction7:
-byte base64(uKNKiw==)
-load 27 // v764
-itob
-concat
-load 17 // lastPrice/798
-itob
-concat
-log // up to 20 bytes
-// ^ log: "endSuccess" [v764,lastPrice/798] "endSuccess(uint64,uint64)"
-load 27 // v764
-itob
-global Round
-itob
-concat
-load 17 // lastPrice/798
-itob
-concat
-store 11 // v882
-byte base64(AAAAAAAAA3I=)
-load 11 // v882
-concat
-log // up to 32 bytes
-load 11 // v882
-store 4 // GV_apiRet :: Null
-load 11 // v882
-int 0
-global Round
-store 16 // thisConsensusTime/799
-store 18 // keepBidding/797
-store 21 // endRes/794
-_reachl_3:
-load 16 // thisConsensusTime/799
-load 22 // timeRemaining/792
-<=
-load 18 // keepBidding/797
-&&
-bz l23_ifF
-load 16 // thisConsensusTime/799
-load 23 // v791
-+
-store 13 // v824
+txn Sender
+load 31 // Seller/778
+==
+txn Sender
+load 28 // Admin/798
+==
+||
+bz l41_ifF
 int 1
-store 18 // keepBidding/797
-l24_LF_svsDump_9:
-load 32 // Seller/734
-load 31 // tokenId/735
+int 0
+global Round
+store 13 // thisConsensusTime/1387
+store 32 // awaitingDecision/1386
+store 33 // agreed/1385
+_reachl_4:
+// CompanionLabel False "_reachl_4"
+load 13 // thisConsensusTime/1387
+load 14 // end_/1384
+<
+load 32 // awaitingDecision/1386
+&&
+bz l49_ifF
+int 1
+store 32 // awaitingDecision/1386
+l50_LF_svsDump_11:
+load 31 // Seller/778
+load 30 // tokenId/779
 itob
 concat
-load 30 // adminContract/737
+load 29 // adminContract/781
 itob
 concat
-load 29 // Admin/754
+load 28 // Admin/798
 concat
-load 28 // v759
+load 27 // v803
 concat
-load 27 // v764
+load 23 // v816
+concat
+load 21 // endRes/838
+concat
+load 20 // highestBidder/839
+concat
+load 17 // lastPrice/842
 itob
 concat
-load 26 // thisConsensusTime/770
+load 14 // end_/1384
 itob
 concat
-load 25 // v771
-itob
-concat
-load 24 // v772
-concat
-load 23 // v791
-itob
-concat
-load 22 // timeRemaining/792
-itob
-concat
-load 21 // endRes/794
-concat
-load 20 // highestBidder/795
-concat
-load 19 // isFirstBid/796
+load 33 // agreed/1385
 itob
 substring 7 8
 concat
-load 18 // keepBidding/797
+load 32 // awaitingDecision/1386
 itob
 substring 7 8
 concat
-load 17 // lastPrice/798
+load 12 // tokenInfos/1393
+concat
+load 11 // netBalance/1394
 itob
 concat
-load 15 // tokenInfos/805
+int 24
+bzero
 concat
-load 14 // netBalance/806
-itob
-concat
-load 13 // v824
-itob
-concat
-int 9
+int 11
 global Round
 b updateStateNoOp
-_api_Bidder_bid7:
-load 33 // .fork114.msg/865
+_api_Auctioneer_rejectSale9:
+// CompanionLabel True "_api_Auctioneer_rejectSale9"
+int 0
+store 15 // v1511
+byte base64(AAAAAAAABec=)
+load 15 // v1511
+itob
+substring 7 8
+concat
+log // up to 9 bytes
+load 15 // v1511
+itob
+substring 7 8
+store 4 // GV_apiRet :: Null
+txn Sender
+load 31 // Seller/778
+==
+txn Sender
+load 28 // Admin/798
+==
+||
+bz l42_ifF
+int 0
+int 0
+global Round
+store 13 // thisConsensusTime/1387
+store 32 // awaitingDecision/1386
+store 33 // agreed/1385
+b _reachl_4
+_api_Auctioneer_stopAuction12:
+// CompanionLabel True "_api_Auctioneer_stopAuction12"
+txn Sender
+load 31 // Seller/778
+==
+txn Sender
+load 28 // Admin/798
+==
+||
+bz l30_ifF
+load 26 // v808
+itob
+global Round
+itob
+concat
+load 17 // lastPrice/842
+itob
+concat
+store 11 // v918
+byte base64(AAAAAAAAA5Y=)
+load 11 // v918
+concat
+log // up to 32 bytes
+load 11 // v918
+store 4 // GV_apiRet :: Null
+load 11 // v918
+int 0
+global Round
+store 16 // thisConsensusTime/843
+store 18 // keepBidding/841
+store 21 // endRes/838
+_reachl_3:
+// CompanionLabel False "_reachl_3"
+load 16 // thisConsensusTime/843
+load 22 // end/836
+<
+load 18 // keepBidding/841
+&&
+bz l46_ifF
+int 1
+store 18 // keepBidding/841
+l47_LF_svsDump_15:
+load 31 // Seller/778
+load 30 // tokenId/779
+itob
+concat
+load 29 // adminContract/781
+itob
+concat
+load 28 // Admin/798
+concat
+load 27 // v803
+concat
+load 26 // v808
+itob
+concat
+load 25 // thisConsensusTime/814
+itob
+concat
+load 24 // v815
+itob
+concat
+load 23 // v816
+concat
+load 22 // end/836
+itob
+concat
+load 21 // endRes/838
+concat
+load 20 // highestBidder/839
+concat
+load 19 // isFirstBid/840
+itob
+substring 7 8
+concat
+load 18 // keepBidding/841
+itob
+substring 7 8
+concat
+load 17 // lastPrice/842
+itob
+concat
+load 15 // tokenInfos/849
+concat
+load 14 // netBalance/850
+itob
+concat
+int 15
+global Round
+b updateStateNoOp
+_api_Bidder_bid12:
+// CompanionLabel True "_api_Bidder_bid12"
+callsub l2_LF_companionCall
+// cost credit: 3
+load 13 // .fork114.msg/898
 int 1
 extract_uint64
 dup
-store 33 // bid/1005
-load 17 // lastPrice/798
+store 32 // bid/1062
+load 17 // lastPrice/842
 >
 assert
 // ^ Claim: Your bid is too low, please try again
 // at reach standard library:57:5:application
-// at ./src/contracts/auction.rsh:134:38:application call to "check" (defined at: reach standard library:49:32:function exp)
-// at ./src/contracts/auction.rsh:133:49:application call to [unknown function] (defined at: ./src/contracts/auction.rsh:133:49:function exp)
-// at ./src/contracts/auction.rsh:116:31:application call to [unknown function] (defined at: ./src/contracts/auction.rsh:133:49:function exp)
-// at ./src/contracts/auction.rsh:116:31:application call to [unknown function] (defined at: ./src/contracts/auction.rsh:116:31:function exp)
-load 14 // netBalance/806
-load 33 // bid/1005
+// at ./src/contracts/auction.rsh:141:38:application call to "check" (defined at: reach standard library:49:32:function exp)
+// at ./src/contracts/auction.rsh:140:49:application call to [unknown function] (defined at: ./src/contracts/auction.rsh:140:49:function exp)
+// at ./src/contracts/auction.rsh:123:31:application call to [unknown function] (defined at: ./src/contracts/auction.rsh:140:49:function exp)
+// at ./src/contracts/auction.rsh:123:31:application call to [unknown function] (defined at: ./src/contracts/auction.rsh:123:31:function exp)
+load 14 // netBalance/850
+load 32 // bid/1062
 +
-store 13 // v1010
-load 33 // bid/1005
-callsub l17_LF_checkTxn_False
+store 13 // v1067
+load 32 // bid/1062
+callsub l31_LF_checkTxn_False
 // ^ CheckPay
-// at ./src/contracts/auction.rsh:116:31:dot
-load 19 // isFirstBid/796
-bz l18_ifF
+// at ./src/contracts/auction.rsh:123:31:dot
+load 19 // isFirstBid/840
+bz l32_ifF
 byte base64(YXBwSUQ=)
-load 30 // adminContract/737
+load 29 // adminContract/781
 itob
 concat
 sha512_256
@@ -390,12 +562,12 @@ int 0
 itxn_field Fee
 int appl
 itxn_field TypeEnum
-load 30 // adminContract/737
+load 29 // adminContract/781
 // resource: R_App
 itxn_field ApplicationID
 byte base64(B0BfPQ==)
 itxn_field ApplicationArgs
-load 27 // v764
+load 26 // v808
 itob
 itxn_field ApplicationArgs
 txn Sender
@@ -404,8 +576,8 @@ itxn_field Accounts
 itxn_field ApplicationArgs
 itxn_submit
 // ^ Remote: Auctions_updateHighestBidder(uint64,address)void
-// at ./src/contracts/auction.rsh:140:91:application
-// at ./src/contracts/auction.rsh:137:50:application call to [unknown function] (defined at: ./src/contracts/auction.rsh:137:50:function exp)
+// at ./src/contracts/auction.rsh:147:91:application
+// at ./src/contracts/auction.rsh:144:50:application call to [unknown function] (defined at: ./src/contracts/auction.rsh:144:50:function exp)
 global CurrentApplicationAddress
 balance
 load 9 // GV_remoteMinB :: Tuple()
@@ -417,130 +589,149 @@ itob
 gitxn 0 LastLog
 extract 4 0
 concat
-store 12 // v1062
-byte base64(AAAAAAAABCY=)
-load 12 // v1062
+store 12 // v1143
+byte base64(AAAAAAAABHc=)
+load 12 // v1143
 concat
 log // up to 16 bytes
-load 12 // v1062
+load 12 // v1143
 dup
-store 11 // v1063
+store 11 // v1144
 int 0
 extract_uint64
-store 12 // v1065
+store 12 // v1146
 int 0
-load 12 // v1065
+load 12 // v1146
 ==
 assert
 // ^ Claim: remote bill check
-// at ./src/contracts/auction.rsh:140:91:application
-// at ./src/contracts/auction.rsh:137:50:application call to [unknown function] (defined at: ./src/contracts/auction.rsh:137:50:function exp)
-byte base64(6vTulQ==)
-load 27 // v764
+// at ./src/contracts/auction.rsh:147:91:application
+// at ./src/contracts/auction.rsh:144:50:application call to [unknown function] (defined at: ./src/contracts/auction.rsh:144:50:function exp)
+byte base64(/bK0jQ==)
+load 26 // v808
 itob
 concat
-load 33 // bid/1005
+load 32 // bid/1062
 itob
 concat
 txn Sender
 concat
-load 24 // v772
+load 23 // v816
 concat
-log // up to 72 bytes
-// ^ log: "bidSuccess" [v764,bid/1005,this/864,v772] "bidSuccess(uint64,uint64,address,byte[20])"
+log // up to 84 bytes
+// ^ log: "bidSuccess" [v808,bid/1062,this/897,v816] "bidSuccess(uint64,uint64,address,byte[32])"
 txn Sender
-load 17 // lastPrice/798
+load 17 // lastPrice/842
 itob
 concat
-store 11 // v1073
-byte base64(AAAAAAAABDE=)
-load 11 // v1073
+store 11 // v1154
+byte base64(AAAAAAAABII=)
+load 11 // v1154
 concat
 log // up to 48 bytes
-load 11 // v1073
+load 11 // v1154
 store 4 // GV_apiRet :: Null
 txn Sender
 int 0
-load 33 // bid/1005
+load 32 // bid/1062
 global Round
-load 13 // v1010
-load 12 // v1065
+load 13 // v1067
+load 12 // v1146
 +
-store 14 // netBalance/806
-store 16 // thisConsensusTime/799
-store 17 // lastPrice/798
-store 19 // isFirstBid/796
-store 20 // highestBidder/795
+store 14 // netBalance/850
+store 16 // thisConsensusTime/843
+store 17 // lastPrice/842
+store 19 // isFirstBid/840
+store 20 // highestBidder/839
 b _reachl_3
-_api_Bidder_optIn7:
-load 14 // netBalance/806
+_api_Bidder_optIn12:
+// CompanionLabel True "_api_Bidder_optIn12"
+load 14 // netBalance/850
 int 1000000
 +
-store 12 // v1141
+store 12 // v1222
 int 1000000
-callsub l17_LF_checkTxn_False
+callsub l31_LF_checkTxn_False
 // ^ CheckPay
-// at ./src/contracts/auction.rsh:116:31:dot
-load 12 // v1141
+// at ./src/contracts/auction.rsh:123:31:dot
+load 12 // v1222
 int 900000
 >=
-bz l20_ifF
-load 12 // v1141
+bz l34_ifF
+load 12 // v1222
 int 900000
 -
-store 11 // v1220
+store 11 // v1325
 int 900000
 // resource: R_Account
-load 29 // Admin/754
-callsub l19_LF_makeTxn_False_False_False_True
-load 11 // v1220
+load 28 // Admin/798
+callsub l33_LF_makeTxn_False_False_False_True
+load 11 // v1325
 int 100000
 >=
-bz l21_ifF
+bz l35_ifF
 int 100000
 // resource: R_Account
-load 32 // Seller/734
-callsub l19_LF_makeTxn_False_False_False_True
+load 31 // Seller/778
+callsub l33_LF_makeTxn_False_False_False_True
 byte base64(xGuQEw==)
-load 27 // v764
+load 26 // v808
 itob
 concat
 txn Sender
 concat
 log // up to 44 bytes
-// ^ log: "optInSuccess" [v764,this/864] "optInSuccess(uint64,address)"
+// ^ log: "optInSuccess" [v808,this/897] "optInSuccess(uint64,address)"
 int 1
-store 12 // v1227
-byte base64(AAAAAAAABMs=)
-load 12 // v1227
+store 12 // v1332
+byte base64(AAAAAAAABTQ=)
+load 12 // v1332
 itob
 substring 7 8
 concat
 log // up to 9 bytes
-load 12 // v1227
+load 12 // v1332
 itob
 substring 7 8
 store 4 // GV_apiRet :: Null
 global Round
-load 11 // v1220
+load 11 // v1325
 int 100000
 -
-store 14 // netBalance/806
-store 16 // thisConsensusTime/799
+store 14 // netBalance/850
+store 16 // thisConsensusTime/843
 b _reachl_3
-_reacha_live:
+_api_Bidder_updateState9:
+// CompanionLabel True "_api_Bidder_updateState9"
+byte base64()
+store 15 // v1580
+byte base64(AAAAAAAABiw=)
+load 15 // v1580
+concat
+log // up to 8 bytes
+load 15 // v1580
+store 4 // GV_apiRet :: Null
+global Round
+store 13 // thisConsensusTime/1387
+b _reachl_4
+_reacha_hasEnded:
+// CompanionLabel False "_reacha_hasEnded"
 load 1 // GV_currentStep :: UInt
-int 9
+int 11
 <
-bz l2_ifF
+bz l5_ifF
+load 1 // GV_currentStep :: UInt
+int 10
+<
+bz l6_ifF
 load 1 // GV_currentStep :: UInt
 int 7
 ==
 assert
 // ^ Claim: Incorrect state: not leaf
-// at ./src/contracts/auction.rsh:68:21:property binding
-callsub l3_LF_svsLoad_7
-byte base64(AA==)
+// at ./src/contracts/auction.rsh:74:25:property binding
+callsub l7_LF_svsLoad_7
+byte base64(AQ==)
 store 4 // GV_apiRet :: Null
 apiReturn_check:
 txn OnCompletion
@@ -549,114 +740,157 @@ int NoOp
 assert
 // checked on completion
 b apiReturn_noCheck
+_reacha_highestPrice:
+// CompanionLabel False "_reacha_highestPrice"
+load 1 // GV_currentStep :: UInt
+int 11
+<
+bz l14_ifF
+load 1 // GV_currentStep :: UInt
+int 10
+<
+bz l15_ifF
+load 1 // GV_currentStep :: UInt
+int 7
+==
+assert
+// ^ Claim: Incorrect state: not leaf
+// at ./src/contracts/auction.rsh:73:29:property binding
+callsub l7_LF_svsLoad_7
+load 17 // lastPrice/842
+itob
+store 4 // GV_apiRet :: Null
+b apiReturn_check
+_reacha_live:
+// CompanionLabel False "_reacha_live"
+load 1 // GV_currentStep :: UInt
+int 11
+<
+bz l17_ifF
+load 1 // GV_currentStep :: UInt
+int 10
+<
+bz l18_ifF
+load 1 // GV_currentStep :: UInt
+int 7
+==
+assert
+// ^ Claim: Incorrect state: not leaf
+// at ./src/contracts/auction.rsh:72:21:property binding
+callsub l7_LF_svsLoad_7
+byte base64(AA==)
+store 4 // GV_apiRet :: Null
+b apiReturn_check
 _reachi_0:
+// CompanionLabel False "_reachi_0"
 txn Sender
-store 32 // Seller/734
-load 11 // v4684
+store 31 // Seller/778
+load 11 // v10281
 int 0
 extract_uint64
-store 12 // v4683
-load 11 // v4684
+store 12 // v10280
+load 11 // v10281
 int 8
 extract_uint64
-store 31 // tokenId/735
-load 11 // v4684
-extract 16 148
-store 22 // auctionInfo/736
-load 11 // v4684
-int 164
+store 30 // tokenId/779
+load 11 // v10281
+extract 16 160
+store 32 // auctionInfo/780
+load 11 // v10281
+int 176
 extract_uint64
-store 30 // adminContract/737
-byte base64(ax+F5g==)
-load 12 // v4683
+store 29 // adminContract/781
+byte base64(HH9xvw==)
+load 12 // v10280
 itob
 concat
-load 31 // tokenId/735
+load 30 // tokenId/779
 itob
 concat
-load 22 // auctionInfo/736
+load 32 // auctionInfo/780
 concat
-load 30 // adminContract/737
+load 29 // adminContract/781
 itob
 concat
-log // up to 176 bytes
-// ^ log: "_reach_e0" [v4683,tokenId/735,auctionInfo/736,adminContract/737] "_reach_e0(uint64,uint64,(uint64,byte[80],address,uint64,byte[20]),uint64)"
-load 12 // v4683
-callsub l5_LF_timeCheck
+log // up to 188 bytes
+// ^ log: "_reach_e0" [v10280,tokenId/779,auctionInfo/780,adminContract/781] "_reach_e0(uint64,uint64,(uint64,byte[80],address,uint64,byte[32]),uint64)"
+load 12 // v10280
+callsub l21_LF_timeCheck
 int 17
 bzero
 dup
-store 11 // tokInfos/712
+store 11 // tokInfos/756
 dup
 extract 0 17
 int 8
 bzero
 replace2 0
 replace2 0
-store 12 // tokInfos'/742
+store 12 // tokInfos'/786
 int 100000
 callsub l1_LF_mbrAdd
 int 0
 // resource: R_Asset
-load 31 // tokenId/735
+load 30 // tokenId/779
 global CurrentApplicationAddress
-callsub l6_LF_makeTxn_False_False_True_True
-l7_LF_svsDump_1:
-load 32 // Seller/734
-load 31 // tokenId/735
+callsub l22_LF_makeTxn_False_False_True_True
+l23_LF_svsDump_1:
+load 31 // Seller/778
+load 30 // tokenId/779
 itob
 concat
-load 22 // auctionInfo/736
+load 32 // auctionInfo/780
 concat
-load 30 // adminContract/737
+load 29 // adminContract/781
 itob
 concat
-load 12 // tokInfos'/742
+load 12 // tokInfos'/786
 concat
-int 26
+int 10
 bzero
 concat
 int 1
 global Round
 b updateStateNoOp
 _reachi_1:
+// CompanionLabel False "_reachi_1"
 int 1
 load 1 // GV_currentStep :: UInt
 ==
 assert
-l8_LF_svsLoad_1:
+l24_LF_svsLoad_1:
 dup
 extract 0 32
-store 32 // Seller/734
+store 31 // Seller/778
 dup
 int 32
 extract_uint64
-store 31 // tokenId/735
+store 30 // tokenId/779
 dup
-extract 40 148
-store 22 // auctionInfo/736
+extract 40 160
+store 32 // auctionInfo/780
 dup
-int 188
+int 200
 extract_uint64
-store 30 // adminContract/737
-extract 196 17
-store 12 // tokInfos'/742
-load 11 // v4687
+store 29 // adminContract/781
+extract 208 17
+store 12 // tokInfos'/786
+load 11 // v10284
 btoi
-store 13 // v4686
+store 13 // v10283
 byte base64(1RUZFA==)
-load 13 // v4686
+load 13 // v10283
 itob
 concat
 log // up to 12 bytes
-// ^ log: "_reach_e1" [v4686] "_reach_e1(uint64)"
-load 13 // v4686
-callsub l5_LF_timeCheck
-load 12 // tokInfos'/742
+// ^ log: "_reach_e1" [v10283] "_reach_e1(uint64)"
+load 13 // v10283
+callsub l21_LF_timeCheck
+load 12 // tokInfos'/786
 extract 0 17
-store 11 // tokInfo/747
-load 12 // tokInfos'/742
-load 11 // tokInfo/747
+store 11 // tokInfo/791
+load 12 // tokInfos'/786
+load 11 // tokInfo/791
 dup
 int 0
 extract_uint64
@@ -665,10 +899,10 @@ int 1
 itob
 replace2 0
 replace2 0
-store 13 // tokInfos'/752
+store 13 // tokInfos'/796
 int 1
-load 31 // tokenId/735
-l9_LF_checkTxn_True:
+load 30 // tokenId/779
+l25_LF_checkTxn_True:
 // resource: R_Txn
 txn GroupIndex
 load 0 // GV_txnCounter :: UInt
@@ -694,70 +928,91 @@ gtxns AssetAmount
 ==
 assert
 // ^ CheckPay
-// at ./src/contracts/auction.rsh:80:16:dot
-load 32 // Seller/734
+// at ./src/contracts/auction.rsh:85:16:dot
+load 31 // Seller/778
 txn Sender
 ==
 assert
 // ^ Claim: sender correct
-// at ./src/contracts/auction.rsh:80:16:dot
-l10_LF_svsDump_2:
-load 32 // Seller/734
-load 31 // tokenId/735
+// at ./src/contracts/auction.rsh:85:16:dot
+l26_LF_svsDump_2:
+load 31 // Seller/778
+load 30 // tokenId/779
 itob
 concat
-load 22 // auctionInfo/736
+load 32 // auctionInfo/780
 concat
-load 30 // adminContract/737
+load 29 // adminContract/781
 itob
 concat
-load 13 // tokInfos'/752
+load 13 // tokInfos'/796
 concat
-int 26
+int 10
 bzero
 concat
 int 2
 global Round
 b updateStateNoOp
+_reachi_11:
+// CompanionLabel False "_reachi_11"
+int 14
+load 1 // GV_currentStep :: UInt
+==
+assert
+callsub l12_LF_svsLoad_14
+load 14 // v10299
+int 0
+extract_uint64
+store 15 // v10298
+byte base64(AV3ZAQ==)
+load 15 // v10298
+itob
+concat
+log // up to 12 bytes
+// ^ log: "_reach_e11" [v10298,.fork607.msg/1807] "_reach_e11(uint64,())"
+load 15 // v10298
+callsub l21_LF_timeCheck
+b _api_AdminCall_adminCall11
 _reachi_2:
+// CompanionLabel False "_reachi_2"
 txn Sender
-store 29 // Admin/754
+store 28 // Admin/798
 int 2
 load 1 // GV_currentStep :: UInt
 ==
 assert
-l11_LF_svsLoad_2:
+l37_LF_svsLoad_2:
 dup
 extract 0 32
-store 32 // Seller/734
+store 31 // Seller/778
 dup
 int 32
 extract_uint64
-store 31 // tokenId/735
+store 30 // tokenId/779
 dup
-extract 40 148
-store 22 // auctionInfo/736
+extract 40 160
+store 32 // auctionInfo/780
 dup
-int 188
+int 200
 extract_uint64
-store 30 // adminContract/737
-extract 196 17
-store 13 // tokInfos'/752
-load 11 // v4690
+store 29 // adminContract/781
+extract 208 17
+store 13 // tokInfos'/796
+load 11 // v10287
 btoi
-store 12 // v4689
+store 12 // v10286
 byte base64(l073Fw==)
-load 12 // v4689
+load 12 // v10286
 itob
 concat
 log // up to 12 bytes
-// ^ log: "_reach_e2" [v4689] "_reach_e2(uint64)"
-load 12 // v4689
-callsub l5_LF_timeCheck
+// ^ log: "_reach_e2" [v10286] "_reach_e2(uint64)"
+load 12 // v10286
+callsub l21_LF_timeCheck
 byte base64()
-store 28 // v759
+store 27 // v803
 byte base64(YXBwSUQ=)
-load 30 // adminContract/737
+load 29 // adminContract/781
 itob
 concat
 sha512_256
@@ -777,14 +1032,14 @@ int 0
 itxn_field Fee
 int appl
 itxn_field TypeEnum
-load 30 // adminContract/737
+load 29 // adminContract/781
 // resource: R_App
 itxn_field ApplicationID
 byte base64(be29gA==)
 itxn_field ApplicationArgs
 itxn_submit
 // ^ Remote: Auctions_getID()uint64
-// at ./src/contracts/auction.rsh:93:48:application
+// at ./src/contracts/auction.rsh:99:48:application
 global CurrentApplicationAddress
 balance
 load 9 // GV_remoteMinB :: Tuple()
@@ -796,36 +1051,36 @@ itob
 gitxn 0 LastLog
 extract 4 0
 concat
-store 12 // v760
-byte base64(AAAAAAAAAvg=)
-load 12 // v760
+store 12 // v804
+byte base64(AAAAAAAAAyQ=)
+load 12 // v804
 concat
 log // up to 24 bytes
-load 12 // v760
+load 12 // v804
 dup
-store 11 // v761
+store 11 // v805
 int 0
 extract_uint64
-store 12 // v763
-load 11 // v761
+store 12 // v807
+load 11 // v805
 int 8
 extract_uint64
-store 27 // v764
+store 26 // v808
 int 0
-load 12 // v763
+load 12 // v807
 ==
 assert
 // ^ Claim: remote bill check
-// at ./src/contracts/auction.rsh:93:48:application
+// at ./src/contracts/auction.rsh:99:48:application
 global Round
-store 26 // thisConsensusTime/770
+store 25 // thisConsensusTime/814
 txn ApplicationID
-store 25 // v771
-load 22 // auctionInfo/736
-extract 128 20
-store 24 // v772
+store 24 // v815
+load 32 // auctionInfo/780
+extract 128 32
+store 23 // v816
 byte base64(YXBwSUQ=)
-load 30 // adminContract/737
+load 29 // adminContract/781
 itob
 concat
 sha512_256
@@ -845,35 +1100,35 @@ int 0
 itxn_field Fee
 int appl
 itxn_field TypeEnum
-load 30 // adminContract/737
+load 29 // adminContract/781
 itxn_field ApplicationID
-byte base64(dbqs6A==)
+byte base64(ty54wg==)
 itxn_field ApplicationArgs
-load 27 // v764
+load 26 // v808
 itob
-load 25 // v771
+load 24 // v815
 itob
 concat
 global Round
 itob
 concat
-load 32 // Seller/734
+load 31 // Seller/778
 concat
-load 24 // v772
+load 23 // v816
 concat
-load 22 // auctionInfo/736
+load 32 // auctionInfo/780
 extract 8 80
 concat
-load 22 // auctionInfo/736
+load 32 // auctionInfo/780
 extract 120 8
 concat
-load 31 // tokenId/735
+load 30 // tokenId/779
 itob
 concat
 itxn_field ApplicationArgs
 itxn_submit
-// ^ Remote: Auctions_created((uint64,uint64,uint64,address,byte[20],byte[80],uint64,uint64))void
-// at ./src/contracts/auction.rsh:109:39:application
+// ^ Remote: Auctions_created((uint64,uint64,uint64,address,byte[32],byte[80],uint64,uint64))void
+// at ./src/contracts/auction.rsh:116:39:application
 global CurrentApplicationAddress
 balance
 load 9 // GV_remoteMinB :: Tuple()
@@ -885,40 +1140,38 @@ itob
 gitxn 0 LastLog
 extract 4 0
 concat
-store 11 // v779
-byte base64(AAAAAAAAAws=)
-load 11 // v779
+store 11 // v823
+byte base64(AAAAAAAAAzc=)
+load 11 // v823
 concat
 log // up to 16 bytes
-load 11 // v779
+load 11 // v823
 dup
-store 23 // v780
+store 22 // v824
 int 0
 extract_uint64
-store 11 // v782
+store 11 // v826
 int 0
-load 11 // v782
+load 11 // v826
 ==
 assert
 // ^ Claim: remote bill check
-// at ./src/contracts/auction.rsh:109:39:application
-load 22 // auctionInfo/736
+// at ./src/contracts/auction.rsh:116:39:application
+global Round
+load 32 // auctionInfo/780
 int 0
 extract_uint64
-store 23 // v791
-global Round
-load 23 // v791
 +
-store 22 // timeRemaining/792
+store 22 // end/836
 byte base64(jw81Bg==)
-load 27 // v764
+load 26 // v808
 itob
 concat
-load 32 // Seller/734
+load 31 // Seller/778
 concat
 log // up to 44 bytes
-// ^ log: "created" [v764,Seller/734] "created(uint64,address)"
-load 27 // v764
+// ^ log: "created" [v808,Seller/778] "created(uint64,address)"
+load 26 // v808
 itob
 int 8
 bzero
@@ -926,132 +1179,111 @@ concat
 int 8
 bzero
 concat
-load 32 // Seller/734
+load 31 // Seller/778
 int 1
 int 1
 int 0
 global Round
-load 13 // tokInfos'/752
-load 12 // v763
-load 11 // v782
+load 13 // tokInfos'/796
+load 12 // v807
+load 11 // v826
 +
-store 14 // netBalance/806
-store 15 // tokenInfos/805
-store 16 // thisConsensusTime/799
-store 17 // lastPrice/798
-store 18 // keepBidding/797
-store 19 // isFirstBid/796
-store 20 // highestBidder/795
-store 21 // endRes/794
+store 14 // netBalance/850
+store 15 // tokenInfos/849
+store 16 // thisConsensusTime/843
+store 17 // lastPrice/842
+store 18 // keepBidding/841
+store 19 // isFirstBid/840
+store 20 // highestBidder/839
+store 21 // endRes/838
 b _reachl_3
-_reachi_6:
-int 7
-load 1 // GV_currentStep :: UInt
-==
-assert
-callsub l3_LF_svsLoad_7
-load 15 // v4696
-btoi
-store 16 // v4695
-byte base64(cO3veg==)
-load 16 // v4695
-itob
-concat
-log // up to 12 bytes
-// ^ log: "_reach_e6" [v4695] "_reach_e6(uint64)"
-load 16 // v4695
-callsub l5_LF_timeCheck
-global Round
-load 18 // v1316
->=
-assert
-load 29 // Admin/754
-txn Sender
-==
-assert
-// ^ Claim: sender correct
-// at ./src/contracts/auction.rsh:236:39:dot
-// at ./src/contracts/auction.rsh:235:61:application call to [unknown function] (defined at: ./src/contracts/auction.rsh:235:61:function exp)
-global Round
-store 13 // thisConsensusTime/1294
-b _reachl_4
 _reachi_8:
-int 9
+// CompanionLabel False "_reachi_8"
+int 10
 load 1 // GV_currentStep :: UInt
 ==
 assert
-callsub l4_LF_svsLoad_9
-load 11 // v4702
-btoi
-store 12 // v4701
-byte base64(L9rpHQ==)
-load 12 // v4701
+callsub l8_LF_svsLoad_10
+load 11 // v10293
+int 0
+extract_uint64
+store 12 // v10292
+byte base64(ryhksA==)
+load 12 // v10292
 itob
 concat
 log // up to 12 bytes
-// ^ log: "_reach_e8" [v4701] "_reach_e8(uint64)"
-load 12 // v4701
-callsub l5_LF_timeCheck
-global Round
-load 13 // v824
->=
-assert
-load 29 // Admin/754
-txn Sender
-==
-assert
-// ^ Claim: sender correct
-// at ./src/contracts/auction.rsh:179:39:dot
-// at ./src/contracts/auction.rsh:178:73:application call to [unknown function] (defined at: ./src/contracts/auction.rsh:178:73:function exp)
-load 27 // v764
-itob
-global Round
-itob
-concat
-load 17 // lastPrice/798
-itob
-concat
-global Round
-store 16 // thisConsensusTime/799
-store 21 // endRes/794
-b _reachl_3
+// ^ log: "_reach_e8" [v10292,.fork607.msg/1724] "_reach_e8(uint64,())"
+load 12 // v10292
+callsub l21_LF_timeCheck
+b _api_AdminCall_adminCall8
 _reachp_0:
 callsub l0_LF_wasntMeth
-int 100000
+int 200000
 callsub l1_LF_mbrAdd
+// CompanionCreate
+itxn_begin
+int 0
+itxn_field Fee
+int appl
+itxn_field TypeEnum
+// resource: R_App
+byte base64(CDEAMgkS)
+itxn_field ApprovalProgram
+byte base64(CA==)
+itxn_field ClearStateProgram
+itxn_submit
+// cost credit: 3
+itxn CreatedApplicationID
+store 5 // GV_companion :: Contract
+// CompanionLabel False "_reachp_0"
 txna ApplicationArgs 1
-store 11 // v4684
+store 11 // v10281
 b _reachi_0
 _reachp_1:
 callsub l0_LF_wasntMeth
+// CompanionLabel False "_reachp_1"
 txna ApplicationArgs 1
-store 11 // v4687
+store 11 // v10284
 b _reachi_1
+_reachp_11:
+callsub l0_LF_wasntMeth
+// CompanionLabel False "_reachp_11"
+txna ApplicationArgs 1
+store 14 // v10299
+b _reachi_11
+_reachp_12:
+callsub l0_LF_wasntMeth
+// CompanionLabel False "_reachp_12"
+txna ApplicationArgs 1
+store 11 // v10302
+b _reachi_12
 _reachp_2:
 callsub l0_LF_wasntMeth
+// CompanionLabel False "_reachp_2"
+callsub l2_LF_companionCall
+// cost credit: 3
 txna ApplicationArgs 1
-store 11 // v4690
+store 11 // v10287
 b _reachi_2
-_reachp_5:
-callsub l0_LF_wasntMeth
-txna ApplicationArgs 1
-store 15 // v4693
-b _reachi_5
 _reachp_6:
 callsub l0_LF_wasntMeth
+// CompanionLabel False "_reachp_6"
 txna ApplicationArgs 1
-store 15 // v4696
+store 11 // v10290
 b _reachi_6
-_reachp_7:
-callsub l0_LF_wasntMeth
-txna ApplicationArgs 1
-store 11 // v4699
-b _reachi_7
 _reachp_8:
 callsub l0_LF_wasntMeth
+// CompanionLabel False "_reachp_8"
 txna ApplicationArgs 1
-store 11 // v4702
+store 11 // v10293
 b _reachi_8
+_reachp_9:
+callsub l0_LF_wasntMeth
+// CompanionLabel False "_reachp_9"
+txna ApplicationArgs 1
+store 15 // v10296
+b _reachi_9
 alloc:
 int 0
 txn GlobalNumUint
@@ -1069,29 +1301,149 @@ int 0
 txn LocalNumByteSlice
 ==
 assert
+int 0
+store 5 // GV_companion :: Contract
 callsub l0_LF_wasntMeth
-int 239
+int 235
 bzero
 int 0
 int 0
 b updateStateNoOp
-l12_Auctioneer_acceptSale0_458:
-b _api_Auctioneer_acceptSale5
-l13_Auctioneer_rejectSale0_458:
-b _api_Auctioneer_rejectSale5
-l14_Auctioneer_stopAuction0_114:
-b _api_Auctioneer_stopAuction7
-l15_Bidder_bid0_114:
-b _api_Bidder_bid7
-l16_Bidder_optIn0_114:
-b _api_Bidder_optIn7
+hasEnded__bytepX6OTtup_VFAW6oeAvnoNxyS_EyjvBzcUVPbSUvHpb4_:
+// CompanionLabel False "hasEnded__bytepX6OTtup_VFAW6oeAvnoNxyS_EyjvBzcUVPbSUvHpb4_"
+b _reacha_hasEnded
+highestPrice__ui5WJ2ajpeBRmuMgj5ufd_hSQZwMOiodPdt_Bqmi1wDQo_:
+// CompanionLabel False "highestPrice__ui5WJ2ajpeBRmuMgj5ufd_hSQZwMOiodPdt_Bqmi1wDQo_"
+b _reacha_highestPrice
+l11_ifF:
+load 1 // GV_currentStep :: UInt
+int 15
+==
+assert
+// ^ Claim: Incorrect state: not leaf
+// at ./src/contracts/auction.rsh:74:25:property binding
+callsub l13_LF_svsLoad_15
+byte base64(AA==)
+store 4 // GV_apiRet :: Null
+b apiReturn_check
+l14_ifF:
+load 1 // GV_currentStep :: UInt
+int 14
+<
+bz l16_ifF
+load 1 // GV_currentStep :: UInt
+int 11
+==
+assert
+// ^ Claim: Incorrect state: not leaf
+// at ./src/contracts/auction.rsh:73:29:property binding
+callsub l10_LF_svsLoad_11
+load 17 // lastPrice/842
+itob
+store 4 // GV_apiRet :: Null
+b apiReturn_check
+l15_ifF:
+load 1 // GV_currentStep :: UInt
+int 10
+==
+assert
+// ^ Claim: Incorrect state: not leaf
+// at ./src/contracts/auction.rsh:73:29:property binding
+callsub l8_LF_svsLoad_10
+load 17 // lastPrice/842
+itob
+store 4 // GV_apiRet :: Null
+b apiReturn_check
+l16_ifF:
+load 1 // GV_currentStep :: UInt
+int 14
+==
+assert
+// ^ Claim: Incorrect state: not leaf
+// at ./src/contracts/auction.rsh:73:29:property binding
+callsub l12_LF_svsLoad_14
+load 17 // lastPrice/842
+itob
+store 4 // GV_apiRet :: Null
+b apiReturn_check
+l17_ifF:
+load 1 // GV_currentStep :: UInt
+int 14
+<
+bz l19_ifF
+load 1 // GV_currentStep :: UInt
+int 11
+==
+assert
+// ^ Claim: Incorrect state: not leaf
+// at ./src/contracts/auction.rsh:72:21:property binding
+callsub l10_LF_svsLoad_11
+byte base64(AA==)
+store 4 // GV_apiRet :: Null
+b apiReturn_check
 l18_ifF:
-load 17 // lastPrice/798
+load 1 // GV_currentStep :: UInt
+int 10
+==
+assert
+// ^ Claim: Incorrect state: not leaf
+// at ./src/contracts/auction.rsh:72:21:property binding
+callsub l8_LF_svsLoad_10
+byte base64(AA==)
+store 4 // GV_apiRet :: Null
+b apiReturn_check
+l19_ifF:
+load 1 // GV_currentStep :: UInt
+int 15
+<
+bz l20_ifF
+load 1 // GV_currentStep :: UInt
+int 14
+==
+assert
+// ^ Claim: Incorrect state: not leaf
+// at ./src/contracts/auction.rsh:72:21:property binding
+callsub l12_LF_svsLoad_14
+byte base64(AA==)
+store 4 // GV_apiRet :: Null
+b apiReturn_check
+l20_ifF:
+load 1 // GV_currentStep :: UInt
+int 15
+==
+assert
+// ^ Claim: Incorrect state: not leaf
+// at ./src/contracts/auction.rsh:72:21:property binding
+callsub l13_LF_svsLoad_15
+byte base64(AQ==)
+store 4 // GV_apiRet :: Null
+b apiReturn_check
+l27_Auctioneer_stopAuction0_114:
+b _api_Auctioneer_stopAuction12
+l28_Bidder_bid0_114:
+b _api_Bidder_bid12
+l29_Bidder_optIn0_114:
+b _api_Bidder_optIn12
+l30_ifF:
+int 24
+bzero
+store 11 // v935
+byte base64(AAAAAAAAA6c=)
+load 11 // v935
+concat
+log // up to 32 bytes
+load 11 // v935
+store 4 // GV_apiRet :: Null
+global Round
+store 16 // thisConsensusTime/843
+b _reachl_3
+l32_ifF:
+load 17 // lastPrice/842
 // resource: R_Account
-load 20 // highestBidder/795
-callsub l19_LF_makeTxn_False_False_False_True
+load 20 // highestBidder/839
+callsub l33_LF_makeTxn_False_False_False_True
 byte base64(YXBwSUQ=)
-load 30 // adminContract/737
+load 29 // adminContract/781
 itob
 concat
 sha512_256
@@ -1111,12 +1463,12 @@ int 0
 itxn_field Fee
 int appl
 itxn_field TypeEnum
-load 30 // adminContract/737
+load 29 // adminContract/781
 // resource: R_App
 itxn_field ApplicationID
 byte base64(B0BfPQ==)
 itxn_field ApplicationArgs
-load 27 // v764
+load 26 // v808
 itob
 itxn_field ApplicationArgs
 txn Sender
@@ -1125,8 +1477,8 @@ itxn_field Accounts
 itxn_field ApplicationArgs
 itxn_submit
 // ^ Remote: Auctions_updateHighestBidder(uint64,address)void
-// at ./src/contracts/auction.rsh:140:91:application
-// at ./src/contracts/auction.rsh:137:50:application call to [unknown function] (defined at: ./src/contracts/auction.rsh:137:50:function exp)
+// at ./src/contracts/auction.rsh:147:91:application
+// at ./src/contracts/auction.rsh:144:50:application call to [unknown function] (defined at: ./src/contracts/auction.rsh:144:50:function exp)
 global CurrentApplicationAddress
 balance
 load 9 // GV_remoteMinB :: Tuple()
@@ -1138,154 +1490,227 @@ itob
 gitxn 0 LastLog
 extract 4 0
 concat
-store 12 // v1038
-byte base64(AAAAAAAABA4=)
-load 12 // v1038
+store 12 // v1119
+byte base64(AAAAAAAABF8=)
+load 12 // v1119
 concat
 log // up to 16 bytes
-load 12 // v1038
+load 12 // v1119
 dup
-store 11 // v1039
+store 11 // v1120
 int 0
 extract_uint64
-store 12 // v1041
+store 12 // v1122
 int 0
-load 12 // v1041
+load 12 // v1122
 ==
 assert
 // ^ Claim: remote bill check
-// at ./src/contracts/auction.rsh:140:91:application
-// at ./src/contracts/auction.rsh:137:50:application call to [unknown function] (defined at: ./src/contracts/auction.rsh:137:50:function exp)
-byte base64(6vTulQ==)
-load 27 // v764
+// at ./src/contracts/auction.rsh:147:91:application
+// at ./src/contracts/auction.rsh:144:50:application call to [unknown function] (defined at: ./src/contracts/auction.rsh:144:50:function exp)
+byte base64(/bK0jQ==)
+load 26 // v808
 itob
 concat
-load 33 // bid/1005
+load 32 // bid/1062
 itob
 concat
 txn Sender
 concat
-load 24 // v772
+load 23 // v816
 concat
-log // up to 72 bytes
-// ^ log: "bidSuccess" [v764,bid/1005,this/864,v772] "bidSuccess(uint64,uint64,address,byte[20])"
+log // up to 84 bytes
+// ^ log: "bidSuccess" [v808,bid/1062,this/897,v816] "bidSuccess(uint64,uint64,address,byte[32])"
 txn Sender
-load 17 // lastPrice/798
+load 17 // lastPrice/842
 itob
 concat
-store 11 // v1049
-byte base64(AAAAAAAABBk=)
-load 11 // v1049
+store 11 // v1130
+byte base64(AAAAAAAABGo=)
+load 11 // v1130
 concat
 log // up to 48 bytes
-load 11 // v1049
+load 11 // v1130
 store 4 // GV_apiRet :: Null
 txn Sender
 int 0
-load 33 // bid/1005
+load 32 // bid/1062
 global Round
-load 13 // v1010
-load 17 // lastPrice/798
+load 13 // v1067
+load 17 // lastPrice/842
 -
-load 12 // v1041
+load 12 // v1122
 +
-store 14 // netBalance/806
-store 16 // thisConsensusTime/799
-store 17 // lastPrice/798
-store 19 // isFirstBid/796
-store 20 // highestBidder/795
+store 14 // netBalance/850
+store 16 // thisConsensusTime/843
+store 17 // lastPrice/842
+store 19 // isFirstBid/840
+store 20 // highestBidder/839
 b _reachl_3
-l20_ifF:
-load 12 // v1141
+l34_ifF:
+load 12 // v1222
 int 100000
 >=
-bz l22_ifF
+bz l36_ifF
 int 100000
 // resource: R_Account
-load 32 // Seller/734
-callsub l19_LF_makeTxn_False_False_False_True
+load 31 // Seller/778
+callsub l33_LF_makeTxn_False_False_False_True
 byte base64(xGuQEw==)
-load 27 // v764
+load 26 // v808
 itob
 concat
 txn Sender
 concat
 log // up to 44 bytes
-// ^ log: "optInSuccess" [v764,this/864] "optInSuccess(uint64,address)"
+// ^ log: "optInSuccess" [v808,this/897] "optInSuccess(uint64,address)"
 int 1
-store 11 // v1247
-byte base64(AAAAAAAABN8=)
-load 11 // v1247
+store 11 // v1352
+byte base64(AAAAAAAABUg=)
+load 11 // v1352
 itob
 substring 7 8
 concat
 log // up to 9 bytes
-load 11 // v1247
+load 11 // v1352
 itob
 substring 7 8
 store 4 // GV_apiRet :: Null
 global Round
-load 12 // v1141
+load 12 // v1222
 int 100000
 -
-store 14 // netBalance/806
-store 16 // thisConsensusTime/799
+store 14 // netBalance/850
+store 16 // thisConsensusTime/843
 b _reachl_3
-l21_ifF:
+l35_ifF:
 byte base64(xGuQEw==)
-load 27 // v764
+load 26 // v808
 itob
 concat
 txn Sender
 concat
 log // up to 44 bytes
-// ^ log: "optInSuccess" [v764,this/864] "optInSuccess(uint64,address)"
+// ^ log: "optInSuccess" [v808,this/897] "optInSuccess(uint64,address)"
 int 1
-store 12 // v1234
-byte base64(AAAAAAAABNI=)
-load 12 // v1234
+store 12 // v1339
+byte base64(AAAAAAAABTs=)
+load 12 // v1339
 itob
 substring 7 8
 concat
 log // up to 9 bytes
-load 12 // v1234
+load 12 // v1339
 itob
 substring 7 8
 store 4 // GV_apiRet :: Null
 global Round
-load 11 // v1220
-store 14 // netBalance/806
-store 16 // thisConsensusTime/799
+load 11 // v1325
+store 14 // netBalance/850
+store 16 // thisConsensusTime/843
 b _reachl_3
-l22_ifF:
+l36_ifF:
 byte base64(xGuQEw==)
-load 27 // v764
+load 26 // v808
 itob
 concat
 txn Sender
 concat
 log // up to 44 bytes
-// ^ log: "optInSuccess" [v764,this/864] "optInSuccess(uint64,address)"
+// ^ log: "optInSuccess" [v808,this/897] "optInSuccess(uint64,address)"
 int 1
-store 11 // v1254
-byte base64(AAAAAAAABOY=)
-load 11 // v1254
+store 11 // v1359
+byte base64(AAAAAAAABU8=)
+load 11 // v1359
 itob
 substring 7 8
 concat
 log // up to 9 bytes
-load 11 // v1254
+load 11 // v1359
 itob
 substring 7 8
 store 4 // GV_apiRet :: Null
 global Round
-load 12 // v1141
-store 14 // netBalance/806
-store 16 // thisConsensusTime/799
+load 12 // v1222
+store 14 // netBalance/850
+store 16 // thisConsensusTime/843
 b _reachl_3
-l23_ifF:
+l38_Auctioneer_acceptSale0_419:
+b _api_Auctioneer_acceptSale9
+l39_Auctioneer_rejectSale0_419:
+b _api_Auctioneer_rejectSale9
+l3_ifF:
+load 1 // GV_currentStep :: UInt
+int 14
+<
+bz l4_ifF
+int 8
+bzero
+store 11 // v10293
+b _reachi_8
+l40_Bidder_updateState0_419:
+b _api_Bidder_updateState9
+l41_ifF:
+global Round
+store 13 // thisConsensusTime/1387
+b _reachl_4
+l42_ifF:
+global Round
+store 13 // thisConsensusTime/1387
+b _reachl_4
+l43_ifF:
+load 12 // tokenInfos/1794
+extract 0 17
+int 0
+extract_uint64
+// resource: R_Asset
+load 30 // tokenId/779
+// resource: R_Account
+load 28 // Admin/798
+callsub l22_LF_makeTxn_False_False_True_True
+load 11 // netBalance/1795
+load 28 // Admin/798
+callsub l33_LF_makeTxn_False_False_False_True
+// resource: R_Account
+int 0
+load 30 // tokenId/779
+global CurrentApplicationAddress
+global CreatorAddress
+callsub l45_LF_makeTxn_False_True_True_True
+// CompanionDeletePre
+updateStateHalt:
+txn OnCompletion
+int DeleteApplication
+==
+assert
+// checked on completion
+// CompanionDelete
+itxn_begin
+int 0
+itxn_field Fee
+int appl
+itxn_field TypeEnum
+load 5 // GV_companion :: Contract
+itxn_field ApplicationID
+int DeleteApplication
+itxn_field OnCompletion
+itxn_submit
+// cost credit: 3
+int 100000
+l56_LF_mbrSub:
+load 7 // GV_mbrSub :: UInt
++
+store 7 // GV_mbrSub :: UInt
+callsub l57_LF_updateMbr
+// resource: R_Account
+int 0
+global CurrentApplicationAddress
+global CreatorAddress
+callsub l58_LF_makeTxn_False_True_False_True
+b updateState
+l46_ifF:
 byte base64(YXBwSUQ=)
-load 30 // adminContract/737
+load 29 // adminContract/781
 itob
 concat
 sha512_256
@@ -1305,16 +1730,17 @@ int 0
 itxn_field Fee
 int appl
 itxn_field TypeEnum
-load 30 // adminContract/737
+load 29 // adminContract/781
 // resource: R_App
 itxn_field ApplicationID
-byte base64(FIl4rg==)
+byte base64(SdVQsg==)
 itxn_field ApplicationArgs
-load 21 // endRes/794
+load 26 // v808
+itob
 itxn_field ApplicationArgs
 itxn_submit
-// ^ Remote: Auctions_ended((uint64,uint64,uint64))void
-// at ./src/contracts/auction.rsh:194:37:application
+// ^ Remote: Auctions_endSuccess(uint64)void
+// at ./src/contracts/auction.rsh:188:42:application
 global CurrentApplicationAddress
 balance
 load 9 // GV_remoteMinB :: Tuple()
@@ -1326,184 +1752,435 @@ itob
 gitxn 0 LastLog
 extract 4 0
 concat
-store 18 // v1276
-byte base64(AAAAAAAABPw=)
-load 18 // v1276
+store 19 // v1369
+byte base64(AAAAAAAABVk=)
+load 19 // v1369
 concat
 log // up to 16 bytes
-load 18 // v1276
+load 19 // v1369
 dup
-store 19 // v1277
+store 18 // v1370
 int 0
 extract_uint64
-store 18 // v1279
-load 14 // netBalance/806
-load 18 // v1279
+store 19 // v1372
+load 14 // netBalance/850
+load 19 // v1372
 +
-store 19 // v1284
+store 18 // v1377
 int 0
-load 18 // v1279
+load 19 // v1372
 ==
 assert
 // ^ Claim: remote bill check
-// at ./src/contracts/auction.rsh:194:37:application
-byte base64(eH51vg==)
-load 27 // v764
+// at ./src/contracts/auction.rsh:188:42:application
+byte base64(l0EejQ==)
+load 26 // v808
 itob
 concat
-load 17 // lastPrice/798
+load 17 // lastPrice/842
 itob
 concat
-load 32 // Seller/734
+load 31 // Seller/778
 concat
-load 25 // v771
+load 24 // v815
 itob
 concat
-load 26 // thisConsensusTime/770
+load 25 // thisConsensusTime/814
 itob
 concat
-load 24 // v772
+load 23 // v816
 concat
-log // up to 88 bytes
-// ^ log: "down" [v764,lastPrice/798,Seller/734,v771,thisConsensusTime/770,v772] "down(uint64,uint64,address,uint64,uint64,byte[20])"
-load 17 // lastPrice/798
+log // up to 100 bytes
+// ^ log: "down" [v808,lastPrice/842,Seller/778,v815,thisConsensusTime/814,v816] "down(uint64,uint64,address,uint64,uint64,byte[32])"
+load 17 // lastPrice/842
 int 0
 >
-bz l25_ifF
-load 16 // thisConsensusTime/799
+bz l48_ifF
+load 16 // thisConsensusTime/843
 int 50
 +
-store 14 // end/1291
+store 14 // end_/1384
 int 1
 int 1
-load 16 // thisConsensusTime/799
-load 15 // tokenInfos/805
-load 19 // v1284
-store 11 // netBalance/1301
-store 12 // tokenInfos/1300
-store 13 // thisConsensusTime/1294
-store 33 // awaitingDecision/1293
-store 34 // agreed/1292
+load 16 // thisConsensusTime/843
+load 15 // tokenInfos/849
+load 18 // v1377
+store 11 // netBalance/1394
+store 12 // tokenInfos/1393
+store 13 // thisConsensusTime/1387
+store 32 // awaitingDecision/1386
+store 33 // agreed/1385
 b _reachl_4
-l25_ifF:
-load 15 // tokenInfos/805
+l48_ifF:
+load 15 // tokenInfos/849
 extract 0 17
+dup
+store 19 // tokInfo/1755
 int 0
 extract_uint64
+dup
+store 14 // v1756
 // resource: R_Asset
-load 31 // tokenId/735
+load 30 // tokenId/779
 // resource: R_Account
-load 32 // Seller/734
-callsub l6_LF_makeTxn_False_False_True_True
-load 19 // v1284
+load 31 // Seller/778
+callsub l22_LF_makeTxn_False_False_True_True
+load 18 // v1377
 // resource: R_Account
-load 20 // highestBidder/795
-callsub l19_LF_makeTxn_False_False_False_True
-// resource: R_Account
-int 0
-load 31 // tokenId/735
+load 20 // highestBidder/839
+callsub l33_LF_makeTxn_False_False_False_True
+byte base64(YXBwSUQ=)
+load 29 // adminContract/781
+itob
+concat
+sha512_256
+store 8 // GV_remoteCallee :: Address
 global CurrentApplicationAddress
-global CreatorAddress
-callsub l26_LF_makeTxn_False_True_True_True
-updateStateHalt:
-txn OnCompletion
-int DeleteApplication
+min_balance
+store 9 // GV_remoteMinB :: Tuple()
+byte base64()
+global CurrentApplicationAddress
+balance
+load 9 // GV_remoteMinB :: Tuple()
+-
+itob
+store 10 // GV_remoteBals :: Tuple()
+itxn_begin
+int 0
+itxn_field Fee
+int appl
+itxn_field TypeEnum
+load 29 // adminContract/781
+itxn_field ApplicationID
+byte base64(FIl4rg==)
+itxn_field ApplicationArgs
+load 21 // endRes/838
+itxn_field ApplicationArgs
+itxn_submit
+// ^ Remote: Auctions_ended((uint64,uint64,uint64))void
+// at ./src/contracts/auction.rsh:250:37:application
+global CurrentApplicationAddress
+balance
+load 9 // GV_remoteMinB :: Tuple()
+-
+load 10 // GV_remoteBals :: Tuple()
+btoi
+-
+itob
+gitxn 0 LastLog
+extract 4 0
+concat
+store 20 // v1777
+byte base64(AAAAAAAABvE=)
+load 20 // v1777
+concat
+log // up to 16 bytes
+load 20 // v1777
+dup
+store 21 // v1778
+int 0
+extract_uint64
+store 20 // v1780
+int 0
+load 20 // v1780
 ==
 assert
-// checked on completion
-callsub l30_LF_updateMbr
-// resource: R_Account
-int 0
-global CurrentApplicationAddress
-global CreatorAddress
-callsub l31_LF_makeTxn_False_True_False_True
-b updateState
-l27_ifF:
-load 34 // agreed/1292
-bz l29_ifF
-load 12 // tokenInfos/1300
+// ^ Claim: remote bill check
+// at ./src/contracts/auction.rsh:250:37:application
+int 1
+load 16 // thisConsensusTime/843
+load 15 // tokenInfos/849
+load 19 // tokInfo/1755
+load 14 // v1756
+dup
+-
+itob
+replace2 0
+replace2 0
+load 18 // v1377
+dup
+-
+load 20 // v1780
++
+store 11 // netBalance/1795
+store 12 // tokenInfos/1794
+store 13 // thisConsensusTime/1788
+store 32 // rideOn/1787
+b _reachl_10
+l49_ifF:
+load 33 // agreed/1385
+bz l51_ifF
+load 12 // tokenInfos/1393
 extract 0 17
+dup
+store 22 // tokInfo/1587
 int 0
 extract_uint64
+dup
+store 14 // v1588
 // resource: R_Asset
-load 31 // tokenId/735
+load 30 // tokenId/779
 // resource: R_Account
-load 20 // highestBidder/795
-callsub l6_LF_makeTxn_False_False_True_True
-load 11 // netBalance/1301
+load 20 // highestBidder/839
+callsub l22_LF_makeTxn_False_False_True_True
+load 11 // netBalance/1394
 // resource: R_Account
-load 32 // Seller/734
-callsub l19_LF_makeTxn_False_False_False_True
-byte base64(7qaZxA==)
-load 24 // v772
+load 31 // Seller/778
+callsub l33_LF_makeTxn_False_False_False_True
+byte base64(YjcdxA==)
+load 23 // v816
 concat
-load 17 // lastPrice/798
+load 17 // lastPrice/842
 itob
 concat
-load 32 // Seller/734
+load 31 // Seller/778
 concat
-load 20 // highestBidder/795
+load 20 // highestBidder/839
 concat
-load 31 // tokenId/735
+load 30 // tokenId/779
 itob
 concat
-log // up to 104 bytes
-// ^ log: "accepted" [v772,lastPrice/798,Seller/734,highestBidder/795,tokenId/735] "accepted(byte[20],uint64,address,address,uint64)"
-// resource: R_Account
-int 0
-load 31 // tokenId/735
+log // up to 116 bytes
+// ^ log: "accepted" [v816,lastPrice/842,Seller/778,highestBidder/839,tokenId/779] "accepted(byte[32],uint64,address,address,uint64)"
+byte base64(YXBwSUQ=)
+load 29 // adminContract/781
+itob
+concat
+sha512_256
+store 8 // GV_remoteCallee :: Address
 global CurrentApplicationAddress
-global CreatorAddress
-callsub l26_LF_makeTxn_False_True_True_True
-b updateStateHalt
-l29_ifF:
-load 12 // tokenInfos/1300
-extract 0 17
+min_balance
+store 9 // GV_remoteMinB :: Tuple()
+byte base64()
+global CurrentApplicationAddress
+balance
+load 9 // GV_remoteMinB :: Tuple()
+-
+itob
+store 10 // GV_remoteBals :: Tuple()
+itxn_begin
+int 0
+itxn_field Fee
+int appl
+itxn_field TypeEnum
+load 29 // adminContract/781
+// resource: R_App
+itxn_field ApplicationID
+byte base64(FIl4rg==)
+itxn_field ApplicationArgs
+load 21 // endRes/838
+itxn_field ApplicationArgs
+itxn_submit
+// ^ Remote: Auctions_ended((uint64,uint64,uint64))void
+// at ./src/contracts/auction.rsh:250:37:application
+global CurrentApplicationAddress
+balance
+load 9 // GV_remoteMinB :: Tuple()
+-
+load 10 // GV_remoteBals :: Tuple()
+btoi
+-
+itob
+gitxn 0 LastLog
+extract 4 0
+concat
+store 20 // v1610
+byte base64(AAAAAAAABko=)
+load 20 // v1610
+concat
+log // up to 16 bytes
+load 20 // v1610
+dup
+store 21 // v1611
 int 0
 extract_uint64
-// resource: R_Asset
-load 31 // tokenId/735
-// resource: R_Account
-load 32 // Seller/734
-callsub l6_LF_makeTxn_False_False_True_True
-load 11 // netBalance/1301
-// resource: R_Account
-load 20 // highestBidder/795
-callsub l19_LF_makeTxn_False_False_False_True
-byte base64(pU+azQ==)
-load 24 // v772
-concat
-load 17 // lastPrice/798
-itob
-concat
-load 32 // Seller/734
-concat
-load 20 // highestBidder/795
-concat
-load 31 // tokenId/735
-itob
-concat
-log // up to 104 bytes
-// ^ log: "rejected" [v772,lastPrice/798,Seller/734,highestBidder/795,tokenId/735] "rejected(byte[20],uint64,address,address,uint64)"
-// resource: R_Account
+store 20 // v1613
 int 0
-load 31 // tokenId/735
-global CurrentApplicationAddress
-global CreatorAddress
-callsub l26_LF_makeTxn_False_True_True_True
-b updateStateHalt
-l2_ifF:
-load 1 // GV_currentStep :: UInt
-int 9
+load 20 // v1613
 ==
 assert
-// ^ Claim: Incorrect state: not leaf
-// at ./src/contracts/auction.rsh:68:21:property binding
-callsub l4_LF_svsLoad_9
-byte base64(AQ==)
-store 4 // GV_apiRet :: Null
-b apiReturn_check
-l32_LF_makeTxnK_False_True:
+// ^ Claim: remote bill check
+// at ./src/contracts/auction.rsh:250:37:application
+int 1
+load 13 // thisConsensusTime/1387
+load 12 // tokenInfos/1393
+load 22 // tokInfo/1587
+load 14 // v1588
+dup
+-
+itob
+replace2 0
+replace2 0
+load 11 // netBalance/1394
+dup
+-
+load 20 // v1613
++
+store 15 // netBalance/1628
+store 16 // tokenInfos/1627
+store 18 // thisConsensusTime/1621
+store 19 // rideOn/1620
+b _reachl_5
+l4_ifF:
+int 8
+bzero
+store 14 // v10299
+b _reachi_11
+l51_ifF:
+load 12 // tokenInfos/1393
+extract 0 17
+dup
+store 22 // tokInfo/1671
+int 0
+extract_uint64
+dup
+store 14 // v1672
+// resource: R_Asset
+load 30 // tokenId/779
+// resource: R_Account
+load 31 // Seller/778
+callsub l22_LF_makeTxn_False_False_True_True
+load 11 // netBalance/1394
+// resource: R_Account
+load 20 // highestBidder/839
+callsub l33_LF_makeTxn_False_False_False_True
+byte base64(7kMQ9Q==)
+load 23 // v816
+concat
+load 17 // lastPrice/842
+itob
+concat
+load 31 // Seller/778
+concat
+load 20 // highestBidder/839
+concat
+load 30 // tokenId/779
+itob
+concat
+log // up to 116 bytes
+// ^ log: "rejected" [v816,lastPrice/842,Seller/778,highestBidder/839,tokenId/779] "rejected(byte[32],uint64,address,address,uint64)"
+byte base64(YXBwSUQ=)
+load 29 // adminContract/781
+itob
+concat
+sha512_256
+store 8 // GV_remoteCallee :: Address
+global CurrentApplicationAddress
+min_balance
+store 9 // GV_remoteMinB :: Tuple()
+byte base64()
+global CurrentApplicationAddress
+balance
+load 9 // GV_remoteMinB :: Tuple()
+-
+itob
+store 10 // GV_remoteBals :: Tuple()
+itxn_begin
+int 0
+itxn_field Fee
+int appl
+itxn_field TypeEnum
+load 29 // adminContract/781
+// resource: R_App
+itxn_field ApplicationID
+byte base64(FIl4rg==)
+itxn_field ApplicationArgs
+load 21 // endRes/838
+itxn_field ApplicationArgs
+itxn_submit
+// ^ Remote: Auctions_ended((uint64,uint64,uint64))void
+// at ./src/contracts/auction.rsh:250:37:application
+global CurrentApplicationAddress
+balance
+load 9 // GV_remoteMinB :: Tuple()
+-
+load 10 // GV_remoteBals :: Tuple()
+btoi
+-
+itob
+gitxn 0 LastLog
+extract 4 0
+concat
+store 20 // v1694
+byte base64(AAAAAAAABp4=)
+load 20 // v1694
+concat
+log // up to 16 bytes
+load 20 // v1694
+dup
+store 21 // v1695
+int 0
+extract_uint64
+store 20 // v1697
+int 0
+load 20 // v1697
+==
+assert
+// ^ Claim: remote bill check
+// at ./src/contracts/auction.rsh:250:37:application
+int 1
+load 13 // thisConsensusTime/1387
+load 12 // tokenInfos/1393
+load 22 // tokInfo/1671
+load 14 // v1672
+dup
+-
+itob
+replace2 0
+replace2 0
+load 11 // netBalance/1394
+dup
+-
+load 20 // v1697
++
+store 15 // netBalance/1712
+store 16 // tokenInfos/1711
+store 18 // thisConsensusTime/1705
+store 19 // rideOn/1704
+b _reachl_7
+l52_ifF:
+load 16 // tokenInfos/1627
+extract 0 17
+int 0
+extract_uint64
+// resource: R_Asset
+load 30 // tokenId/779
+// resource: R_Account
+load 28 // Admin/798
+callsub l22_LF_makeTxn_False_False_True_True
+load 15 // netBalance/1628
+load 28 // Admin/798
+callsub l33_LF_makeTxn_False_False_False_True
+// resource: R_Account
+int 0
+load 30 // tokenId/779
+global CurrentApplicationAddress
+global CreatorAddress
+callsub l45_LF_makeTxn_False_True_True_True
+// CompanionDeletePre
+b updateStateHalt
+l54_ifF:
+load 16 // tokenInfos/1711
+extract 0 17
+int 0
+extract_uint64
+// resource: R_Asset
+load 30 // tokenId/779
+// resource: R_Account
+load 28 // Admin/798
+callsub l22_LF_makeTxn_False_False_True_True
+load 15 // netBalance/1712
+load 28 // Admin/798
+callsub l33_LF_makeTxn_False_False_False_True
+// resource: R_Account
+int 0
+load 30 // tokenId/779
+global CurrentApplicationAddress
+global CreatorAddress
+callsub l45_LF_makeTxn_False_True_True_True
+// CompanionDeletePre
+b updateStateHalt
+l59_LF_makeTxnK_False_True:
 int 0
 itxn_field Fee
 int pay
@@ -1512,7 +2189,22 @@ itxn_field Receiver
 itxn_field Amount
 itxn_submit
 retsub
-l33_LF_makeTxnK_True_True:
+l5_ifF:
+load 1 // GV_currentStep :: UInt
+int 14
+<
+bz l9_ifF
+load 1 // GV_currentStep :: UInt
+int 11
+==
+assert
+// ^ Claim: Incorrect state: not leaf
+// at ./src/contracts/auction.rsh:74:25:property binding
+callsub l10_LF_svsLoad_11
+byte base64(AA==)
+store 4 // GV_apiRet :: Null
+b apiReturn_check
+l60_LF_makeTxnK_True_True:
 int 0
 itxn_field Fee
 int axfer
@@ -1522,7 +2214,34 @@ itxn_field XferAsset
 itxn_field AssetAmount
 itxn_submit
 retsub
+l6_ifF:
+load 1 // GV_currentStep :: UInt
+int 10
+==
+assert
+// ^ Claim: Incorrect state: not leaf
+// at ./src/contracts/auction.rsh:74:25:property binding
+callsub l8_LF_svsLoad_10
+byte base64(AQ==)
+store 4 // GV_apiRet :: Null
+b apiReturn_check
+l9_ifF:
+load 1 // GV_currentStep :: UInt
+int 15
+<
+bz l11_ifF
+load 1 // GV_currentStep :: UInt
+int 14
+==
+assert
+// ^ Claim: Incorrect state: not leaf
+// at ./src/contracts/auction.rsh:74:25:property binding
+callsub l12_LF_svsLoad_14
+byte base64(AQ==)
+store 4 // GV_apiRet :: Null
+b apiReturn_check
 live__bytevEYhhKwsTMkq5gDpSKYRz7Vjsh8qsSWQ6ENyCX8wGGo_:
+// CompanionLabel False "live__bytevEYhhKwsTMkq5gDpSKYRz7Vjsh8qsSWQ6ENyCX8wGGo_"
 b _reacha_live
 updateMbr_eq:
 pop
@@ -1533,7 +2252,7 @@ swap
 dup
 store 6 // GV_mbrAdd :: UInt
 global CreatorAddress
-callsub l19_LF_makeTxn_False_False_False_True
+callsub l33_LF_makeTxn_False_False_False_True
 retsub
 updateMbr_pos_eq:
 -
@@ -1541,16 +2260,16 @@ dup
 bz updateMbr_eq
 dup
 store 6 // GV_mbrAdd :: UInt
-callsub l17_LF_checkTxn_False
+callsub l31_LF_checkTxn_False
 retsub
-l19_LF_makeTxn_False_False_False_True:
+l33_LF_makeTxn_False_False_False_True:
 itxn_begin
-b l32_LF_makeTxnK_False_True
+b l59_LF_makeTxnK_False_True
 l0_LF_wasntMeth:
 int 1
 store 3 // GV_wasntMeth :: Bool
 retsub
-l5_LF_timeCheck:
+l21_LF_timeCheck:
 dup
 int 0
 ==
@@ -1560,129 +2279,122 @@ load 2 // GV_currentTime :: UInt
 ||
 assert
 retsub
-l6_LF_makeTxn_False_False_True_True:
+l22_LF_makeTxn_False_False_True_True:
 itxn_begin
-b l33_LF_makeTxnK_True_True
-l4_LF_svsLoad_9:
+b l60_LF_makeTxnK_True_True
+l8_LF_svsLoad_10:
 dup
-extract 0 32
-store 32 // Seller/734
-dup
-int 32
+int 0
 extract_uint64
-store 31 // tokenId/735
+store 30 // tokenId/779
+dup
+extract 8 32
+store 28 // Admin/798
 dup
 int 40
 extract_uint64
-store 30 // adminContract/737
+store 17 // lastPrice/842
 dup
-extract 48 32
-store 29 // Admin/754
-dup
-pop
-byte base64()
-store 28 // v759
-dup
-int 80
+extract 48 17
+store 16 // tokenInfos/1711
+int 65
 extract_uint64
-store 27 // v764
-dup
-int 88
-extract_uint64
-store 26 // thisConsensusTime/770
-dup
-int 96
-extract_uint64
-store 25 // v771
-dup
-extract 104 20
-store 24 // v772
-dup
-int 124
-extract_uint64
-store 23 // v791
-dup
-int 132
-extract_uint64
-store 22 // timeRemaining/792
-dup
-extract 140 24
-store 21 // endRes/794
-dup
-extract 164 32
-store 20 // highestBidder/795
-dup
-extract 196 1
-btoi
-store 19 // isFirstBid/796
-dup
-extract 197 1
-btoi
-store 18 // keepBidding/797
-dup
-int 198
-extract_uint64
-store 17 // lastPrice/798
-dup
-extract 206 17
-store 15 // tokenInfos/805
-dup
-int 223
-extract_uint64
-store 14 // netBalance/806
-int 231
-extract_uint64
-store 13 // v824
+store 15 // netBalance/1712
 retsub
-l3_LF_svsLoad_7:
+l7_LF_svsLoad_7:
+dup
+int 0
+extract_uint64
+store 30 // tokenId/779
+dup
+extract 8 32
+store 28 // Admin/798
+dup
+int 40
+extract_uint64
+store 17 // lastPrice/842
+dup
+extract 48 17
+store 16 // tokenInfos/1627
+int 65
+extract_uint64
+store 15 // netBalance/1628
+retsub
+l12_LF_svsLoad_14:
+dup
+int 0
+extract_uint64
+store 30 // tokenId/779
+dup
+extract 8 32
+store 28 // Admin/798
+dup
+int 40
+extract_uint64
+store 17 // lastPrice/842
+dup
+extract 48 17
+store 12 // tokenInfos/1794
+int 65
+extract_uint64
+store 11 // netBalance/1795
+retsub
+l10_LF_svsLoad_11:
 dup
 extract 0 32
-store 32 // Seller/734
+store 31 // Seller/778
 dup
 int 32
 extract_uint64
-store 31 // tokenId/735
+store 30 // tokenId/779
 dup
-extract 40 32
-store 29 // Admin/754
-dup
-extract 72 20
-store 24 // v772
-dup
-extract 92 32
-store 20 // highestBidder/795
-dup
-int 124
+int 40
 extract_uint64
-store 17 // lastPrice/798
+store 29 // adminContract/781
 dup
-int 132
+extract 48 32
+store 28 // Admin/798
+dup
+pop
+byte base64()
+store 27 // v803
+dup
+extract 80 32
+store 23 // v816
+dup
+extract 112 24
+store 21 // endRes/838
+dup
+extract 136 32
+store 20 // highestBidder/839
+dup
+int 168
 extract_uint64
-store 14 // end/1291
+store 17 // lastPrice/842
 dup
-extract 140 1
+int 176
+extract_uint64
+store 14 // end_/1384
+dup
+extract 184 1
 btoi
-store 34 // agreed/1292
+store 33 // agreed/1385
 dup
-extract 141 1
+extract 185 1
 btoi
-store 33 // awaitingDecision/1293
+store 32 // awaitingDecision/1386
 dup
-extract 142 17
-store 12 // tokenInfos/1300
-dup
-int 159
+extract 186 17
+store 12 // tokenInfos/1393
+int 203
 extract_uint64
-store 11 // netBalance/1301
-int 167
-extract_uint64
-store 18 // v1316
+store 11 // netBalance/1394
 retsub
-l26_LF_makeTxn_False_True_True_True:
+l45_LF_makeTxn_False_True_True_True:
 itxn_begin
 itxn_field AssetCloseTo
-b l33_LF_makeTxnK_True_True
-l17_LF_checkTxn_False:
+b l60_LF_makeTxnK_True_True
+l31_LF_checkTxn_False:
 // resource: R_Txn
 txn GroupIndex
 load 0 // GV_txnCounter :: UInt
@@ -1704,19 +2416,92 @@ gtxns Amount
 ==
 assert
 retsub
-l30_LF_updateMbr:
+l13_LF_svsLoad_15:
+dup
+extract 0 32
+store 31 // Seller/778
+dup
+int 32
+extract_uint64
+store 30 // tokenId/779
+dup
+int 40
+extract_uint64
+store 29 // adminContract/781
+dup
+extract 48 32
+store 28 // Admin/798
+dup
+pop
+byte base64()
+store 27 // v803
+dup
+int 80
+extract_uint64
+store 26 // v808
+dup
+int 88
+extract_uint64
+store 25 // thisConsensusTime/814
+dup
+int 96
+extract_uint64
+store 24 // v815
+dup
+extract 104 32
+store 23 // v816
+dup
+int 136
+extract_uint64
+store 22 // end/836
+dup
+extract 144 24
+store 21 // endRes/838
+dup
+extract 168 32
+store 20 // highestBidder/839
+dup
+extract 200 1
+btoi
+store 19 // isFirstBid/840
+dup
+extract 201 1
+btoi
+store 18 // keepBidding/841
+dup
+int 202
+extract_uint64
+store 17 // lastPrice/842
+dup
+extract 210 17
+store 15 // tokenInfos/849
+int 227
+extract_uint64
+store 14 // netBalance/850
+retsub
+l57_LF_updateMbr:
 load 6 // GV_mbrAdd :: UInt
 load 7 // GV_mbrSub :: UInt
 dup2
 >=
 bz updateMbr_neg
 b updateMbr_pos_eq
+l2_LF_companionCall:
+itxn_begin
+int 0
+itxn_field Fee
+int appl
+itxn_field TypeEnum
+load 5 // GV_companion :: Contract
+itxn_field ApplicationID
+itxn_submit
+retsub
 l1_LF_mbrAdd:
 load 6 // GV_mbrAdd :: UInt
 +
 store 6 // GV_mbrAdd :: UInt
 retsub
-l31_LF_makeTxn_False_True_False_True:
+l58_LF_makeTxn_False_True_False_True:
 itxn_begin
 itxn_field CloseRemainderTo
-b l32_LF_makeTxnK_False_True
+b l59_LF_makeTxnK_False_True

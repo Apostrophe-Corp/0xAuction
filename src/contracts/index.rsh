@@ -15,7 +15,7 @@ export const main = Reach.App(() => {
 		['contractInfo', Contract],
 		['blockCreated', UInt],
 		['owner', Address],
-		['title', Bytes(20)],
+		['title', Bytes(32)],
 		['description', Bytes(80)],
 		['price', UInt],
 		['tokenId', Token],
@@ -32,12 +32,14 @@ export const main = Reach.App(() => {
 		ended: Fun([endResponse], Null),
 		getID: Fun([], UInt),
 		updateHighestBidder: Fun([UInt, Address], Null),
+		endSuccess: Fun([UInt], Null),
 	})
 
 	const Auction = Events({
 		end: [UInt, UInt, UInt],
-		create: [UInt, Contract, UInt, Address, Bytes(20), Bytes(80), UInt, Token],
+		create: [UInt, Contract, UInt, Address, Bytes(32), Bytes(80), UInt, Token],
 		updateHighestBidder: [UInt, Address],
+		endSuccess: [UInt],
 	})
 
 	init()
@@ -81,6 +83,11 @@ export const main = Reach.App(() => {
 		})
 		.api(Auctions.updateHighestBidder, (id, address, ret) => {
 			Auction.updateHighestBidder(id, address)
+			ret(null)
+			return auctionID
+		})
+		.api(Auctions.endSuccess, (id, ret) => {
+			Auction.endSuccess(id)
 			ret(null)
 			return auctionID
 		})

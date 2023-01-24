@@ -21,7 +21,7 @@ const Seller = () => {
 	const aucAsset = useRef()
 	const [newAuction, setNewAuction] = useState({})
 	const [title, setTitle] = useState('')
-
+	const [hasEnded, setHasEnded] = useState(true)
 
 	const setPreviewBgs = ({ x = '', y = '', found = false } = {}) => {
 		aucAsset.current.style.background = `url(${x}), url(${y}), url(${
@@ -87,6 +87,7 @@ const Seller = () => {
 							s.wMax,
 							s.flex,
 							s.flexCenter,
+							s.tCenter,
 							auc.aucTitleText
 						)}
 					>
@@ -97,7 +98,10 @@ const Seller = () => {
 					className={cf(s.wMax, auc.aucAsset)}
 					ref={aucAsset}
 				></div>
-				<Deadline blockCreated ={newAuction.blockCreated}/>
+				<Deadline
+					blockCreated={newAuction.blockCreated}
+					setHasEnded={setHasEnded}
+				/>
 				<div
 					className={cf(
 						s.w50,
@@ -155,15 +159,17 @@ const Seller = () => {
 					</span>
 				</div>
 				<div className={cf(s.wMax, s.flex, s.flexCenter, auc.terminateCon)}>
-					<button
-						className={cf(s.flex, s.flexCenter, auc.terminateBtn)}
-						type='button'
-						onClick={() => {
-							endAuction(newAuction.contractInfo)
-						}}
-					>
-						End Auction
-					</button>
+					{!hasEnded && (
+						<button
+							className={cf(s.flex, s.flexCenter, auc.terminateBtn)}
+							type='button'
+							onClick={() => {
+								endAuction(newAuction.contractInfo)
+							}}
+						>
+							End Auction
+						</button>
+					)}
 					<button
 						className={cf(s.flex, s.flexCenter, auc.terminateBtn)}
 						type='button'

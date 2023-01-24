@@ -14,7 +14,7 @@ let time = {
 
 const setTime = (x) => (time = x())
 
-const Deadline = ({ blockCreated }) => {
+const Deadline = ({ blockCreated, setHasEnded }) => {
 	const [blocksRemaining, setBlocksRemaining] = useState(0)
 	const [time_, setTime_] = useState(time)
 	const [show, setShow] = useState(false)
@@ -22,8 +22,8 @@ const Deadline = ({ blockCreated }) => {
 	useLayoutEffect(() => {
 		const getTimeRemaining = async () => {
 			const present = reach.bigNumberToNumber(await reach.getNetworkTime())
-			const remaining = blockCreated + 23351 - present
-			const tRemaining = (remaining * 3.7) / 60 / 60
+			const remaining = blockCreated + 985 - present
+			const tRemaining = remaining > 1 ? (remaining * 3.7) / 60 / 60 : 0
 			setTime(() => ({
 				sec: Math.floor(((((tRemaining % 24) % 1) * 60) % 1) * 60),
 				min: Math.floor(((tRemaining % 24) % 1) * 60),
@@ -38,68 +38,35 @@ const Deadline = ({ blockCreated }) => {
 	useEffect(() => {
 		let updateRemaining = setInterval(async () => {
 			const present = reach.bigNumberToNumber(await reach.getNetworkTime())
-			const remaining = blockCreated + 23351 - present
-			setBlocksRemaining(remaining)
+			const remaining = blockCreated + 985 - present
+			setHasEnded(remaining < 1)
+			setBlocksRemaining(remaining < 1 ? 'Ended' : remaining)
+			const tRemaining = remaining > 0 ? (remaining * 3.7) / 60 / 60 : 0
+			if (tRemaining === 0) clearInterval(updateRemaining)
+			setTime_((previous) => ({
+				sec: Math.floor(((((tRemaining % 24) % 1) * 60) % 1) * 60),
+				min: Math.floor(((tRemaining % 24) % 1) * 60),
+				hr: Math.floor(tRemaining % 24),
+				day: Math.floor(tRemaining / 24),
+			}))
 		}, 3700)
 
 		return () => {
 			clearTimeout(updateRemaining)
 			updateRemaining = undefined
 		}
-	}, [blockCreated])
+	}, [blockCreated, setHasEnded])
 
 	useEffect(() => {
-		let countDown = setInterval(() => {
-			if (time.sec > 0) {
-				setTime(() => ({
-					...time,
-					sec: time.sec - 1,
-				}))
-				setTime_(time)
-			} else {
-				if (time.min > 0) {
-					setTime(() => ({
-						...time,
-						sec: 59,
-						min: time.min - 1,
-					}))
-					setTime_(time)
-				} else {
-					if (time.hr > 0) {
-						setTime(() => ({
-							...time,
-							sec: 59,
-							min: 59,
-							hr: time.hr - 1,
-						}))
-						setTime_(time)
-					} else {
-						if (time.day > 0) {
-							setTime(() => ({
-								...time,
-								sec: 59,
-								min: 59,
-								hr: 11,
-								day: time.day - 1,
-							}))
-							setTime_(time)
-						} else clearInterval(countDown)
-					}
-				}
-			}
-		}, 1000)
-
 		let waiter = setTimeout(() => {
 			setShow(true)
 			clearTimeout(waiter)
 		}, 5000)
 		return () => {
-			clearInterval(countDown)
-			countDown = undefined
 			clearTimeout(waiter)
 			waiter = undefined
 		}
-	}, [])
+	}, [blockCreated])
 
 	return (
 		<div className={cf(s.wMax, s.flex, s.flexCenter)}>
@@ -129,11 +96,15 @@ const Deadline = ({ blockCreated }) => {
 					)}
 				>
 					{blocksRemaining} Blocks ~{' '}
-					{`${time_.day.toString().padStart(2, '0')}:${time_.hr
-						.toString()
-						.padStart(2, '0')}:${time_.min
-						.toString()
-						.padStart(2, '0')}:${time_.sec.toString().padStart(2, '0')}`}
+					{`${
+						Number(time_.day) < 1 ? '00' : time_.day.toString().padStart(2, '0')
+					}:${
+						Number(time_.hr) < 1 ? '00' : time_.hr.toString().padStart(2, '0')
+					}:${
+						Number(time_.min) < 1 ? '00' : time_.min.toString().padStart(2, '0')
+					}:${
+						Number(time_.sec) < 1 ? '00' : time_.sec.toString().padStart(2, '0')
+					}`}
 				</span>
 			</div>
 		</div>

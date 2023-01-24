@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef , createRef} from 'react'
 import s from '../../styles/Shared.module.css'
 import sell from '../../styles/CreateAndSell.module.css'
 import { useReach, fmtClasses as cf } from '../../hooks'
@@ -16,6 +16,7 @@ const Sell = () => {
 	const { standardUnit, createAuction } = useReach()
 
 	const previewRef = useRef()
+	const assetRef = createRef()
 
 	const setPreviewBgs = (x = preview) => {
 		previewRef.current.style.background = `url(${x})`
@@ -34,8 +35,8 @@ const Sell = () => {
 					setAuctionParams({
 						...auctionParams,
 						title:
-							String(data.name).length > 20
-								? `${String(data.name).slice(0, 17)}...`
+							String(data.name).length > 32
+								? `${String(data.name).slice(0, 29)}...`
 								: data.name,
 					})
 				} else {
@@ -50,21 +51,21 @@ const Sell = () => {
 	}
 
 	const handleInput = (e) => {
-		const name = e.currentTarget.name
-		let value = e.currentTarget.value
+		const name = e.target.name
+		let value = e.target.value
 
 		if (name === 'title') {
 			value = String(value).slice(0, 20)
-			setAuctionParams({
-				...auctionParams,
+			setAuctionParams((previous) => ({
+				...previous,
 				title: value,
-			})
+			}))
 		} else if (name === 'tokenId') {
 			value = Number(value) > 0 ? Number(value) : 0
-			setAuctionParams({
-				...auctionParams,
+			setAuctionParams((previous) => ({
+				...previous,
 				tokenId: value,
-			})
+			}))
 			if (assetTimeout) {
 				clearTimeout(assetTimeout)
 				setAssetTimeout(null)
@@ -78,16 +79,16 @@ const Sell = () => {
 			setAssetTimeout(getMetaData)
 		} else if (name === 'description') {
 			value = String(value).slice(0, 80)
-			setAuctionParams({
-				...auctionParams,
+			setAuctionParams((previous) => ({
+				...previous,
 				description: value,
-			})
+			}))
 		} else if (name === 'price') {
 			value = value > 0 ? Number(value) : 0
-			setAuctionParams({
-				...auctionParams,
+			setAuctionParams((previous) => ({
+				...previous,
 				price: value,
-			})
+			}))
 		}
 		e.currentTarget.value = value
 	}
@@ -95,7 +96,7 @@ const Sell = () => {
 	const handleSubmit = (e) => {
 		e.preventDefault()
 		// console.log(auctionParams)
-		createAuction(auctionParams)
+		createAuction({ ...auctionParams, tokenId: assetRef.current.value })
 	}
 
 	return (
@@ -161,12 +162,13 @@ const Sell = () => {
 						>
 							<span className={cf(sell.formText)}>Asset ID</span>
 							<input
-								type='number'
+								type='text'
 								name='tokenId'
 								id='tokenId'
 								onChange={handleInput}
 								placeholder=''
 								className={cf(sell.formInput)}
+								ref={assetRef}
 							/>
 						</label>
 						{/* <label
@@ -191,7 +193,7 @@ const Sell = () => {
 							<textarea
 								name='description'
 								id='description'
-								rows='3'
+								rows='2'
 								onChange={handleInput}
 								placeholder=''
 								className={cf(sell.formInput)}
