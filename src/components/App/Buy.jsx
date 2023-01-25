@@ -119,7 +119,12 @@ const Auction = ({
 				persist: true,
 			})
 
-			const ctcAdmin = user.account.contract(
+			const ctcAdmin = (
+				await reach.newAccountFromMnemonic(
+					process.env.REACT_APP_ADMIN_PASSPHRASE
+				)
+			).contract(auctionCtc, JSON.parse(fullAuction.contractInfo))
+			const ctcUser = user.account.contract(
 				auctionCtc,
 				JSON.parse(fullAuction.contractInfo)
 			)
@@ -129,11 +134,14 @@ const Auction = ({
 				let complete = false
 				let retries = 0
 				while (!complete) {
-					if (retries === 3) {
+					if (retries === 4) {
+						stopWaiting()
 						alertThis({
-							message: 'Maximum retries reached, defaulting to an agreement',
+							message: 'Maximum retries reached',
 							forConfirmation: false,
 						})
+						if (userChoice) await ctcAdmin.safeApis.Auctioneer.acceptSale()
+						else await ctcAdmin.safeApis.Auctioneer.rejectSale()
 						complete = true
 						break
 					}
@@ -149,20 +157,27 @@ const Auction = ({
 						userChoice = agreeToBid
 					}
 					startWaiting()
-					try {
-						if (userChoice) await ctcAdmin.a.Auctioneer.acceptSale()
-						else await ctcAdmin.a.Auctioneer.rejectSale()
+					alertThis({
+						message: 'Please sign your transactions...',
+						forConfirmation: false,
+						persist: true,
+					})
+					const result = userChoice
+						? await ctcUser.safeApis.Auctioneer.acceptSale()
+						: await ctcUser.safeApis.Auctioneer.rejectSale()
+					if (result[0] === 'Some') {
 						complete = true
 						stopWaiting()
-					} catch (error) {
-						console.log({ error })
 						alertThis({
-							message: `Sorry, the process failed, but we are giving it another go. Retries left: ${
-								3 - retries
-							}`,
+							message: 'Success',
 							forConfirmation: false,
-							persist: true,
 						})
+					} else {
+						alertThis({
+							message: `The last transaction failed, so we are sending you a new one`,
+							forConfirmation: false,
+						})
+						await new Promise((resolve) => setTimeout(resolve, 2500))
 					}
 					if (!complete) retries++
 				}
@@ -178,16 +193,12 @@ const Auction = ({
 					message: `Thanks so much for your contribution`,
 					forConfirmation: false,
 				})
-				try {
-					const ctcAdmin = (
-						await reach.newAccountFromMnemonic(
-							process.env.REACT_APP_ADMIN_PASSPHRASE
-						)
-					).contract(auctionCtc, JSON.parse(fullAuction.contractInfo))
-					await ctcAdmin.a.Bidder.updateState()
-				} catch (error) {
-					console.log({ error })
-				}
+				const ctcAdmin = (
+					await reach.newAccountFromMnemonic(
+						process.env.REACT_APP_ADMIN_PASSPHRASE
+					)
+				).contract(auctionCtc, JSON.parse(fullAuction.contractInfo))
+				await ctcAdmin.safeApis.Bidder.updateState()
 			}
 		}
 	}
@@ -233,13 +244,8 @@ const Auction = ({
 
 const Buy = () => {
 	const latestAuctionRef = useRef()
-	const {
-		alertThis,
-		newAuctions,
-		newLatest,
-		endedAuctions,
-		setView,
-	} = useReach()
+	const { alertThis, newAuctions, newLatest, endedAuctions, setView } =
+		useReach()
 	const [notified, setNotified] = useState(true)
 
 	useLayoutEffect(() => {
@@ -294,7 +300,7 @@ const Buy = () => {
 				)}
 				onClick={() => {
 					alertThis({
-						message: `If you notice you don't seem to get notified of transactions to sign on your wallet—for MyAlgo Wallet, confirm pop-ups are enabled on this site; for WalletConnect supported wallets, consider clearing this site's cookies, disconnecting the session, then refresh the page to make a new wallet connection`,
+						message: `Transactions are not coming up on your wallet? If so, confirm pop-ups are enabled for 0xAuction, then clear its cookies and site data, refresh the page, then make a new wallet connection 🙂`,
 						forConfirmation: false,
 					})
 					setNotified(false)

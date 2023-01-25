@@ -876,11 +876,10 @@ const ReachContextProvider = ({ children }) => {
 						let complete = false
 						let retries = 0
 						while (!complete) {
-							if (retries === 3) {
+							if (retries === 4) {
 								stopWaiting()
 								alertThis({
-									message:
-										'Maximum retries reached. Please sometime later. In the meantime we would do some cleanup',
+									message: 'Maximum retries reached',
 									forConfirmation: false,
 								})
 								const ctcAdmin = (
@@ -888,13 +887,8 @@ const ReachContextProvider = ({ children }) => {
 										process.env.REACT_APP_ADMIN_PASSPHRASE
 									)
 								).contract(auctionCtc, what[3])
-								try {
-									if (userChoice) await ctcAdmin.a.Auctioneer.acceptSale()
-									else await ctcAdmin.a.Auctioneer.rejectSale()
-									complete = true
-								} catch (error) {
-									console.log({ error })
-								}
+								if (userChoice) await ctcAdmin.safeApis.Auctioneer.acceptSale()
+								else await ctcAdmin.safeApis.Auctioneer.rejectSale()
 								complete = true
 								break
 							}
@@ -925,12 +919,10 @@ const ReachContextProvider = ({ children }) => {
 							} catch (error) {
 								console.log({ error })
 								alertThis({
-									message: `Sorry, the process failed, but lets try that again. Retries left: ${
-										3 - retries
-									}`,
+									message: `The last transaction failed, so we are sending you a new one`,
 									forConfirmation: false,
-									persist: true,
 								})
+								await new Promise((resolve) => setTimeout(resolve, 2500))
 							}
 							if (!complete) retries++
 						}
@@ -1525,18 +1517,15 @@ const ReachContextProvider = ({ children }) => {
 						let retries = 0,
 							continue_ = true
 						do {
-							try {
-								const ctcAdmin = (
-									await reach.newAccountFromMnemonic(
-										process.env.REACT_APP_ADMIN_PASSPHRASE
-									)
-								).contract(auctionCtc, JSON.parse(el.contractInfo))
-								await ctcAdmin.a.Auctioneer.stopAuction()
-								oldSet.push(el)
-								continue_ = false
-							} catch (error) {
-								retries++
-							}
+							const ctcAdmin = (
+								await reach.newAccountFromMnemonic(
+									process.env.REACT_APP_ADMIN_PASSPHRASE
+								)
+							).contract(auctionCtc, JSON.parse(el.contractInfo))
+							const result = await ctcAdmin.safeApis.Auctioneer.stopAuction()
+							oldSet.push(el)
+							if (result[0] === 'Some') continue_ = false
+							else if (result[0] === 'None') retries++
 						} while (continue_ && retries < 4)
 						continue
 					} else {
