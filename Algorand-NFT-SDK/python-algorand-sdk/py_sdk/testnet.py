@@ -1,5 +1,7 @@
 import hashlib
 import asyncio
+import time
+import threading
 from promisio import promisify
 import json
 import time
@@ -46,6 +48,9 @@ indexer_client = indexer.IndexerClient(indexer_token, indexer_address_testnet)
 
 def verify_opt_in(address, asset_id):
   account_info = indexer_client.lookup_account_assets(address=address, asset_id=asset_id)
+  
+  if not account_info.get("assets"):
+  return False
   
   if account_info.get("assets")[0].get("asset-id") == asset_id:
     return True
