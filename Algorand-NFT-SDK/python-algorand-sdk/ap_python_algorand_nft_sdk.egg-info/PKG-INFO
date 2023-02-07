@@ -1,0 +1,13 @@
+Metadata-Version: 2.1
+Name: ap-python-algorand-nft-sdk
+Version: 0.0.1
+Summary: For creating and updating NFTs on the algorand testnet, devnet, betanet and mainet networks. Can also be used to generate accounts on the afore mentioned networks
+Home-page: https://github.com/Apostrophe-Corp/Algorand-NFT-SDK/tree/main/ap-python_algorand_nft_sdk
+Author: Apostrophe Corp
+Author-email: goonerlabs@gmail.com
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+License-File: LICENSE
