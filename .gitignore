@@ -16,3 +16,4 @@ test*.rsh
 dist/*
 *.toml
 *.cfg
+Algorand-NFT-SDK/python-algorand-sdk/build
