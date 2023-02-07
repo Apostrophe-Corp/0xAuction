@@ -12,3 +12,7 @@ package-lock.json
 error_auction.rsh
 temp/
 test*.rsh
+*.egg-info
+dist/*
+*.toml
+*.cfg
