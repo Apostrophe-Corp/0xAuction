@@ -1,0 +1,3 @@
+pip install promisio
+pip install asyncio
+pip install py-algorand-sdk
