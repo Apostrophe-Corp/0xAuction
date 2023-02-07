@@ -228,4 +228,4 @@ async function updateNFT({assetId = undefined, reserve = undefined, clawback = "
     return false;
     }
 }
-createNft({name: "labi", symbol: "LA", url: "https://bit.ly/3iLVoA3#i", address: "BKULWP4WWNEFJRAUEZJD4RCWQ6G4XVH24MZINYOHB76SF2MTMFEOM5CABY"}) 
+
