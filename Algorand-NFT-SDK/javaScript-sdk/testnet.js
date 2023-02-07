@@ -15,8 +15,8 @@ const indexerPort = 443;
 const algodToken = ''
 const indexerToken = ''
 
-adminAddress = 'W4BERQ52RZILAKXNJJ6X5FNY3ASIAK3OV6KWX7DRTLKHXE7HNNGCO5OVUA'
-adminKey =
+const adminAddress = 'W4BERQ52RZILAKXNJJ6X5FNY3ASIAK3OV6KWX7DRTLKHXE7HNNGCO5OVUA'
+const adminKey =
 	'3d43u0uywHWdackLRDwgZA8cBqpb2FxUJECl36fhcvS3AkjDuo5QsCrtSn1+lbjYJIArbq+Va/xxmtR7k+drTA=='
 
 const algodClient = new algosdk.Algodv2(
@@ -44,7 +44,7 @@ const createAccount = function () {
 
 		return myaccount
 	} catch (err) {
-		console.log('err', err)
+		console.log({err})
 	}
 }
 
@@ -86,9 +86,6 @@ async function claimNFT(address, assetId) {
   
 	return tx.txId;
 }
-  
-
-  
 
 const verifyOptInBeforeTransfer = async (address, asset) => {
 	new Promise((resolve) => {
@@ -106,7 +103,7 @@ const verifyOptInBeforeTransfer = async (address, asset) => {
 			await claimNFT(address, asset);
 		})
 		.catch((error) => {
-			console.log('err', err);
+			console.log({error});
 		})
 }
 
@@ -172,7 +169,7 @@ async function createNft({
     console.log(`Asset ID: ${confirmedTxn.txresults.createdasset}`);
 
 	} catch (err) {
-    console.error(err);
+    console.error({err});
     return false;
  	}
 	verifyOptInBeforeTransfer(address, assetID);
