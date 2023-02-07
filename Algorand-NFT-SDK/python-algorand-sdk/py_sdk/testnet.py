@@ -1,13 +1,8 @@
 import hashlib
-import asyncio
-import time
-import threading
-from promisio import promisify
 import json
+import threading
 import time
-import time, threading
 from promisio import promisify
-import asyncio
 from algosdk.v2client import algod, indexer
 from algosdk import transaction, account, mnemonic
 
@@ -28,14 +23,6 @@ class setInterval :
     def cancel(self) :
         self.stopEvent.set()
 
-# # start action every 0.6s
-# inter=setInterval(0.6,action)
-# print('just after setInterval -> time : {:.1f}s'.format(time.time()-StartTime))
-
-# # will stop interval in 5s
-# t=threading.Timer(5,inter.cancel)
-# t.start()
-
 algod_address_testnet = "https://testnet-api.algonode.cloud"
 indexer_address_testnet = "https://testnet-idx.algonode.cloud"
 algod_token = ""
@@ -48,10 +35,8 @@ indexer_client = indexer.IndexerClient(indexer_token, indexer_address_testnet)
 
 def verify_opt_in(address, asset_id):
   account_info = indexer_client.lookup_account_assets(address=address, asset_id=asset_id)
-  
   if not account_info.get("assets"):
-  return False
-  
+    return False
   if account_info.get("assets")[0].get("asset-id") == asset_id:
     return True
   else:
@@ -89,7 +74,6 @@ def claim_nft(address, asset_id):
 
   return txid
 
-# make function asynchronous
 @promisify
 def verify_opt_in_before_transfer(address, asset):
   # time.sleep(150)
