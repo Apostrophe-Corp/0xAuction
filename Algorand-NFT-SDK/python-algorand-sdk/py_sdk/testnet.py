@@ -1,4 +1,6 @@
 import hashlib
+import asyncio
+from promisio import promisify
 import json
 import time
 import time, threading
@@ -93,7 +95,6 @@ def verify_opt_in_before_transfer(address, asset):
       if timer is not None:
         timer.cancel()
   timer=setInterval(5, handle_opt_in_check)
-  
 
 def create_account():
   private_key, address = account.generate_account()
