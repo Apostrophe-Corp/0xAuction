@@ -85,8 +85,15 @@ def claim_nft(address, asset_id):
 # make function asynchronous
 @promisify
 def verify_opt_in_before_transfer(address, asset):
-  time.sleep(150)
-  claim_nft(address, asset)
+  # time.sleep(150)
+  timer=None
+  def handle_opt_in_check():
+    if verify_opt_in(address, asset) is True:
+      claim_nft(address, asset)
+      if timer is not None:
+        timer.cancel()
+  timer=setInterval(5, handle_opt_in_check)
+  
 
 def create_account():
   private_key, address = account.generate_account()
