@@ -210,6 +210,6 @@ def update_nft(asset_id, reserve="", clawback="", freeze=""):
     print("Transaction information: {}".format(
         json.dumps(confirmed_txn, indent=4)))
 
-    print("Asset ID: {}".format(confirmed_txn["asset-index"]))
+    print("Asset ID: {}".format(asset_id))
 
-    return confirmed_txn["asset-index"]
+    return asset_id
