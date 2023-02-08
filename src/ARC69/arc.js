@@ -93,7 +93,7 @@ export class Arc69 {
 		if (!Object.keys(assetInfo).length)
 			assetInfo = await algoExplorerFetch(assetId)
 		if (!Object.keys(assetInfo).length) assetInfo = await arc69Fetch(assetId)
-		return Object.key(assetInfo).length
+		return Object.keys(assetInfo).length
 			? { success: true, ...assetInfo }
 			: { success: false }
 	}
