@@ -2,13 +2,13 @@
 
 This platform provides a Python SDK and a JavaScript SDK that builds upon the Algorand SDKs, allowing developers to easily create and update NFTs. As well as a few other utility functions. Making life a bit easier for developers in the Algorand ecosystem.
 
-[ to Python SDK documentation] (https://github.com/Apostrophe-Corp/0xAuction/blob/beta/Algorand-NFT-SDK/python-algorand-sdk/README.md)
+[ to Python SDK documentation](https://github.com/Apostrophe-Corp/0xAuction/blob/beta/Algorand-NFT-SDK/python-algorand-sdk/README.md)
 
-[link to JavaScript SDK documentation] (https://github.com/Apostrophe-Corp/0xAuction/blob/beta/Algorand-NFT-SDK/javaScript-sdk/README.md)
+[link to JavaScript SDK documentation](https://github.com/Apostrophe-Corp/0xAuction/blob/beta/Algorand-NFT-SDK/javaScript-sdk/README.md)
 
 The dApp also allows users (non-developers) to create NFTs, auction NFTs, and buy NFTs and other collectibles by submitting bids for them.
 
-[link to DApp] (https://0x-auction-beta.vercel.app/) 
+[link to DApp](https://0x-auction-beta.vercel.app/) 
 
 Users can start an auction for the NFTs they own and other users can bid on them. Users can also optionally opt in to see the current highest bid for each auction, for every user that opts in to view the live bid of an auction, the auctioneer gets 10% of the opt-in fee, and the rest is sent to the deployer of the 0xAuction contract as a token of appreciation for using our platform. The NFT and current highest bid are always held in escrow by the contract and lesser bids previously made are returned to the respective bidders and new bids not higher than the highest bid are rejected.  
 
@@ -34,7 +34,7 @@ Currently supported connection methods include:
 
 ## Running the dApp
 
-simply click on the project link, here: [link to DApp] (https://0x-auction-beta.vercel.app/) 
+simply click on the project link, here: [link to DApp](https://0x-auction-beta.vercel.app/) 
 
 ### Usage
 
@@ -47,7 +47,7 @@ simply click on the project link, here: [link to DApp] (https://0x-auction-beta.
 
 - To experience all the features of our dApp, we advise you open at least 3 browser windows (For instance one Incognito Google Chrome tab, one Guest Google Chrome tab and one Brave browser tab).
 
-- Navigate to the app at the URL: [App url] (https://0x-auction-beta.vercel.app/) .
+- Navigate to the app at the URL: [App url](https://0x-auction-beta.vercel.app/) .
 
 - Click on the **Connect Account** button and select the **WalletConnect** option to activate WalletConnect and scan the QR code.
 
