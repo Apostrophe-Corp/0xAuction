@@ -46,7 +46,7 @@ export async function checkOptIn(algodClient, address, assetId) {
 }
 
 export async function claimNFT(algodClient, address, assetId) {
-	const isOptIn = await checkOptIn(address, assetId)
+	const isOptIn = await checkOptIn(algodClient, address, assetId)
 	if (!isOptIn) {
 		console.log(
 			`Asset with Id: ${assetId} has not yet been opted into by Wallet: ${address}. Please opt-in`
