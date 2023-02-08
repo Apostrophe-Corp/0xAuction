@@ -79,7 +79,7 @@ Required :-
 - metadataUrl: This should be passed as a string and should be a URL pointing to a file where the NFT metadata such as an image is stored. If you wish for this NFT to be mutable, then the metadata_url passed must be in accordance with ARC-19 standards.
 
 Optional :-
--address: This is an argument of type string and denotes the receiving address of the NFT(i.e) where the NFT would be stored after creation. If no Address is passed, then an address would be generated for the user and information about this address such as the secrete key, the public key and the mnemonic seed phrase would be printed out to the CLI. These must be copied and stored in a secure manner and later import the wallet to GUI such as [MyAlgo wallet] (<https://wallet.myalgo.com/>) or [Pera Algo wallet] (<https://perawallet.app/>)
+-address: This is an argument of type string and denotes the receiving address of the NFT(i.e) where the NFT would be stored after creation. If no Address is passed, then an address would be generated for the user and information about this address such as the secrete key, the public key and the mnemonic seed phrase would be printed out to the CLI. These must be copied and stored in a secure manner and later import the wallet to GUI such as [MyAlgo wallet](<https://wallet.myalgo.com/>) or [Pera Algo wallet](<https://perawallet.app/>)
 
 - freeze: This is an argument of type string. It denotes a wallet that can sign a transaction to freeze the asset. It usually does not apply to NFTs.
 - clawback: This is an argument of type string. It denotes a wallet that can reclaim an asset.
@@ -102,7 +102,7 @@ nftSDK.testNet.createNFT({name: "labi", symbol: "LA", url: "https://bit.ly/3iLVo
 #### Fund wallet and Opt-in to asset
 
 -The User or receiver of the NFT must opt-in to the NFT in their wallet by adding the asset ID generated in the previous step to their wallet.
--The user must also have few algos in their wallet. You can get algos from the [testnet dispenser] (<https://testnet.algoexplorer.io/dispenser>).  
+-The user must also have few algos in their wallet. You can get algos from the [testnet dispenser](<https://testnet.algoexplorer.io/dispenser>).  
 
 **You can also use the utility function verifyOptIn() to ensure that the receiver address has opted in to the asset before moving on to the next step.**
 
@@ -129,7 +129,7 @@ Example:
 nftSDK.testNet.verifyOptIn("BKULWP4WWNEFJRAUEZJD4RCWQ6G4XVH24MZINYOHB76SF2MTMFEOM5CABY", 156938060)
 ```  
 
-**You can also use the utility function createAccount() to generate a new account**  
+**You can also use the utility function createAccount() to generate a new account**
 
 ```js
 nftSDK['mainNet' || 'betaNet' || 'testNet'].createAccount()
@@ -151,7 +151,7 @@ Example:
 nftSDK.testNet.createAccount()
 ```
 
-This function prints out the account information which you can then copy from the CLI and store in a safe place and later import the wallet to GUI such as [MyAlgo wallet] (<https://wallet.myalgo.com/>) or [Pera Algo wallet] (<https://perawallet.app/>)
+This function prints out the account information which you can then copy from the CLI and store in a safe place and later import the wallet to GUI such as [MyAlgo wallet](<https://wallet.myalgo.com/>) or [Pera Algo wallet](<https://perawallet.app/>)
 
 ### Optional Step
 
