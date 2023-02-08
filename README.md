@@ -1,22 +1,26 @@
 # 0xAuction
 
-The dApp allows users to create NFTs, auction NFTs, and buy NFTs and other collectibles by submitting bids for them.
+This platform provides a Python SDK and a JavaScript SDK that builds upon the Algorand SDKs, allowing developers to easily create and update NFTs. As well as a few other utility functions. Making life a bit easier for developers in the Algorand ecosystem.
+
+[ to Python SDK documentation] (https://github.com/Apostrophe-Corp/0xAuction/blob/beta/Algorand-NFT-SDK/python-algorand-sdk/README.md)
+
+[link to JavaScript SDK documentation] (https://github.com/Apostrophe-Corp/0xAuction/blob/beta/Algorand-NFT-SDK/javaScript-sdk/README.md)
+
+The dApp also allows users (non-developers) to create NFTs, auction NFTs, and buy NFTs and other collectibles by submitting bids for them.
+
+[link to DApp] (https://0x-auction-beta.vercel.app/) 
 
 Users can start an auction for the NFTs they own and other users can bid on them. Users can also optionally opt in to see the current highest bid for each auction, for every user that opts in to view the live bid of an auction, the auctioneer gets 10% of the opt-in fee, and the rest is sent to the deployer of the 0xAuction contract as a token of appreciation for using our platform. The NFT and current highest bid are always held in escrow by the contract and lesser bids previously made are returned to the respective bidders and new bids not higher than the highest bid are rejected.  
+
+**<add demo video>**
 
 The end game is for users to be able to create, buy and sell NFTs and other collectibles without a central dependency.
 
 ## Getting Started
 
-### Pre-requisites and Local Development
+### Pre-requisites
 
-Developers using this dApp should already have Node installed on their local machines.
-
-### The guidelines for installation can be found below
-
-[Instructions for installing Node](https://nodejs.org/en/download/)
-
-In addition, they should have an Algorand wallet (preferably Pera Algo Wallet) installed on their phone and loaded with Testnet Algos in order to be able to sign transactions, share their NFTs and bid on auctions. The wallet can be installed from the App store (iPhone) or Google Play (Android) as is appropriate.
+Users should have an Algorand wallet (preferably Pera Algo Wallet) installed on their phone and loaded with Testnet Algos in order to be able to sign transactions, share their NFTs and bid on auctions. The wallet can be installed from the App store (iPhone) or Google Play (Android) as is appropriate.
 
 Of course users can also use other means of connecting to our dApp, as well as other wallets.  
 Currently supported connection methods include:  
@@ -30,25 +34,11 @@ Currently supported connection methods include:
 
 ## Running the dApp
 
-### Steps
-
-- Fork the repository and or clone the repository.
-
-- Change directory (cd) into the directory.
-
-Then run the following commands to start up the dApp:
-
-```sh
->> npm install
-
->> npm start
-
-```
+simply click on the project link, here: [link to DApp] (https://0x-auction-beta.vercel.app/) 
 
 ### Usage
 
 - When using our dApp, interactions that would require a communication to be made with the blockchain through your account would require you sign some transactions. The following interactions are to be taken note of:  
-  - Deployment of an 0xAuction contract - usually 3 transactions.
   - Minting of a token - just 1.
   - Starting an auction - usually 3 transactions.
   - Placing a bid - just 1.
@@ -57,17 +47,13 @@ Then run the following commands to start up the dApp:
 
 - To experience all the features of our dApp, we advise you open at least 3 browser windows (For instance one Incognito Google Chrome tab, one Guest Google Chrome tab and one Brave browser tab).
 
-- Navigate to the app at the URL `http://localhost:3000`.
+- Navigate to the app at the URL: [App url] (https://0x-auction-beta.vercel.app/) .
 
 - Click on the **Connect Account** button and select the **WalletConnect** option to activate WalletConnect and scan the QR code.
 
-- Click on any of the features of the dApp, Create, Sell, or Buy to start the process to launch or connect to, an 0xAuction contract.
+- Click on any of the features of the dApp, Create, Sell, or Buy.
 
-- Upon selecting 'Deploying' as your desired action, and signing all transactions on your wallet, your 0xAuction contract would be deployed (be sure to copy the contract information to the clipboard after deployment), and you can head over to the second browser tab to create an NFT or Start an Auction.
-
-- Head on over to the next browser and connect with a separate wallet, click on the **Buy** button, select 'Attaching' as the desired action, paste the 0xAuction contract information and attach. Click on the **Buy** button and you can then go ahead to test the bidding functionality.
-
-- Repeat the step above with a third wallet and simulate bidding against the other users/wallets.
+- And buy, sell or create NFTs as you so wish.
 
 #### Important points to note
 
@@ -76,16 +62,12 @@ Then run the following commands to start up the dApp:
 - Only users who opt-in to Live bid get to see the outcome of the auction at its end, else they only get notified that the auction has ended.
 - Failure on the Auctioneer's part to give a reply on the prompt to decide whether to accept the highest bid or not, would be regarded as an approval to sell to the highest bidder.
 - Users are not advised to use a URL shortener as opposed to the demo, this was only stated for testing purposes as real NFTs must have a reliable media link to their NFT media file, preferably from one hosted on IPFS, as URL shortener providers could someday crash and their links rendered useless.
-- 0xAuction is provided as a completely one-instance maintainable service, anyone can have their own instance and with many others connected to this one instance for the sake of having a pool of auctions in one place for others to bid upon, raising the likelihood of getting a bid. But at the same time, 0xAuction can be used for the sole purpose of auctioning a single asset, as long as the contract information where the asset was published is shared with others to connect to, to have access to the published auction.
 
 We encourage you to play around with the dApp and create NFTs, auction NFTs or bid on items at 0xAuction's pool of auctions.
 
 ### Troubleshooting
 
-- `Unable to connect with a different wallet on the same browser even after closing the browser and launching it back again`
-
-On most browsers, simply clear the cookies used by `http://localhost:3000`, on Firefox, you can use the `Forget About This Site` feature, after right-clicking on `0xAuction | NFT Marketplace` on your `History` view.
-
+- `Unable to connect with a different wallet on the same browser even after closing the browser and launching it back again.
 - Should you encounter any other errors, please tag either `goonerlabs#1008` 0r `Emmanuel Agbavwe#2954` on [Reach's Discord server](https://bit.ly/3BnPyKd).
 
 ## The DApp
