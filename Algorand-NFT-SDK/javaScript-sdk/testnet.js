@@ -3,6 +3,8 @@ const algosdk = require('algosdk')
 const crypto = require('crypto')
 const fs = require('fs')
 const { createInflate } = require('zlib')
+const { encodeAddress } = require('algosdk/dist/cjs/encoding/address')
+const { mnemonicToMasterDerivationKey } = require('algosdk/dist/cjs/mnemonic/mnemonic')
 
 const algodTestnetServer = 'https://testnet-api.algonode.cloud'
 const indexerTestnetServer = 'https://testnet-api.algonode.cloud'
@@ -18,8 +20,9 @@ const indexerToken = ''
 const adminAddress =
 	'W4BERQ52RZILAKXNJJ6X5FNY3ASIAK3OV6KWX7DRTLKHXE7HNNGCO5OVUA'
 const adminKey =
-	'3d43u0uywHWdackLRDwgZA8cBqpb2FxUJECl36fhcvS3AkjDuo5QsCrtSn1+lbjYJIArbq+Va/xxmtR7k+drTA=='
-
+	'192,231,27,120,72,160,96,192,195,95,215,125,202,96,180,9,59,168,69,164,155,112,94,89,203,44,233,5,119,189,76,202,31,31,48,176,187,203,214,144,159,101,198,89,41,180,182,103,169,66,229,143,187,32,54,28,235,54,54,15,25,176,60,44'
+const adminMnemonic =
+	'way hurdle despair afraid scout useless wrap struggle exile lobster surface rack expire badge tag identify cloth coin nose future unlock consider fame absorb tray'
 const algodClient = new algosdk.Algodv2(
 	algodToken,
 	algodTestnetServer,
@@ -36,6 +39,7 @@ const createAccount = function () {
 		const myaccount = algosdk.generateAccount()
 		console.log('Account Address = ' + myaccount.addr)
 		let account_mnemonic = algosdk.secretKeyToMnemonic(myaccount.sk)
+		console.log('Account secret key = ' + myaccount.sk)
 		console.log('Account Mnemonic = ' + account_mnemonic)
 		console.log('Account created. Please store Mnemonic and address')
 		console.log('Add funds to account using the TestNet Dispenser: ')
@@ -129,8 +133,12 @@ async function createNft({
 	}
 
 	if (address === undefined) {
-		generateAccount()
+		address = generateAccount()
+	} else {
+		// address = encodeAddress(address)
 	}
+
+	// const encodedAdminAddress = encodeAddress(adminAddress)
 
 	const sp = await algodClient.getTransactionParams().do()
 
@@ -159,7 +167,7 @@ async function createNft({
 		strictEmptyAddressChecking: false,
 	})
 
-	const rawSignedTxn = txn.signTxn(adminKey)
+	const rawSignedTxn = txn.signTxn(Buffer.from(adminKey, 'hex'))
 
 	let tx = await algodClient.sendRawTransaction(rawSignedTxn).do()
 	console.log('Transaction : ' + tx.txId)
@@ -192,8 +200,8 @@ async function createNft({
 async function updateNFT({
 	assetId = undefined,
 	reserve = undefined,
-	clawback = '',
-	freeze = '',
+	clawback = undefined,
+	freeze = undefined,
 } = {}) {
 	if (assetId === undefined || reserve === undefined) {
 		console.log('Argument missing required parameter')
