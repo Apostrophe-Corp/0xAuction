@@ -186,8 +186,6 @@ Example:
 ```{python}
 nft_sdk.update_nft(156938060, <reserve address>)
 ```
-## Deployment
-<include pypi link or project link>
 
 ## Authors
 
