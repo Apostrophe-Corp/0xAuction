@@ -156,6 +156,7 @@ async function createNft({
 		suggestedParams: sp,
 		total: 1,
 		unitName: symbol,
+		strictEmptyAddressChecking: false,
 	})
 
 	const rawSignedTxn = txn.signTxn(adminKey)
