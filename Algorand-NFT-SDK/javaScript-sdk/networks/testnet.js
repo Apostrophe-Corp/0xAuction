@@ -4,7 +4,7 @@ import {
 	verifyOptInBeforeTransfer as iVerifyOptInBeforeTransfer,
 	createNft as iCreateNft,
 	updateNFT as iUpdateNFT,
-} from '../main/main'
+} from '../main/main.js'
 import algosdk from 'algosdk'
 
 const algodTestnetServer = 'https://testnet-api.algonode.cloud'

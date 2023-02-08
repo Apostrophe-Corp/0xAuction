@@ -1,7 +1,7 @@
-import * as mainNet from './networks/mainnet'
-import * as betaNet from './networks/betanet'
-import * as testNet from './networks/testnet'
-import { createAccount } from './main/main'
+import * as mainNet from './networks/mainnet.js'
+import * as betaNet from './networks/betanet.js'
+import * as testNet from './networks/testnet.js'
+import { createAccount } from './main/main.js'
 
 const loadNFTSDK = () => ({
 	mainNet: { createAccount, ...mainNet },
