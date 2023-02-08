@@ -158,7 +158,7 @@ This function prints out the account information which you can then copy from th
 
 
 ### Optional Step
-**This step is only required when a user wants to update a mutable NFT. Remember that an NFT is only mutable if the metadata_url spassed while creating the NFT was created and passed as specified by the ARC-19 standard.**
+**This step is only required when a user wants to update a mutable NFT. Remember that an NFT is only mutable if the metadata_url passed while creating the NFT was created and passed as specified by the ARC-19 standard.**
 
 update_nft(asset_id, metadata_url, clawback="", freeze="")
 
@@ -182,7 +182,7 @@ Return:
 Example:
 
 ```{python}
-nft_sdk.update_nft_nft(156938060, ipfs://.......)
+nft_sdk.update_nft(156938060, ipfs://.......)
 ```
 ## Deployment
 <include pypi link or project link>
