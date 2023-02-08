@@ -49,8 +49,12 @@ pip install pip upgrade
 #install py-algo-nft-sdk
 pip install py-algo-nft-sdk
 
-#install py-algo-sdk
-pip install -r requirements.txt
+#install dependencies
+pip install algosdk
+
+pip install asyncio
+
+pip install promisio
 
 ```
 
