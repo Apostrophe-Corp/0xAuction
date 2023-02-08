@@ -50,7 +50,7 @@ pip install pip upgrade
 pip install py-algo-nft-sdk
 
 #install dependencies
-pip install algosdk
+pip3 install py-algorand-sdk
 
 pip install asyncio
 
