@@ -56,10 +56,13 @@ const createAccount = function () {
 async function checkOptIn(address, assetId) {
 	const accountInfo = await algodClient.accountInformation(address).do()
 	const assets = accountInfo.assets
+	// console.log({assets});
 
 	let optInStatus = false
 	for (const asset of assets) {
-		if (asset.asset_id === parseInt(assetId)) {
+		// console.log({asset})
+		if (asset['asset-id'] === parseInt(assetId)) {
+			console.log(asset['asset-id'])
 			optInStatus = true
 			break
 		}
@@ -76,13 +79,19 @@ async function claimNFT(address, assetId) {
 		return false
 	}
 
-	const params = algodClient.getTransactionParams()
-	const txn = algosdk.makeAssetTransferTxn(
-		address,
-		[{ assetId: assetId, amount: 1 }],
-		params
-	)
-	const signedTxn = txn.sign(adminKey)
+	const sp = await algodClient.getTransactionParams().do()
+	const txn = algosdk.makeAssetTransferTxnWithSuggestedParamsFromObject({
+		amount: 1,
+		assetIndex: assetId,
+		closeRemainderTo: undefined,
+		from: adminAddress,
+		note: undefined,
+		rekeyTo: undefined,
+		revocationTarget: undefined,
+		suggestedParams: sp,
+		to: address,
+ })
+	const signedTxn = txn.signTxn(adminKey)
 	const tx = await algodClient.sendRawTransaction(signedTxn).do()
 	console.log(`Successfully sent transaction with txID: ${tx.txId}`)
 
@@ -265,4 +274,3 @@ async function updateNFT({
 	}
 }
 
-createNft({name: "labi", symbol: "LA", url: "https://bit.ly/3iLVoA3#i", address: "BKULWP4WWNEFJRAUEZJD4RCWQ6G4XVH24MZINYOHB76SF2MTMFEOM5CABY"}) 
