@@ -47,7 +47,7 @@ source venv/bin/activate
 pip install pip upgrade
 
 #install py-algo-nft-sdk
-pip install py-algo-nft-sdk
+pip install py-algorand-nft-sdk==0.0.2
 
 #install dependencies
 pip3 install py-algorand-sdk
