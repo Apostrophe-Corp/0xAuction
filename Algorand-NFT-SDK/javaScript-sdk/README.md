@@ -56,7 +56,8 @@ Testnet: testnet
 Betanet: betanet
 Mainnet: mainnet
 '''
-import { nftSDK } from 'javascript-algorand-nft-sdk')
+import loadNFTSDK from 'javascript-algorand-nft-sdk'
+const nftSDK = loadNFTSDK()
 ```
 
 ### Step 2
