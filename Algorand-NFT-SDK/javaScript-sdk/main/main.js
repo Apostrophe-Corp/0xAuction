@@ -1,16 +1,13 @@
-const { generateAccount } = require('algosdk')
-const algosdk = require('algosdk')
-const crypto = require('crypto')
+import algosdk, { generateAccount } from 'algosdk'
 
 const adminAddress =
 	'ONOL67X6NTUZSMWUQPNHZRFXCO7JK547YYJCSDQTI5V3BOFPPJRK73EFNA'
 const mnemonic =
 	'pink sound impulse project salt asset until leg glide kite inhale salt logic sell pull street gun viable outdoor electric funny club journey above estate'
 
-const recoveredAccount = algosdk.mnemonicToSecretKey(mnemonic);
+const recoveredAccount = algosdk.mnemonicToSecretKey(mnemonic)
 
-const adminKey = recoveredAccount.sk;
-
+const adminKey = recoveredAccount.sk
 
 export const createAccount = function () {
 	try {
@@ -67,7 +64,7 @@ export async function claimNFT(algodClient, address, assetId) {
 		revocationTarget: undefined,
 		suggestedParams: sp,
 		to: address,
- })
+	})
 	const signedTxn = txn.signTxn(adminKey)
 	const tx = await algodClient.sendRawTransaction(signedTxn).do()
 	console.log(`Successfully sent transaction with txID: ${tx.txId}`)
@@ -85,7 +82,11 @@ export async function claimNFT(algodClient, address, assetId) {
 	return tx.txId
 }
 
-export const verifyOptInBeforeTransfer = async (algodClient, address, asset) => {
+export const verifyOptInBeforeTransfer = async (
+	algodClient,
+	address,
+	asset
+) => {
 	new Promise((resolve) => {
 		let waiter = undefined
 		waiter = setInterval(async () => {
@@ -239,7 +240,3 @@ export async function updateNFT(
 		return false
 	}
 }
-
-// createNft({name: "labi", symbol: "LA", url: "https://bit.ly/3iLVoA3#i", address: "BKULWP4WWNEFJRAUEZJD4RCWQ6G4XVH24MZINYOHB76SF2MTMFEOM5CABY"}) 
-
-// updateNFT({assetId: 157737372, clawback: 'BKULWP4WWNEFJRAUEZJD4RCWQ6G4XVH24MZINYOHB76SF2MTMFEOM5CABY'})

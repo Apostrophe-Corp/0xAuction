@@ -5,7 +5,7 @@ import {
 	createNft as iCreateNft,
 	updateNFT as iUpdateNFT,
 } from '../main/main'
-const algosdk = require('algosdk')
+import algosdk from 'algosdk'
 
 const algodTestnetServer = 'https://testnet-api.algonode.cloud'
 

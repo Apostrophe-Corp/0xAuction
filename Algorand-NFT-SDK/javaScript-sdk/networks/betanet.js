@@ -5,7 +5,7 @@ import {
 	createNft as iCreateNft,
 	updateNFT as iUpdateNFT,
 } from '../main/main'
-const algosdk = require('algosdk')
+import algosdk from 'algosdk'
 
 const algodBetanetServer = 'https://betanet-api.algonode.cloud'
 const algodPort = 443
