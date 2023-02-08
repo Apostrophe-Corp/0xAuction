@@ -76,7 +76,7 @@ from py_sdk import testnet as nft_sdk
 
 **Call the function to mint an NFT**
 
-create_nft(name, symbol, metadata_url, address, reserve=False, freeze="", clawback="")
+create_nft(name, symbol, metadata_url, address, reserve="", freeze="", clawback="")
 
 Descripton: This function mints a new NFT. 
 
@@ -90,6 +90,7 @@ Required :-
 Optional :-
 -address: This is an argument of type string and denotes the receiving address of the NFT(i.e) where the NFT would be stored after creation. If no Address is passed, then an address would be generated for the user and information about this address such as the secrete key, the public key and the mnemonic seed phrase would be printed out to the CLI. These must be copied and stored in a secure manner and later import the wallet to GUI such as [MyAlgo wallet] (https://wallet.myalgo.com/) or [Pera Algo wallet] (https://perawallet.app/) 
 
+- reserve: the reserve address, this should only be passed if the user wants the NFT to be mutable. this address should be in accordance with ARC-19 standards.
 - freeze: This is an argument of type string. It denotes a wallet that can sign a transaction to freeze the asset. It usually does not apply to NFTs.
 - clawback: This is an argument of type string. It denotes a wallet that can reclaim an asset.
 
@@ -160,18 +161,19 @@ This function prints out the account information which you can then copy from th
 ### Optional Step
 **This step is only required when a user wants to update a mutable NFT. Remember that an NFT is only mutable if the metadata_url passed while creating the NFT was created and passed as specified by the ARC-19 standard.**
 
-update_nft(asset_id, metadata_url, clawback="", freeze="")
+update_nft(asset_id, clawback="", freeze="", reserve="")
 
 Descripton: This function updates an NFT. 
 
 Arguments:
 
 Required :-
-- metadat_url: This should be passed as a string and should be a URL pointing to a file where the NFT metadata stored. The URL must be in accordance with ARC-19 standards and must be stored on IPFS
+- asset_id: this is of type integer and denotes the NFT the user wants to mutate.
 
 Optional :-
 - freeze: This is an argument of type string. It denotes a wallet that can sign a transaction to freeze the asset. It usually does not apply to NFTs.
 - clawback: This is an argument of type string. It denotes a wallet that can reclaim an asset.
+- reserve: This must be in accordance with ARC-19 standards in order to mutate the NFT.
 
 Side Effects:
 -The function prints out the metadata hash, transaction ID, transaction information and the asset ID to the CLI.
@@ -182,7 +184,7 @@ Return:
 Example:
 
 ```{python}
-nft_sdk.update_nft(156938060, ipfs://.......)
+nft_sdk.update_nft(156938060, <reserve address>)
 ```
 ## Deployment
 <include pypi link or project link>
