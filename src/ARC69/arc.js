@@ -10,8 +10,8 @@ export class Arc69 {
 	async fetch(assetId) {
 		// Fetch `acfg` transactions.
 		let assetInfo = {}
-		const arc69Fetch = async (assetId) => {
-			const url = `${this.algoExplorerApiBaseUrl}/v2/transactions?asset-id=${assetId}&tx-type=acfg`
+		const arc69Fetch = async (id) => {
+			const url = `${this.algoExplorerApiBaseUrl}/v2/transactions?asset-id=${id}&tx-type=acfg`
 			let transactions
 			try {
 				const transitTransactions = await fetch(url, {
@@ -63,29 +63,29 @@ export class Arc69 {
 			}
 		}
 
-		const algoExplorerFetch = async (assetId) => {
+		const algoExplorerFetch = async (id) => {
 			const assetInfo = await fetch(
-				`https://indexer.testnet.algoexplorerapi.io/v2/assets/${assetId}`
+				`https://indexer.testnet.algoexplorerapi.io/v2/assets/${id}`
 			)
 				.then((res) => res.json())
 				.then(
 					(res) =>
-						({ ...res?.asset?.params, success: true } ?? { success: false })
+						({ ...res?.asset?.params } ?? {})
 				)
-				.catch((error) => ({ success: false }))
+				.catch((error) => ({}))
 			return assetInfo
 		}
 
-		const algoNodeFetch = async (assetId) => {
+		const algoNodeFetch = async (id) => {
 			const assetInfo = await fetch(
-				`https://testnet-idx.algonode.cloud/v2/assets/${assetId}?include-all=true`
+				`https://testnet-idx.algonode.cloud/v2/assets/${id}?include-all=true`
 			)
 				.then((res) => res.json())
 				.then(
 					(res) =>
-						({ ...res?.asset?.params, success: true } ?? { success: false })
+						({ ...res?.asset?.params } ?? {})
 				)
-				.catch((error) => ({ success: false }))
+				.catch((error) => ({}))
 			return assetInfo
 		}
 
