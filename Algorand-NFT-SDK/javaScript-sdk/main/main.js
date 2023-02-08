@@ -1,18 +1,6 @@
 const { generateAccount } = require('algosdk')
 const algosdk = require('algosdk')
 const crypto = require('crypto')
-const fs = require('fs')
-const { createInflate } = require('zlib')
-
-const algodTestnetServer = 'https://testnet-api.algonode.cloud'
-
-const algodBetanetServer = 'https://betanet-api.algonode.cloud'
-
-const algodMainetServer = 'https://mainnet-api.algonode.cloud'
-
-const algodPort = 443
-const algodToken = ''
-
 
 const adminAddress =
 	'ONOL67X6NTUZSMWUQPNHZRFXCO7JK547YYJCSDQTI5V3BOFPPJRK73EFNA'
@@ -23,14 +11,8 @@ const recoveredAccount = algosdk.mnemonicToSecretKey(mnemonic);
 
 const adminKey = recoveredAccount.sk;
 
-const algodClient = new algosdk.Algodv2(
-	algodToken,
-	algodTestnetServer,
-	algodPort
-)
 
-
-const createAccount = function () {
+export const createAccount = function () {
 	try {
 		const myaccount = algosdk.generateAccount()
 		console.log('Account Address = ' + myaccount.addr)
@@ -48,7 +30,7 @@ const createAccount = function () {
 	}
 }
 
-async function checkOptIn(address, assetId) {
+export async function checkOptIn(algodClient, address, assetId) {
 	const accountInfo = await algodClient.accountInformation(address).do()
 	const assets = accountInfo.assets
 	// console.log({assets});
@@ -65,7 +47,7 @@ async function checkOptIn(address, assetId) {
 	return optInStatus
 }
 
-async function claimNFT(address, assetId) {
+export async function claimNFT(algodClient, address, assetId) {
 	const isOptIn = await checkOptIn(address, assetId)
 	if (!isOptIn) {
 		console.log(
@@ -103,11 +85,11 @@ async function claimNFT(address, assetId) {
 	return tx.txId
 }
 
-const verifyOptInBeforeTransfer = async (address, asset) => {
+export const verifyOptInBeforeTransfer = async (algodClient, address, asset) => {
 	new Promise((resolve) => {
 		let waiter = undefined
 		waiter = setInterval(async () => {
-			const hasOptIn = await checkOptIn(address, asset) // true || false
+			const hasOptIn = await checkOptIn(algodClient, address, asset) // true || false
 			if (hasOptIn) {
 				clearInterval(waiter)
 				waiter = undefined
@@ -116,21 +98,24 @@ const verifyOptInBeforeTransfer = async (address, asset) => {
 		}, 5000)
 	})
 		.then(async () => {
-			await claimNFT(address, asset)
+			await claimNFT(algodClient, address, asset)
 		})
 		.catch((error) => {
 			console.log({ error })
 		})
 }
 
-async function createNft({
-	name = undefined,
-	symbol = undefined,
-	address = undefined,
-	url = undefined,
-	clawback = undefined,
-	freeze = undefined,
-} = {}) {
+export async function createNft(
+	algodClient,
+	{
+		name = undefined,
+		symbol = undefined,
+		address = undefined,
+		url = undefined,
+		clawback = undefined,
+		freeze = undefined,
+	} = {}
+) {
 	if (name === undefined || symbol === undefined || url === undefined) {
 		console.log('Argument missing required parameter')
 		return
@@ -142,19 +127,16 @@ async function createNft({
 
 	const sp = await algodClient.getTransactionParams().do()
 
-
 	const hash = crypto.createHash('sha256')
 	hash.update(url)
 	const digest = hash.digest()
 	const hexDigest = digest.toString('hex')
 	console.log(`Your metadata hash: ${hexDigest}`)
-	const metadata = new Uint8Array(digest);
-	
+	const metadata = new Uint8Array(digest)
 
 	// function b64_to_utf8(str) { return decodeURIComponent((atob(str))); }
-	
+
 	const txn = algosdk.makeAssetCreateTxnWithSuggestedParamsFromObject({
-	
 		assetMetadataHash: metadata,
 		assetName: name,
 		assetURL: url,
@@ -192,22 +174,25 @@ async function createNft({
 		console.log(
 			`Transaction information: ${JSON.stringify(confirmedTxn, null, 4)}`
 		)
-		console.log(`Asset ID: ${confirmedTxn["asset-index"]}`)
+		console.log(`Asset ID: ${confirmedTxn['asset-index']}`)
 		console.log(`Please copy Asset ID and opt-in to the asset in your wallet.`)
 	} catch (err) {
 		console.error({ err })
 		return false
 	}
-	verifyOptInBeforeTransfer(address, assetID)
+	verifyOptInBeforeTransfer(algodClient, address, assetID)
 }
 
 // todo update nft function
-async function updateNFT({
-	assetId = undefined,
-	reserve = undefined,
-	clawback = undefined,
-	freeze = undefined,
-} = {}) {
+export async function updateNFT(
+	algodClient,
+	{
+		assetId = undefined,
+		reserve = undefined,
+		clawback = undefined,
+		freeze = undefined,
+	} = {}
+) {
 	if (assetId === undefined) {
 		console.log('Argument missing required parameter')
 		return
@@ -216,17 +201,17 @@ async function updateNFT({
 	const sp = await algodClient.getTransactionParams().do()
 
 	const txn = algosdk.makeAssetConfigTxnWithSuggestedParamsFromObject({
-		 from: adminAddress,
-			note: undefined,
-			assetIndex: assetId,
-			rekeyTo: undefined,
-			manager: adminAddress,
-			reserve: reserve,
-			freeze: freeze,
-			clawback: clawback,
-			defaultFrozen: false,
-			strictEmptyAddressChecking: false,
-		suggestedParams: sp
+		from: adminAddress,
+		note: undefined,
+		assetIndex: assetId,
+		rekeyTo: undefined,
+		manager: adminAddress,
+		reserve: reserve,
+		freeze: freeze,
+		clawback: clawback,
+		defaultFrozen: false,
+		strictEmptyAddressChecking: false,
+		suggestedParams: sp,
 	})
 
 	const rawSignedTxn = txn.signTxn(adminKey)

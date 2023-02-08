@@ -1,0 +1,12 @@
+{
+  "name": "javascript-sdk",
+  "version": "0.0.1",
+  "description": "JavaScript Algorand NFT SDK",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "Apache-2.0"
+}

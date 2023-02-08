@@ -2,6 +2,7 @@
   "name": "nft_mall",
   "version": "0.1.0",
   "private": true,
+  "license": "Apache-2.0",
   "dependencies": {
     "@perawallet/connect": "^1.0.7",
     "@randlabs/myalgo-connect": "^1.4.2",
