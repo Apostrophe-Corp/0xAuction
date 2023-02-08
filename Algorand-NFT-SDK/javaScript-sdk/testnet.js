@@ -120,8 +120,8 @@ async function createNft({
 	symbol = undefined,
 	address = undefined,
 	url = undefined,
-	clawback = '',
-	freeze = '',
+	clawback = undefined,
+	freeze = undefined,
 } = {}) {
 	if (name === undefined || symbol === undefined || url === undefined) {
 		console.log('Argument missing required parameter')
