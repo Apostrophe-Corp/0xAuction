@@ -1,5 +1,5 @@
 {
-  "name": "javascript-sdk",
+  "name": "javascript-algorand-nft-sdk",
   "version": "0.0.1",
   "description": "JavaScript Algorand NFT SDK",
   "main": "index.js",
@@ -8,5 +8,9 @@
   },
   "keywords": [],
   "author": "",
-  "license": "Apache-2.0"
+  "license": "Apache-2.0",
+  "dependencies": {
+    "algosdk": "^2.1.0",
+    "crypto": "^1.0.1"
+  }
 }
