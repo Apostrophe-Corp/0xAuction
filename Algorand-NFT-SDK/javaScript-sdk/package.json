@@ -1,6 +1,6 @@
 {
   "name": "javascript-algorand-nft-sdk",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "JavaScript Algorand NFT SDK",
   "main": "index.js",
   "type": "module",

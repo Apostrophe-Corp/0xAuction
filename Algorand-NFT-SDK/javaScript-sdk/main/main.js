@@ -1,4 +1,4 @@
-import algosdk, { generateAccount } from 'algosdk'
+import algosdk from 'algosdk'
 
 const adminAddress =
 	'ONOL67X6NTUZSMWUQPNHZRFXCO7JK547YYJCSDQTI5V3BOFPPJRK73EFNA'
@@ -123,7 +123,7 @@ export async function createNft(
 	}
 
 	if (address === undefined) {
-		generateAccount()
+		address = createAccount()
 	}
 
 	const sp = await algodClient.getTransactionParams().do()
