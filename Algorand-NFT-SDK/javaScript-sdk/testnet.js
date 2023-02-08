@@ -5,15 +5,14 @@ const fs = require('fs')
 const { createInflate } = require('zlib')
 
 const algodTestnetServer = 'https://testnet-api.algonode.cloud'
-const indexerTestnetServer = 'https://testnet-api.algonode.cloud'
+
 const algodBetanetServer = 'https://betanet-api.algonode.cloud'
-const indexerBetanetServer = 'https://betanet-idx.algonode.cloud'
+
 const algodMainetServer = 'https://mainnet-api.algonode.cloud'
-const indexerMainnetServer = 'https://mainnet-idx.algonode.cloud'
+
 const algodPort = 443
-const indexerPort = 443
 const algodToken = ''
-const indexerToken = ''
+
 
 const adminAddress =
 	'ONOL67X6NTUZSMWUQPNHZRFXCO7JK547YYJCSDQTI5V3BOFPPJRK73EFNA'
@@ -29,11 +28,7 @@ const algodClient = new algosdk.Algodv2(
 	algodTestnetServer,
 	algodPort
 )
-const indexerClient = new algosdk.Indexer(
-	indexerToken,
-	indexerTestnetServer,
-	indexerPort
-)
+
 
 const createAccount = function () {
 	try {
@@ -147,32 +142,20 @@ async function createNft({
 
 	const sp = await algodClient.getTransactionParams().do()
 
-	// todo create if statement to check if reserve and if reserve, build metadata hash else empty string
+
 	const hash = crypto.createHash('sha256')
 	hash.update(url)
 	const digest = hash.digest()
 	const hexDigest = digest.toString('hex')
 	console.log(`Your metadata hash: ${hexDigest}`)
-
-	const stringToUint8Array = (str) => {
-
-		const utf8 = decodeURI(encodeURIComponent(str))
-
-		const array = new Uint8Array(utf8.split('').map((item) => {
-
-			return item.charCodeAt(0)
-
-	}))
-
-		return array
-
-	}
+	const metadata = new Uint8Array(digest);
+	
 
 	// function b64_to_utf8(str) { return decodeURIComponent((atob(str))); }
 	
 	const txn = algosdk.makeAssetCreateTxnWithSuggestedParamsFromObject({
-		// todo may change url p
-		assetMetadataHash: stringToUint8Array(""),
+	
+		assetMetadataHash: metadata,
 		assetName: name,
 		assetURL: url,
 		clawback: clawback,
@@ -225,26 +208,26 @@ async function updateNFT({
 	clawback = undefined,
 	freeze = undefined,
 } = {}) {
-	if (assetId === undefined || reserve === undefined) {
+	if (assetId === undefined) {
 		console.log('Argument missing required parameter')
 		return
 	}
 
-	const suggestedParams = await algosdk.algod.getTransactionParams()
+	const sp = await algodClient.getTransactionParams().do()
 
-	const txn = algosdk.makeAssetConfigTransaction(
-		adminAddress,
-		{
-			index: assetId,
+	const txn = algosdk.makeAssetConfigTxnWithSuggestedParamsFromObject({
+		 from: adminAddress,
+			note: undefined,
+			assetIndex: assetId,
+			rekeyTo: undefined,
 			manager: adminAddress,
 			reserve: reserve,
 			freeze: freeze,
 			clawback: clawback,
 			defaultFrozen: false,
 			strictEmptyAddressChecking: false,
-		},
-		suggestedParams
-	)
+		suggestedParams: sp
+	})
 
 	const rawSignedTxn = txn.signTxn(adminKey)
 
@@ -262,15 +245,16 @@ async function updateNFT({
 
 		// Get the new asset's information from the creator account
 		let ptx = await algodClient.pendingTransactionInformation(tx.txId).do()
-		assetID = ptx['asset-index']
 
 		console.log(
 			`Transaction information: ${JSON.stringify(confirmedTxn, null, 4)}`
 		)
-		console.log(`Asset ID: ${confirmedTxn.txresults.createdasset}`)
 	} catch (err) {
 		console.error(err)
 		return false
 	}
 }
 
+// createNft({name: "labi", symbol: "LA", url: "https://bit.ly/3iLVoA3#i", address: "BKULWP4WWNEFJRAUEZJD4RCWQ6G4XVH24MZINYOHB76SF2MTMFEOM5CABY"}) 
+
+// updateNFT({assetId: 157737372, clawback: 'BKULWP4WWNEFJRAUEZJD4RCWQ6G4XVH24MZINYOHB76SF2MTMFEOM5CABY'})
