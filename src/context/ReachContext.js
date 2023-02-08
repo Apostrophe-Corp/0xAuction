@@ -1638,6 +1638,17 @@ const ReachContextProvider = ({ children }) => {
 						>
 							Buy
 						</li>
+						<li
+							className={cf(s.flex, s.flexCenter, s.p10, s.m0, app.navItem)}
+							onClick={() => {
+								window.open(
+									'https://github.com/Apostrophe-Corp/0xAuction/blob/beta/Algorand-NFT-SDK/README.md',
+									'_blank'
+								)
+							}}
+						>
+							NFT SDK
+						</li>
 					</ul>
 				</div>
 				<button

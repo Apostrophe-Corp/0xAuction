@@ -18,7 +18,7 @@ const algodToken = ''
 const indexerToken = ''
 
 const adminAddress =
-	'D4PTBMF3ZPLJBH3FYZMSTNFWM6UUFZMPXMQDMHHLGY3A6GNQHQWFAD57TY'
+	'W4BERQ52RZILAKXNJJ6X5FNY3ASIAK3OV6KWX7DRTLKHXE7HNNGCO5OVUA'
 const adminKey =
 	'192,231,27,120,72,160,96,192,195,95,215,125,202,96,180,9,59,168,69,164,155,112,94,89,203,44,233,5,119,189,76,202,31,31,48,176,187,203,214,144,159,101,198,89,41,180,182,103,169,66,229,143,187,32,54,28,235,54,54,15,25,176,60,44'
 const adminMnemonic =
@@ -54,7 +54,7 @@ const createAccount = function () {
 }
 
 async function checkOptIn(address, assetId) {
-	const accountInfo = await algodClient.accountInformation(address).do()
+	const accountInfo = await tokenClient.accountInformation(address).do()
 	const assets = accountInfo.assets
 
 	let optInStatus = false
@@ -148,19 +148,10 @@ async function createNft({
 	const digest = hash.digest()
 	const hexDigest = digest.toString('hex')
 	console.log(`Your metadata hash: ${hexDigest}`)
-	const utf8Digest = digest.toString('utf8')
-
-	const stringTUint8Array = (str) => {
-		const utf8 = decodeURI(encodeURIComponent(str))
-		const array = new Uint8Array(
-			utf8.split('').map((item) => item.charCodeAt(0))
-		)
-		return array
-	}
 
 	const txn = algosdk.makeAssetCreateTxnWithSuggestedParamsFromObject({
 		// todo may change url p
-		assetMetadataHash: '',
+		assetMetadataHash: digest,
 		assetName: name,
 		assetURL: url,
 		clawback: clawback,
@@ -232,7 +223,7 @@ async function updateNFT({
 		suggestedParams
 	)
 
-	const rawSignedTxn = txn.signTxn((adminMnemonic))
+	const rawSignedTxn = txn.signTxn(adminKey)
 
 	let tx = await algodClient.sendRawTransaction(rawSignedTxn).do()
 	console.log('Transaction : ' + tx.txId)
@@ -259,15 +250,3 @@ async function updateNFT({
 		return false
 	}
 }
-
-;(async () => {
-	await createNft({
-		name: 'siju',
-		symbol: 'SJ',
-		url: 'https://bit.ly/3iLVoA3#i',
-		address: 'KUJA3TRZXK2ZSDL6IGUSG2M3WMCK6MOKWJJJFBXGQI473KLVBL4SDQI54E',
-	})
-	// createAccount()
-})()
-
-// console.log('W4BERQ52RZILAKXNJJ6X5FNY3ASIAK3OV6KWX7DRTLKHXE7HNNGCO5OVUA'.length)
