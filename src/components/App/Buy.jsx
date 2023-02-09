@@ -286,8 +286,11 @@ const Buy = () => {
 				clearInterval(slide)
 			}
 		}
+	}, [newLatest])
+
+	useEffect(() => {
 		if (!newAuctions.length && !endedAuctions.length) setView('App')
-	}, [newLatest, newAuctions, endedAuctions, setView])
+	}, [newAuctions, endedAuctions, setView])
 
 	return (
 		<div className={cf(s.wMax, s.window, buy.buyParent)}>
