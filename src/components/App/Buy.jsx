@@ -262,7 +262,7 @@ const Buy = () => {
 	useEffect(() => {
 		let slide = undefined
 		let progress = 0
-		slide = setInterval(() => {
+		slide = setInterval(async () => {
 			if (newLatest.length > 2) {
 				progress += 100
 				latestAuctionRef.current.style.transform = `translate(-${progress}%,0)`
@@ -289,7 +289,8 @@ const Buy = () => {
 			clearInterval(slide)
 			slide = undefined
 		}
-	}, [newLatest])
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [])
 
 	useEffect(() => {
 		if (!newAuctions.length && !endedAuctions.length) setView('App')
