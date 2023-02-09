@@ -260,9 +260,10 @@ const Buy = () => {
 	}, [newAuctions, endedAuctions, setView, alertThis])
 
 	useEffect(() => {
+		let slide = undefined
 		if (newLatest.length > 2) {
 			let progress = 0
-			const slide = setInterval(() => {
+			slide = setInterval(() => {
 				progress += 100
 				latestAuctionRef.current.style.transform = `translate(-${progress}%,0)`
 				const length = (newLatest.length - 1) * 100
@@ -282,9 +283,11 @@ const Buy = () => {
 					}, 1000)
 				}
 			}, 4000)
-			return () => {
-				clearInterval(slide)
-			}
+		}
+
+		return () => {
+			clearInterval(slide)
+			slide = undefined
 		}
 	}, [newLatest])
 
