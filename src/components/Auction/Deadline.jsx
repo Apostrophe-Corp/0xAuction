@@ -22,7 +22,7 @@ const Deadline = ({ blockCreated, setHasEnded }) => {
 	useLayoutEffect(() => {
 		const getTimeRemaining = async () => {
 			const present = reach.bigNumberToNumber(await reach.getNetworkTime())
-			const remaining = blockCreated + 985 - present
+			const remaining = blockCreated + 2101622 - present
 			const tRemaining = remaining > 1 ? (remaining * 3.7) / 60 / 60 : 0
 			setTime(() => ({
 				sec: Math.floor(((((tRemaining % 24) % 1) * 60) % 1) * 60),
@@ -38,7 +38,7 @@ const Deadline = ({ blockCreated, setHasEnded }) => {
 	useEffect(() => {
 		let updateRemaining = setInterval(async () => {
 			const present = reach.bigNumberToNumber(await reach.getNetworkTime())
-			const remaining = blockCreated + 985 - present
+			const remaining = blockCreated + 2101622 - present
 			setHasEnded(remaining < 1)
 			setBlocksRemaining(remaining < 1 ? 'Ended' : remaining)
 			const tRemaining = remaining > 0 ? (remaining * 3.7) / 60 / 60 : 0

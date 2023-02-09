@@ -28,7 +28,7 @@ const algoExplorerURI = {
 	MainNet: 'https://algoexplorer.io',
 }['TestNet']
 
-const deadline = 985
+const deadline = 2101622
 
 export let reach = loadStdlib({
 	REACH_CONNECTOR_MODE: 'ALGO',
