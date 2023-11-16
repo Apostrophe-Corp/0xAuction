@@ -36,7 +36,7 @@ const ConnectAccount = () => {
 								</span>
 							</div>
 						</div>
-						<div
+						{/* <div
 							className={cf(s.flex, s.flexCenter, ca.connectOption)}
 							onClick={() => {
 								connectToWallet('MyAlgoConnect')
@@ -87,7 +87,7 @@ const ConnectAccount = () => {
 									Mnemonic
 								</span>
 							</div>
-						</div>
+						</div> */}
 					</div>
 				) : (
 					<div
