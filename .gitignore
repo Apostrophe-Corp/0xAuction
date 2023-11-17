@@ -3,7 +3,7 @@ build/*
 .vscode/*
 *node_modules
 *.vscode
-/package-lock.json
+// package-lock.json
 Algorand-NFT-SDK/javaScript-sdk/package-lock.json
 *.reach
 .reach/*
