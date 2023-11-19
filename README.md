@@ -68,7 +68,7 @@ We encourage you to play around with the dApp and create NFTs, auction NFTs or b
 ### Troubleshooting
 
 - `Unable to connect with a different wallet on the same browser even after closing the browser and launching it back again.
-- Should you encounter any other errors, please tag either `goonerlabs#1008` 0r `Emmanuel Agbavwe#2954` on [Reach's Discord server](https://bit.ly/3BnPyKd).
+- Should you encounter any other errors, please tag either `goonerlabs` 0r `aro1914` on [Reach's Discord server](https://bit.ly/3BnPyKd).
 
 ## The DApp
 
