@@ -8,11 +8,11 @@ This platform provides a Python SDK and a JavaScript SDK that builds upon the Al
 
 The dApp also allows users (non-developers) to create NFTs, auction NFTs, and buy NFTs and other collectibles by submitting bids for them.
 
-[link to DApp](https://0x-auction-beta.vercel.app/) 
+[link to DApp](https://0xauction-if7v24.dappling.network/) 
 
 Users can start an auction for the NFTs they own and other users can bid on them. Users can also optionally opt in to see the current highest bid for each auction, for every user that opts in to view the live bid of an auction, the auctioneer gets 10% of the opt-in fee, and the rest is sent to the deployer of the 0xAuction contract as a token of appreciation for using our platform. The NFT and current highest bid are always held in escrow by the contract and lesser bids previously made are returned to the respective bidders and new bids not higher than the highest bid are rejected.  
 
-[link to demo video](https://youtu.be/Pwjqb6E0Wgg)
+[link to demo video](https://vimeo.com/886093274/dc08b5864a)
 
 The end game is for users to be able to create, buy and sell NFTs and other collectibles without a central dependency.
 
@@ -34,7 +34,7 @@ Currently supported connection methods include:
 
 ## Running the dApp
 
-simply click on the project link, here: [link to DApp](https://0x-auction-beta.vercel.app/) 
+simply click on the project link, here: [link to DApp](https://0xauction-if7v24.dappling.network/) 
 
 ### Usage
 
@@ -47,7 +47,7 @@ simply click on the project link, here: [link to DApp](https://0x-auction-beta.v
 
 - To experience all the features of our dApp, we advise you open at least 3 browser windows (For instance one Incognito Google Chrome tab, one Guest Google Chrome tab and one Brave browser tab).
 
-- Navigate to the app at the URL: [App url](https://0x-auction-beta.vercel.app/) .
+- Navigate to the app at the URL: [App url](https://0xauction-if7v24.dappling.network/) .
 
 - Click on the **Connect Account** button and select the **WalletConnect** option to activate WalletConnect and scan the QR code.
 
